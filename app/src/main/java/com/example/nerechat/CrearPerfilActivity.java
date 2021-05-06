@@ -99,6 +99,7 @@ public class CrearPerfilActivity extends AppCompatActivity {
                                     hashMap.put("nombreUsuario", name);
                                     hashMap.put("fotoPerfil", uri.toString());
                                     hashMap.put("estado", "out");
+                                    hashMap.put("uid", mUser.getUid());
                                     //Una vez tenemos el hashmap lo subimos a la base de datos, dentro de la tabla perfil, y el mUser.getUid como titulo.
                                     mDatabaseRef.child(mUser.getUid()).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener() {
                                         @Override

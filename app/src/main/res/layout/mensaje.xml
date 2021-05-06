@@ -11,57 +11,63 @@
         android:id="@+id/mensajeFotoPerfilUno"
         android:layout_width="45dp"
         android:layout_height="45dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:src="@drawable/icono"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.021"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"></de.hdodenhof.circleimageview.CircleImageView>
 
     <TextView
         android:id="@+id/mensajeTextoUno"
-        android:layout_width="189dp"
-        android:layout_height="39dp"
-        android:background="#F6D5FB"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="40dp"
+        android:background="@drawable/fondo_mensaje_dos"
+        android:paddingStart="10dp"
+        android:paddingTop="8dp"
+        android:paddingRight="8dp"
+        android:paddingBottom="10dp"
         android:text="Mensaje"
         android:textColor="#000000"
-        android:textColorHighlight="#000000"
-        android:textColorHint="#000000"
-        android:textColorLink="#000000"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/mensajeFotoPerfilDos"
-        app:layout_constraintHorizontal_bias="0.067"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/mensajeFotoPerfilUno"
-        app:layout_constraintTop_toTopOf="parent"></TextView>
+        app:layout_constraintTop_toTopOf="@+id/mensajeFotoPerfilUno"
+        app:layout_constraintWidth_default="wrap">
+
+    </TextView>
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/mensajeFotoPerfilDos"
         android:layout_width="45dp"
         android:layout_height="45dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:src="@drawable/icono"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.983"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"></de.hdodenhof.circleimageview.CircleImageView>
+        app:layout_constraintTop_toTopOf="parent"></de.hdodenhof.circleimageview.CircleImageView>
 
     <TextView
         android:id="@+id/mensajeTextoDos"
-        android:layout_width="189dp"
-        android:layout_height="39dp"
-        android:background="#C3EFF4"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/fondo_mensaje_uno"
+        android:paddingStart="10dp"
+        android:paddingTop="8dp"
+        android:paddingRight="8dp"
+        android:paddingBottom="10dp"
         android:text="Mensaje"
-        android:textAlignment="viewEnd"
         android:textColor="#000000"
-        android:textColorHighlight="#000000"
-        android:textColorHint="#000000"
-        android:textColorLink="#000000"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/mensajeFotoPerfilDos"
-        app:layout_constraintHorizontal_bias="0.946"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/mensajeFotoPerfilUno"
-        app:layout_constraintTop_toTopOf="parent"></TextView>
+        app:layout_constraintTop_toTopOf="@+id/mensajeFotoPerfilDos"
+        app:layout_constraintWidth_default="wrap"></TextView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

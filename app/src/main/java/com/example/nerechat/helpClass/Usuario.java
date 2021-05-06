@@ -10,14 +10,16 @@ public class Usuario {
     private String nombreUsuario;
     private String fotoPerfil;
     private String estado;
+    private String uid;
 
     public Usuario() {
     }
 
-    public Usuario(String nombreUsuario,  String fotoPerfil,String estado) {
+    public Usuario(String nombreUsuario,  String fotoPerfil,String estado,String uid) {
         this.nombreUsuario = nombreUsuario;
         this.fotoPerfil = fotoPerfil;
         this.estado = estado;
+        this.uid=uid;
 
     }
 
@@ -33,6 +35,8 @@ public class Usuario {
         return fotoPerfil;
     }
 
+    public String getUid(){ return this.uid;}
+
     public void setNombreUsuario(String nombreUsuario) {
         this.nombreUsuario = nombreUsuario;
     }
@@ -44,4 +48,6 @@ public class Usuario {
     public void setFotoPerfil(String fotoPerfil) {
         this.fotoPerfil = fotoPerfil;
     }
+
+    public void setUid(String uid){ this.uid=uid;}
 }

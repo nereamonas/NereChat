@@ -9,7 +9,11 @@
         android:id="@+id/navigation_chatsamigos"
         android:name="com.example.nerechat.ui.chats.ChatsAmigosFragment"
         android:label="Chats"
-        tools:layout="@layout/fragment_chatsamigos" />
+        tools:layout="@layout/fragment_chatsamigos" >
+        <action
+            android:id="@+id/action_navigation_chatsamigos_to_navigation_chattodos"
+            app:destination="@id/navigation_chattodos" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_fotos"
@@ -31,6 +35,11 @@
     <action
         android:id="@+id/action_global_navigation_perfil"
         app:destination="@id/navigation_perfil" />
+    <fragment
+        android:id="@+id/navigation_chattodos"
+        android:name="com.example.nerechat.ui.chats.ChatsTodosFragment"
+        android:label="fragment_chats_todos"
+        tools:layout="@layout/fragment_chats_todos" />
 
 
 </navigation>

@@ -8,7 +8,7 @@
 
     <include
         android:id="@+id/chat_toolbar"
-        layout="@layout/barra_chat"
+        layout="@layout/toolbar_chat"
         android:background="#F7C6FF"></include>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -22,37 +22,27 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.995">
 
-        <ImageView
-            android:id="@+id/chatImageView"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="4dp"
-            android:src="@drawable/icono"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"></ImageView>
-
         <EditText
             android:id="@+id/chat_mensaje"
-            android:layout_width="280dp"
-            android:layout_height="49dp"
+            android:layout_width="299dp"
+            android:layout_height="46dp"
             android:hint="Ingresa un texto..."
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/chat_send"
-            app:layout_constraintHorizontal_bias="0.186"
-            app:layout_constraintStart_toEndOf="@+id/chatImageView"
+            app:layout_constraintHorizontal_bias="0.192"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintVertical_bias="0.0" />
 
         <ImageView
             android:id="@+id/chat_send"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginEnd="36dp"
-            android:src="@drawable/icono"
+            android:layout_width="42dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="56dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_send" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
