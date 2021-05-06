@@ -105,8 +105,9 @@ public class IniciarSesionActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()){
                         //Se ha registrado correctamente
+                        comprobarSiYaHaySesion();
                         progressDialog.dismiss(); //Cancelamos la barra de proceso
-                        abrirPrincipal();
+
                     }else{
                         progressDialog.dismiss();
                         //Mostrar alerta de q no se ha podido registrar
@@ -127,8 +128,10 @@ public class IniciarSesionActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if(snapshot.exists()){//Comporbamos que ese mUser, tenga creado un perfil. si ya tiene el perfil creado vamos directamente a mainActivicity
+                        Log.d("Logs", "ya tiene perfil asique vamos al main");
                         abrirPrincipal();
                     }else{//Si no tiene el usuario creado, es porque ha abandonado en la pagina NuevoUsuarioActivity, asique le llevamos a esa pag para que termine de crear todo bien
+                        Log.d("Logs", "no tiene perfil tiene q crearse uno");
                         abrirCrearPerfil();
                     }
                 }
