@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_chatsamigos"
+        android:icon="@drawable/ic_home_black_24dp"
+        android:title="chats" />
+
+    <item
+        android:id="@+id/navigation_fotos"
+        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:title="fotos" />
+
+    <item
+        android:id="@+id/navigation_perfil"
+        android:icon="@drawable/ic_notifications_black_24dp"
+        android:title="perfil" />
+
+</menu>

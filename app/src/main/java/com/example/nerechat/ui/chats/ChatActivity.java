@@ -1,11 +1,10 @@
-package com.example.nerechat;
+package com.example.nerechat.ui.chats;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,13 +14,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.widget.Toolbar;
 
+import com.example.nerechat.R;
 import com.example.nerechat.adaptadores.RecyclerViewAdapterChatUsuarios.ViewHolderChat;
 import com.example.nerechat.helpClass.Chat;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -80,10 +78,10 @@ public class ChatActivity extends AppCompatActivity {
         mDatabaseRef= FirebaseDatabase.getInstance().getReference().child("Perfil"); //La base de datos perfil
         mDatabaseRefMensajes= FirebaseDatabase.getInstance().getReference().child("MensajesChat"); //Y la base de datos mensajeChat donde se almacenarán todos los mensajes
 
-
+        getSupportActionBar().hide();
         //Cargamos el toolbar y cargamos la informacion del otro usaurio en el toolbar
         toolbar=findViewById(R.id.chat_toolbar);
-        setSupportActionBar(findViewById(R.id.chat_toolbar));
+        //setSupportActionBar(findViewById(R.id.chat_toolbar));
         cargarInfoBarra();
 
         cargarMiFotoPerfil(); //Buscamos mi foto de perfil porque se usara en los mensajes;
@@ -208,10 +206,8 @@ public class ChatActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent i = new Intent(this, ChatUsuariosActivity.class);
-        i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        startActivity(i);
         finish();
     }
+
 
 }

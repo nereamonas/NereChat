@@ -1,11 +1,4 @@
-package com.example.nerechat;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.navigation.NavOptions;
-import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+package com.example.nerechat.ui.chats;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,7 +6,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.nerechat.R;
 import com.example.nerechat.adaptadores.RecyclerViewAdapterChatUsuarios.ViewHolderChatUsuarios;
+import com.example.nerechat.base.BaseViewModel;
 import com.example.nerechat.helpClass.Usuario;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -24,7 +25,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.squareup.picasso.Picasso;
 
-public class ChatUsuariosActivity extends AppCompatActivity {
+public class ChatsAmigosFragment extends Fragment {
+
+    private BaseViewModel chatsAmigosViewModel;
     //Se muestra un recyclerview + card view de todos los perfiles con los que podemos hablar
 
     FirebaseAuth mAuth;
@@ -35,21 +38,25 @@ public class ChatUsuariosActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat_usuarios);
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
+        chatsAmigosViewModel =
+                new ViewModelProvider(this).get(BaseViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_chatsamigos, container, false);
+
 
         //Inicializamos las variables
         mAuth= FirebaseAuth.getInstance();
         mUser=mAuth.getCurrentUser();
         mDatabaseRef= FirebaseDatabase.getInstance().getReference().child("Perfil"); //Referencia a la base de datos donde se encuentras los perfiles de usuario
 
-        recyclerView=findViewById(R.id.recycleViewContactos);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView=root.findViewById(R.id.recycleViewContactos);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         cargarUsuarios("");
 
+
+        return root;
     }
 
 
@@ -77,8 +84,16 @@ public class ChatUsuariosActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view){
                         //Abrimos el chat, y le pasamos el codigo de la persona con la que vamos a hablar
-                       abrirChat(getRef(position).getKey().toString());
+                        abrirChat(getRef(position).getKey().toString());
+                        /* Bundle bundle = new Bundle(); //Con el bundle podemos pasar datos
+                        bundle.putString("usuario", getRef(position).getKey().toString());
+                        NavOptions options = new NavOptions.Builder()
+                                .setLaunchSingleTop(true)
+                                .build();
+                        Navigation.findNavController(view).navigate(R.id.action_navigation_chatsamigos_to_navigation_chat, bundle,options);
+                    */
                     }
+
                 });
             }
 
@@ -93,26 +108,14 @@ public class ChatUsuariosActivity extends AppCompatActivity {
         adapter.startListening();
         recyclerView.setAdapter(adapter);
 
-
     }
 
     public void abrirChat(String usu){
         //Abrimos el chat y le pasamos el extra del id del usuario con el que vamos a hablar
-        Intent i = new Intent(this, ChatActivity.class);
+        Intent i = new Intent(getContext(), ChatActivity.class);
         i.putExtra("usuario", usu);
         startActivity(i);
-        finish();
     }
 
 
-    public void logout(View v){
-        //Queremos cerrar la sesion. con mAuth.signOut se cerrara la sesion, y luego abrimos la pagina de iniciar sesion
-        mAuth.signOut();
-        //Vamos al intent de iniciar sesion
-        Intent i = new Intent(this, IniciarSesionActivity.class);
-        i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        startActivity(i);
-        finish();
-
-    }
 }

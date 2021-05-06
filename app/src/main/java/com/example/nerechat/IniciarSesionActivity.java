@@ -69,7 +69,7 @@ public class IniciarSesionActivity extends AppCompatActivity {
 
 
     public void abrirPrincipal(){ //Abrimos la pantalla principal porque ya se ha autenticado correctamente
-        Intent i = new Intent(this, ChatUsuariosActivity.class);
+        Intent i = new Intent(this, MainActivity.class);
         i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(i);
         finish();
