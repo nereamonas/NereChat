@@ -74,10 +74,10 @@ public class CrearCuentaActivity extends AppCompatActivity {
             inputemail.setError("El email no es correcto");
             inputemail.requestFocus();
         }else if(pass.equals("")||pass.length()<6){ //La contraseña tiene que tener un minimo de 6 caracteres (Es una restriccion de las pass de firebase). Si no se cumple mostramos mensaje de error
-            inputpass.setError("La contraseña tiene que tener un minimo de 5 caracteres");
+            inputpass.setError("La contraseña tiene que tener un minimo de 6 caracteres");
             inputpass.requestFocus();
         }else if(repPass.equals("")||repPass.length()<6){ //La contraseña tiene que tener un minimo de 6 caracteres (Es una restriccion de las pass de firebase). Si no se cumple mostramos mensaje de error
-            inputrepPass.setError("La contraseña tiene que tener un minimo de 5 caracteres");
+            inputrepPass.setError("La contraseña tiene que tener un minimo de 6 caracteres");
             inputrepPass.requestFocus();
         }else if (!pass.equals(repPass)) { //Las contraseñas tienen que ser iguales
             inputrepPass.setError("Las contraseñas no coinciden");

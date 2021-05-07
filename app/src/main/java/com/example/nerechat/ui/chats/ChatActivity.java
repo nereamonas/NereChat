@@ -2,9 +2,11 @@ package com.example.nerechat.ui.chats;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,9 +16,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.widget.Toolbar;
 
+import com.example.nerechat.IniciarSesionActivity;
+import com.example.nerechat.PerfilOtroUsActivity;
 import com.example.nerechat.R;
-import com.example.nerechat.adaptadores.RecyclerViewAdapterChatUsuarios.ViewHolderChat;
-import com.example.nerechat.helpClass.Chat;
+import com.example.nerechat.adaptadores.RecyclerViewAdapterChatUsuarios.ViewHolderMensaje;
+import com.example.nerechat.helpClass.Mensaje;
+import com.example.nerechat.ui.perfil.PerfilFragment;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -29,6 +34,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -50,8 +57,8 @@ public class ChatActivity extends AppCompatActivity {
     FirebaseAuth mAuth;
     FirebaseUser mUser;
     DatabaseReference mDatabaseRef,mDatabaseRefMensajes;
-    FirebaseRecyclerOptions<Chat> options;
-    FirebaseRecyclerAdapter<Chat, ViewHolderChat> adapter;
+    FirebaseRecyclerOptions<Mensaje> options;
+    FirebaseRecyclerAdapter<Mensaje, ViewHolderMensaje> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,8 +103,41 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+        barraPerfilImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                abrirOtroUsPerfil();
+               /* Bundle bundle = new Bundle(); //Con el bundle podemos pasar datos
+                bundle.putString("usuario", pId);
+                NavOptions options = new NavOptions.Builder()
+                        .setLaunchSingleTop(true)
+                        .build();
+                Navigation.findNavController(v).navigate(R.id.action_navigation_chat_to_navigation_perfil, bundle,options);*/
+            }
+        });
+        barraUsername.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                abrirOtroUsPerfil();
+/*
+                Bundle bundle = new Bundle(); //Con el bundle podemos pasar datos
+                bundle.putString("usuario", pId);
+                NavOptions options = new NavOptions.Builder()
+                        .setLaunchSingleTop(true)
+                        .build();
+                Navigation.findNavController(v).navigate(R.id.action_navigation_chat_to_navigation_perfil, bundle,options);
+*/
+            }
+        });
 
+    }
 
+    public void abrirOtroUsPerfil(){
+        Intent i = new Intent(this, PerfilOtroUsActivity.class);
+        //i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        i.putExtra("usuario", pId);
+        startActivity(i);
+        //finish();
     }
 
     public void cargarInfoBarra(){
@@ -109,7 +149,7 @@ public class ChatActivity extends AppCompatActivity {
                     //Si existe el usuario
                     pNombreUsu=snapshot.child("nombreUsuario").getValue().toString(); //Cogemos su nombre de usuario
                     pFotoPerfil=snapshot.child("fotoPerfil").getValue().toString(); //Cogemos su foto de perfil
-                    pEstado=snapshot.child("estado").getValue().toString(); //Cogemos su estado
+                    pEstado=snapshot.child("conectado").getValue().toString(); //Cogemos su estado
                     Picasso.get().load(pFotoPerfil).into(barraPerfilImg); //Mostramos la foto de perfil en pantalla
                     barraUsername.setText(pNombreUsu);//Mostramos el nombre de usuario en pantalla
                     barraStado.setText(pEstado); //Mostramos el estado en pantalla
@@ -141,35 +181,41 @@ public class ChatActivity extends AppCompatActivity {
     public void cargarMensajes(){
         //Se ha creado con un recycler view + card view como la lista de usuarios. que firebase facilita el trabajo.
         //Tenemos que crear una clase Chat para guardar los valores de la bbdd
-        options= new FirebaseRecyclerOptions.Builder<Chat>().setQuery(mDatabaseRefMensajes.child(mUser.getUid()).child(pId),Chat.class).build();
-        adapter= new FirebaseRecyclerAdapter<Chat, ViewHolderChat>(options) {
+        options= new FirebaseRecyclerOptions.Builder<Mensaje>().setQuery(mDatabaseRefMensajes.child(mUser.getUid()).child(pId), Mensaje.class).build();
+        adapter= new FirebaseRecyclerAdapter<Mensaje, ViewHolderMensaje>(options) {
             @Override
-            protected void onBindViewHolder(@NonNull ViewHolderChat holder, int position, @NonNull Chat model) {
+            protected void onBindViewHolder(@NonNull ViewHolderMensaje holder, int position, @NonNull Mensaje model) {
                 //Tenemos dos opciones. Que el mensaje lo hayamos mandado nosotros, o que nosotros seamos los receptores del mensaje
                 if (model.getUsuario().equals(mUser.getUid())){ //En el caso de que el mensaje lo haya mandado yo
                     holder.mensajeTextoUno.setVisibility(View.GONE); //Oculto la info del otro
                     holder.mensajeFotoPerfilUno.setVisibility(View.GONE);
+                    holder.mensajeHoraUno.setVisibility(View.GONE);
                     holder.mensajeTextoDos.setVisibility(View.VISIBLE); //Pongo visible la info del mio
                     holder.mensajeFotoPerfilDos.setVisibility(View.VISIBLE);
+                    holder.mensajeHoraDos.setVisibility(View.VISIBLE);
 
                     holder.mensajeTextoDos.setText(model.getMensaje()); //Pongo mi mezu
+                    holder.mensajeHoraDos.setText(model.getHora());
                     Picasso.get().load(miFotoPerfil).into(holder.mensajeFotoPerfilDos);
                 }else{
                     holder.mensajeTextoUno.setVisibility(View.VISIBLE);//Pongo visible la info del otro usuario
                     holder.mensajeFotoPerfilUno.setVisibility(View.VISIBLE);
+                    holder.mensajeHoraUno.setVisibility(View.VISIBLE);
                     holder.mensajeTextoDos.setVisibility(View.GONE);//Oculto la info del mio
                     holder.mensajeFotoPerfilDos.setVisibility(View.GONE);
+                    holder.mensajeHoraDos.setVisibility(View.GONE);
 
                     holder.mensajeTextoUno.setText(model.getMensaje()); //Muestro en la pantalla el mensaje del otro
+                    holder.mensajeHoraUno.setText(model.getHora());
                     Picasso.get().load(pFotoPerfil).into(holder.mensajeFotoPerfilUno); //Muestro la foto del otro
                 }
             }
 
             @NonNull
             @Override
-            public ViewHolderChat onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            public ViewHolderMensaje onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.mensaje,parent,false);
-                return new ViewHolderChat(view);
+                return new ViewHolderMensaje(view);
             }
         };
 
@@ -182,10 +228,15 @@ public class ChatActivity extends AppCompatActivity {
         //Mandar un mensaje.
         String mensaj=mensaje.getText().toString();
         if(!mensaj.equals("")){ //El mensaje debe ser distinto de "", sino no se mandara
+            Date date = new Date();
+            SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
+
+
             //Creamos un hashMap que subiremos a la base de datos en la tabla MensajesChat, y guardaremos el mensaje enviado y el Uid del usuario que lo ha mandado, en este caso yo
             HashMap hashMap=new HashMap();
             hashMap.put("mensaje",mensaj);
             hashMap.put("usuario",mUser.getUid());
+            hashMap.put("hora",formatter.format(date));
             //Tenemos que hacer dos cosas, por un lado, subirlo con el titulo de mi usuario y subtitulo del otro usuario y por otro lado con el titulo del otro usuario y subtitulo de mi usuario, para tener las referencias con las dos personas
             mDatabaseRefMensajes.child(pId).child(mUser.getUid()).push().updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener() {
                 @Override

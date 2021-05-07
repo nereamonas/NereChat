@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.perfil.PerfilFragment">
+    tools:context=".PerfilOtroUsActivity">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/circleImageViewPerfilE"
+        android:id="@+id/circleImageViewPerfilOtroUsE"
         android:layout_width="188dp"
         android:layout_height="150dp"
         android:src="@drawable/icono"
@@ -20,33 +20,8 @@
 
     </de.hdodenhof.circleimageview.CircleImageView>
 
-    <Button
-        android:id="@+id/buttonLogOut"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="log out"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.466"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textPerfil_Estado"
-        app:layout_constraintVertical_bias="0.215" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButtonEditFoto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:src="@drawable/ic_camara"
-        app:layout_constraintBottom_toBottomOf="@+id/circleImageViewPerfilE"
-        app:layout_constraintEnd_toEndOf="@+id/circleImageViewPerfilE"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/circleImageViewPerfilE"
-        app:layout_constraintTop_toTopOf="@+id/circleImageViewPerfilE"
-        app:layout_constraintVertical_bias="1.0" />
-
     <TextView
-        android:id="@+id/textPerfil_tituloNombreUs"
+        android:id="@+id/textPerfilOtroUs_tituloNombreUs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Nombre de usuario: "
@@ -57,11 +32,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.435"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/circleImageViewPerfilE"
+        app:layout_constraintTop_toBottomOf="@+id/circleImageViewPerfilOtroUsE"
         app:layout_constraintVertical_bias="0.122" />
 
     <TextView
-        android:id="@+id/textPerfil_Estado"
+        android:id="@+id/textPerfilOtroUs_Estado"
         android:layout_width="202dp"
         android:layout_height="69dp"
         android:text="holiholi"
@@ -70,12 +45,12 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/textPerfil_tituloEstado"
-        app:layout_constraintTop_toBottomOf="@+id/textPerfil_tituloEstado"
+        app:layout_constraintStart_toStartOf="@+id/textPerfilOtroUs_tituloEstado"
+        app:layout_constraintTop_toBottomOf="@+id/textPerfilOtroUs_tituloEstado"
         app:layout_constraintVertical_bias="0.032" />
 
     <TextView
-        android:id="@+id/textPerfil_tituloEstado"
+        android:id="@+id/textPerfilOtroUs_tituloEstado"
         android:layout_width="66dp"
         android:layout_height="25dp"
         android:text="Estado:"
@@ -85,48 +60,24 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/textPerfil_NombreUs"
-        app:layout_constraintTop_toBottomOf="@+id/textPerfil_NombreUs"
+        app:layout_constraintStart_toStartOf="@+id/textPerfilOtroUs_NombreUs"
+        app:layout_constraintTop_toBottomOf="@+id/textPerfilOtroUs_NombreUs"
         app:layout_constraintVertical_bias="0.136" />
 
     <ImageView
-        android:id="@+id/imageViewUsuarioEdit"
+        android:id="@+id/imageViewUsuarioOtroUs"
         android:layout_width="26dp"
         android:layout_height="27dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.526"
-        app:layout_constraintStart_toEndOf="@+id/textPerfil_tituloNombreUs"
-        app:layout_constraintTop_toBottomOf="@+id/circleImageViewPerfilE"
-        app:layout_constraintVertical_bias="0.136"
-        app:srcCompat="@drawable/ic_editar"></ImageView>
-
-    <ImageView
-        android:id="@+id/imageViewUsuario"
-        android:layout_width="26dp"
-        android:layout_height="27dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/textPerfil_tituloNombreUs"
+        app:layout_constraintEnd_toStartOf="@+id/textPerfilOtroUs_tituloNombreUs"
         app:layout_constraintHorizontal_bias="0.548"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/circleImageViewPerfilE"
+        app:layout_constraintTop_toBottomOf="@+id/circleImageViewPerfilOtroUsE"
         app:layout_constraintVertical_bias="0.123"
         app:srcCompat="@drawable/ic_perfil"></ImageView>
 
-    <ImageView
-        android:id="@+id/imageViewEstadoEdit"
-        android:layout_width="26dp"
-        android:layout_height="27dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.52"
-        app:layout_constraintStart_toEndOf="@+id/textPerfil_NombreUs"
-        app:layout_constraintTop_toBottomOf="@+id/textPerfil_NombreUs"
-        app:layout_constraintVertical_bias="0.13"
-        app:srcCompat="@drawable/ic_editar"></ImageView>
-
     <TextView
-        android:id="@+id/textPerfil_NombreUs"
+        android:id="@+id/textPerfilOtroUs_NombreUs"
         android:layout_width="163dp"
         android:layout_height="23dp"
         android:text="Nereamonas"
@@ -135,20 +86,63 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/textPerfil_tituloNombreUs"
-        app:layout_constraintTop_toBottomOf="@+id/textPerfil_tituloNombreUs"
+        app:layout_constraintStart_toStartOf="@+id/textPerfilOtroUs_tituloNombreUs"
+        app:layout_constraintTop_toBottomOf="@+id/textPerfilOtroUs_tituloNombreUs"
         app:layout_constraintVertical_bias="0.02" />
 
     <ImageView
-        android:id="@+id/imageViewEstado"
+        android:id="@+id/imageViewEstadoOtroUs"
         android:layout_width="26dp"
         android:layout_height="27dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/textPerfil_tituloEstado"
+        app:layout_constraintEnd_toStartOf="@+id/textPerfilOtroUs_tituloEstado"
         app:layout_constraintHorizontal_bias="0.548"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textPerfil_NombreUs"
+        app:layout_constraintTop_toBottomOf="@+id/textPerfilOtroUs_NombreUs"
         app:layout_constraintVertical_bias="0.13"
         app:srcCompat="@drawable/ic_perfil"></ImageView>
+
+
+    <TextView
+        android:id="@+id/textPerfilOtroUs_titulofechaunion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Fecha union: "
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/textPerfilOtroUs_Estado"
+        app:layout_constraintTop_toBottomOf="@+id/textPerfilOtroUs_Estado"
+        app:layout_constraintVertical_bias="0.127" />
+
+    <TextView
+        android:id="@+id/textPerfilOtroUs_fechaunion"
+        android:layout_width="163dp"
+        android:layout_height="23dp"
+        android:text="04-05-2021"
+        android:textAlignment="viewStart"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/textPerfilOtroUs_tituloNombreUs"
+        app:layout_constraintTop_toBottomOf="@+id/textPerfilOtroUs_titulofechaunion"
+        app:layout_constraintVertical_bias="0.04000002" />
+
+    <ImageView
+        android:id="@+id/imageViewOtroUsFechaUnion"
+        android:layout_width="26dp"
+        android:layout_height="27dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/textPerfilOtroUs_tituloNombreUs"
+        app:layout_constraintHorizontal_bias="0.548"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textPerfilOtroUs_Estado"
+        app:layout_constraintVertical_bias="0.13"
+        app:srcCompat="@drawable/ic_perfil"></ImageView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

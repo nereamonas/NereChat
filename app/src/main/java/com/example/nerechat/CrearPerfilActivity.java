@@ -26,6 +26,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -94,11 +96,17 @@ public class CrearPerfilActivity extends AppCompatActivity {
                             mStorageRef.child(mUser.getUid()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(Uri uri) {
+                                    //Cogemos la fecha de hoy
+                                    Date date = new Date();
+                                    SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+
                                     //Ya tenemos la url de la foto de perfil de firebase storage. Ahora creamos un hashmap, donde guardamos el nombredeusuario, la foto de perfil y el estado
                                     HashMap hashMap = new HashMap<>();
                                     hashMap.put("nombreUsuario", name);
                                     hashMap.put("fotoPerfil", uri.toString());
-                                    hashMap.put("estado", "out");
+                                    hashMap.put("conectado", "No está conectado");
+                                    hashMap.put("estado", "Heyy, ¡Estoy usando NereChat!");
+                                    hashMap.put("fechaCreacion",formatter.format(date));
                                     hashMap.put("uid", mUser.getUid());
                                     //Una vez tenemos el hashmap lo subimos a la base de datos, dentro de la tabla perfil, y el mUser.getUid como titulo.
                                     mDatabaseRef.child(mUser.getUid()).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener() {

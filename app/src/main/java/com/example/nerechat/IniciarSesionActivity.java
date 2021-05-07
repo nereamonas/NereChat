@@ -91,7 +91,7 @@ public class IniciarSesionActivity extends AppCompatActivity {
             inputemail.setError("El email no es correcto"); //Los tipo input nos permiten mostrar el error directamente, lo que viene muy bien para los inicio de sesion
             inputemail.requestFocus();
         }else if(pass.equals("")||pass.length()<6){ //La contraseña tiene que tener un minimo de 6 caracteres (Es una restriccion de las pass de firebase). Si no se cumple mostramos mensaje de error
-            inputpass.setError("La contraseña tiene que tener un minimo de 5 caracteres");
+            inputpass.setError("La contraseña tiene que tener un minimo de 6 caracteres");
             inputpass.requestFocus();
         }else{//Los datos son correctos asique procedemos a iniciar sesion
             //Mostramos el dialog bar. Que se mantendrá activo hasta que se complete el inicioi de sesion
@@ -104,11 +104,13 @@ public class IniciarSesionActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()){
+                        Log.d("Logs", "Success sign in ");
                         //Se ha registrado correctamente
                         comprobarSiYaHaySesion();
                         progressDialog.dismiss(); //Cancelamos la barra de proceso
 
                     }else{
+                        Log.d("Logs", "No se ha podido sign in ");
                         progressDialog.dismiss();
                         //Mostrar alerta de q no se ha podido registrar
                         Toast.makeText(IniciarSesionActivity.this,"No se ha podido iniciar sesion. Revisa los datos",Toast.LENGTH_SHORT).show();

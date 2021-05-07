@@ -10,19 +10,23 @@ import com.example.nerechat.R;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ViewHolderChat extends RecyclerView.ViewHolder {
+public class ViewHolderMensaje extends RecyclerView.ViewHolder {
     //Guardaremos los elementos que tiene cada elemento del recycler view.
 
     public CircleImageView mensajeFotoPerfilUno;
     public CircleImageView mensajeFotoPerfilDos;
     public TextView mensajeTextoUno;
     public TextView mensajeTextoDos;
+    public TextView mensajeHoraUno;
+    public TextView mensajeHoraDos;
 
-    public ViewHolderChat(@NonNull View itemView){
+    public ViewHolderMensaje(@NonNull View itemView){
         super(itemView);
         mensajeFotoPerfilUno=itemView.findViewById(R.id.mensajeFotoPerfilUno);
         mensajeFotoPerfilDos=itemView.findViewById(R.id.mensajeFotoPerfilDos);
         mensajeTextoUno=itemView.findViewById(R.id.mensajeTextoUno);
         mensajeTextoDos=itemView.findViewById(R.id.mensajeTextoDos);
+        mensajeHoraUno=itemView.findViewById(R.id.mensajeHoraUno);
+        mensajeHoraDos=itemView.findViewById(R.id.mensajeHoraDos);
     }
 }

@@ -3,4 +3,6 @@
     <string name="app_name">NereChat</string>
     <string name="login">Iniciar sesión</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="Ok">Ok</string>
+    <string name="Cancelar">Cancelar</string>
 </resources>

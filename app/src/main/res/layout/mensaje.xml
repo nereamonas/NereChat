@@ -7,6 +7,20 @@
     android:layout_height="wrap_content">
 
 
+    <TextView
+        android:id="@+id/mensajeHoraUno"
+        android:layout_width="16dp"
+        android:layout_height="8dp"
+        android:layout_marginStart="8dp"
+        android:text="00:00"
+        android:textSize="6sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/mensajeFotoPerfilDos"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/mensajeFotoPerfilUno"
+        app:layout_constraintTop_toBottomOf="@+id/mensajeTextoDos"
+        app:layout_constraintVertical_bias="0.0" />
+
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/mensajeFotoPerfilUno"
         android:layout_width="45dp"
@@ -23,7 +37,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="3dp"
         android:layout_marginEnd="40dp"
         android:background="@drawable/fondo_mensaje_dos"
         android:paddingStart="10dp"
@@ -55,7 +69,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="3dp"
         android:layout_marginEnd="8dp"
         android:background="@drawable/fondo_mensaje_uno"
         android:paddingStart="10dp"
@@ -69,5 +83,19 @@
         app:layout_constraintStart_toEndOf="@+id/mensajeFotoPerfilUno"
         app:layout_constraintTop_toTopOf="@+id/mensajeFotoPerfilDos"
         app:layout_constraintWidth_default="wrap"></TextView>
+
+    <TextView
+        android:id="@+id/mensajeHoraDos"
+        android:layout_width="18dp"
+        android:layout_height="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="00:00"
+        android:textSize="6sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/mensajeFotoPerfilDos"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/mensajeFotoPerfilUno"
+        app:layout_constraintTop_toBottomOf="@+id/mensajeTextoDos"
+        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

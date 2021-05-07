@@ -1,15 +1,16 @@
 package com.example.nerechat.helpClass;
 
-public class Chat {
+public class Mensaje {
 
     private String mensaje;
     private String usuario;
+    private String hora;
+    public Mensaje(){}
 
-    public Chat(){}
-
-    public Chat(String mensaje, String usuario) {
+    public Mensaje(String mensaje, String usuario, String hora) {
         this.mensaje = mensaje;
         this.usuario = usuario;
+        this.hora=hora;
     }
 
     public String getMensaje() {
@@ -20,6 +21,8 @@ public class Chat {
         return usuario;
     }
 
+    public String getHora(){ return hora;}
+
     public void setMensaje(String mensaje) {
         this.mensaje = mensaje;
     }
@@ -27,4 +30,6 @@ public class Chat {
     public void setUsuario(String usuario) {
         this.usuario = usuario;
     }
+
+    public void setHora(String hora){ this.hora=hora;}
 }
