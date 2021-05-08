@@ -97,9 +97,9 @@ public class ChatFragment extends Fragment {
 
         pId = getArguments().getString("usuario");
 
-        recyclerView=root.findViewById(R.id.chat_recyclerView2);
-        mensaje=root.findViewById(R.id.chat_mensaje2);
-        send=root.findViewById(R.id.chat_send2);
+        recyclerView=root.findViewById(R.id.chat_recyclerView);
+        mensaje=root.findViewById(R.id.chat_mensaje);
+        send=root.findViewById(R.id.chat_send);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         barraPerfilImg=root.findViewById(R.id.barraImagenPErfil);
         barraUsername=root.findViewById(R.id.barraNombreUsu);
@@ -115,7 +115,7 @@ public class ChatFragment extends Fragment {
         requestQueue= Volley.newRequestQueue(getContext());
         ((AppCompatActivity)getActivity()).getSupportActionBar().hide();
         //Cargamos el toolbar y cargamos la informacion del otro usaurio en el toolbar
-        toolbar=root.findViewById(R.id.chat_toolbar2);
+        toolbar=root.findViewById(R.id.chat_toolbar);
         //setSupportActionBar(findViewById(R.id.chat_toolbar));
 
         BottomNavigationView nv=  ((AppCompatActivity)getActivity()).findViewById(R.id.nav_view);

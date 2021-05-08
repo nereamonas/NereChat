@@ -38,4 +38,5 @@
     <string name="ajustes_verde">Verde</string>
     <string name="ajustes_naranja">Naranja</string>
     <string name="ajustes_azul">Azul</string>
+    <string name="googleApis">https://www.googleapis.com/auth/cloud-platform</string>
 </resources>

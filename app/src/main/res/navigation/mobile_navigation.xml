@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_navigation_chatsamigos_to_ajustesFragment"
             app:destination="@id/ajustesFragment" />
+        <action
+            android:id="@+id/action_navigation_chatsamigos_to_chatbotFragment"
+            app:destination="@id/chatbotFragment" />
     </fragment>
 
     <fragment
@@ -86,6 +89,11 @@
     <action
         android:id="@+id/action_global_ajustesFragment"
         app:destination="@id/ajustesFragment" />
+    <fragment
+        android:id="@+id/chatbotFragment"
+        android:name="com.example.nerechat.chatbot.ChatbotFragment"
+        android:label="fragment_chatbot"
+        tools:layout="@layout/fragment_chatbot" />
 
 
 </navigation>

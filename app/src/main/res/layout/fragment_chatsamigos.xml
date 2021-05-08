@@ -50,5 +50,17 @@
         app:layout_constraintTop_toTopOf="@+id/recycleViewContactos"
         app:layout_constraintVertical_bias="0.452" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/imgChatbot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="5dp"
+        android:backgroundTint="#B2F6FF"
+        android:clickable="true"
+        android:src="@drawable/ic_chatbot_bn"
+        app:layout_constraintBottom_toTopOf="@+id/floatingActionButtonNuevoContacto"
+        app:layout_constraintEnd_toEndOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

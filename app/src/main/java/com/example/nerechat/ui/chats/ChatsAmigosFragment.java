@@ -1,7 +1,6 @@
 package com.example.nerechat.ui.chats;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,12 +11,10 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavOptions;
@@ -45,12 +42,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 public class ChatsAmigosFragment extends Fragment {
 
@@ -65,7 +57,7 @@ public class ChatsAmigosFragment extends Fragment {
 
     RecyclerView recyclerView;
     DividerItemDecoration dividerItemDecoration;
-    FloatingActionButton floatButton;
+    FloatingActionButton floatButton,imgChatbot;
     TextView nohaychats;
 
     EditText toolbarSearchEditText;
@@ -155,6 +147,18 @@ public class ChatsAmigosFragment extends Fragment {
                         .setLaunchSingleTop(true)
                         .build();
                 Navigation.findNavController(v).navigate(R.id.action_navigation_chatsamigos_to_navigation_chattodos,null,options);
+            }
+        });
+
+        imgChatbot=root.findViewById(R.id.imgChatbot);
+
+        imgChatbot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NavOptions options = new NavOptions.Builder()
+                        .setLaunchSingleTop(true)
+                        .build();
+                Navigation.findNavController(v).navigate(R.id.action_navigation_chatsamigos_to_chatbotFragment,null,options);
             }
         });
 
