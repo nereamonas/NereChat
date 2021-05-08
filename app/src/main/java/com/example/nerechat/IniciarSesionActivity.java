@@ -48,8 +48,6 @@ public class IniciarSesionActivity extends BaseActivity {
         mDatabaseRef= FirebaseDatabase.getInstance().getReference().child("Perfil"); //para comprobar el perfil del usuario correspondiente
         progressDialog=new ProgressDialog(this);
 
-        comprobarSiYaHaySesion(); //Con firebase auth, podemos comprobar si esta la sesion iniciada, para asi directamente llevarle a la ventana principal sin tener que iniciar sesion cada vez que cierra y abre la app
-
         TextView text_crearCuenta= findViewById(R.id.text_crearCuenta); //Crear cuenta
         text_crearCuenta.setOnClickListener(new View.OnClickListener() {  //Cuando clickemos en el boton camara. pediremos permisos para abrir la camara y guardar las fotos
             @Override
@@ -107,7 +105,7 @@ public class IniciarSesionActivity extends BaseActivity {
                         Log.d("Logs", "Success sign in ");
                         //Se ha registrado correctamente
                         mUser=mAuth.getCurrentUser();
-                        comprobarSiYaHaySesion();
+                        abrirPrincipal();
                         progressDialog.dismiss(); //Cancelamos la barra de proceso
 
                     }else{
@@ -117,30 +115,6 @@ public class IniciarSesionActivity extends BaseActivity {
                         Toast.makeText(IniciarSesionActivity.this,"No se ha podido iniciar sesion. Revisa los datos",Toast.LENGTH_SHORT).show();
                     }
                 }
-            });
-        }
-
-    }
-
-    public void comprobarSiYaHaySesion(){ //Con firebase, podemos ver si tenemos algun usuario con la sesion iniciada y asi enviarle directamente a la pantalla principal sin que tenga que iniciar sesion
-        if (mUser!=null){  //Si existe un mUser significa que ya tenemos una sesion iniciada
-            Log.d("Logs", "mUser: "+mUser.getUid());
-            //Pero podemos haber abandonado la app sin llegar a crear el perfil del todo.
-            //Comprobamos si tenemos algun perfil creado en la base de datos, de ser asi vamos a la pantalla principal, y en el caso de no tener perfil, llevamos a la pantalla de crear un perfil
-            mDatabaseRef.child(mUser.getUid()).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if(snapshot.exists()){//Comporbamos que ese mUser, tenga creado un perfil. si ya tiene el perfil creado vamos directamente a mainActivicity
-                        Log.d("Logs", "ya tiene perfil asique vamos al main");
-                        abrirPrincipal();
-                    }else{//Si no tiene el usuario creado, es porque ha abandonado en la pagina NuevoUsuarioActivity, asique le llevamos a esa pag para que termine de crear todo bien
-                        Log.d("Logs", "no tiene perfil tiene q crearse uno");
-                        abrirCrearPerfil();
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) { }
             });
         }
 

@@ -18,6 +18,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -113,6 +114,7 @@ public class PerfilFragment extends Fragment {
                 Intent i = new Intent(getContext(), IniciarSesionActivity.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(i);
+                ((AppCompatActivity)getActivity()).finish();
             }
         });
 
