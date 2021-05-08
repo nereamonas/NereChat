@@ -1,9 +1,12 @@
 package com.example.nerechat.ui.chats;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavOptions;
@@ -12,9 +15,15 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.nerechat.R;
 import com.example.nerechat.adaptadores.RecyclerViewAdapterChatUsuarios.ViewHolderChatUsuarios;
@@ -22,6 +31,7 @@ import com.example.nerechat.base.BaseViewModel;
 import com.example.nerechat.helpClass.Usuario;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -43,6 +53,10 @@ public class ChatsTodosFragment extends Fragment {
     RecyclerView recyclerView;
     DividerItemDecoration dividerItemDecoration;
 
+    EditText toolbarSearchEditText;
+    ImageView toolbarImageSearch;
+    TextView toolbarTitulo;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         chatsTodosViewModel =
@@ -62,6 +76,49 @@ public class ChatsTodosFragment extends Fragment {
         recyclerView.addItemDecoration(dividerItemDecoration);
         cargarUsuarios("");
 
+
+        BottomNavigationView nv=  ((AppCompatActivity)getActivity()).findViewById(R.id.nav_view);
+        nv.setVisibility(View.GONE);
+
+        //Toolbar
+
+        toolbarSearchEditText=root.findViewById(R.id.editTextToolbarSearch);
+        toolbarImageSearch=root.findViewById(R.id.imageViewToolbarBuscar);
+        toolbarTitulo=root.findViewById(R.id.toolbarBuscarTitulo);
+        toolbarTitulo.setText("Nuevo chat");
+        toolbarSearchEditText.setVisibility(View.INVISIBLE);
+        toolbarImageSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (toolbarSearchEditText.getVisibility()==View.VISIBLE){
+                    toolbarSearchEditText.setVisibility(View.INVISIBLE);
+                    toolbarImageSearch.setImageDrawable(getResources().getDrawable(R.drawable.ic_buscar));
+                    //Cerramos el teclado
+                    InputMethodManager imm = (InputMethodManager) ((AppCompatActivity)getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(toolbarSearchEditText.getWindowToken(), 0);
+                    cargarUsuarios("");
+                }else {
+                    toolbarSearchEditText.setVisibility(View.VISIBLE);
+                    toolbarImageSearch.setImageDrawable(getResources().getDrawable(R.drawable.ic_cerrar));
+                    //Le ponemos el focus y abrimos el teclado para q escriba
+                    toolbarSearchEditText.requestFocus();
+                    InputMethodManager imm = (InputMethodManager) ((AppCompatActivity)getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.showSoftInput(toolbarSearchEditText, InputMethodManager.SHOW_IMPLICIT);
+                }
+            }
+        });
+        toolbarSearchEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                cargarUsuarios(s.toString());
+            }
+            @Override
+            public void afterTextChanged(Editable s) { }
+        });
+
+
         return root;
     }
 
@@ -79,7 +136,7 @@ public class ChatsTodosFragment extends Fragment {
                 if(!mUser.getUid().equals(getRef(position).getKey().toString())){
                     Picasso.get().load(model.getFotoPerfil()).into(holder.fotoPerfil); //Mostramos la foto de perfil
                     holder.nombreUsuario.setText(model.getNombreUsuario()); //Mostramos el nombre de uusario
-                    holder.info.setText(model.getEstado()); //Mostramos la info
+                    holder.info.setText(model.getConectado()); //Mostramos la info
                 }else{ //Es nuestro perfil actual, por lo que tenemos q omitir este elemento
                     holder.itemView.setVisibility(View.GONE);
                     holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(0,0));
@@ -90,7 +147,13 @@ public class ChatsTodosFragment extends Fragment {
                     @Override
                     public void onClick(View view){
                         //Abrimos el chat, y le pasamos el codigo de la persona con la que vamos a hablar
-                        abrirChat(getRef(position).getKey().toString());
+                        Bundle bundle = new Bundle(); //Con el bundle podemos pasar datos
+                        bundle.putString("usuario", getRef(position).getKey().toString());
+                        NavOptions options = new NavOptions.Builder()
+                                .setLaunchSingleTop(true)
+                                .build();
+                        Navigation.findNavController(view).navigate(R.id.action_navigation_chatsamigos_to_chatFragment, bundle,options);
+
                     }
                 });
             }
@@ -106,13 +169,6 @@ public class ChatsTodosFragment extends Fragment {
         adapter.startListening();
         recyclerView.setAdapter(adapter);
 
-    }
-
-    public void abrirChat(String usu){
-        //Abrimos el chat y le pasamos el extra del id del usuario con el que vamos a hablar
-        Intent i = new Intent(getContext(), ChatActivity.class);
-        i.putExtra("usuario", usu);
-        startActivity(i);
     }
 
 

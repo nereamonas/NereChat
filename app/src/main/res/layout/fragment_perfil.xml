@@ -6,6 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".ui.perfil.PerfilFragment">
 
+    <include
+        android:id="@+id/chat_toolbarPerfil"
+        layout="@layout/toolbar_principal"
+        android:background="#F7C6FF"></include>
+
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/circleImageViewPerfilE"
         android:layout_width="188dp"
@@ -13,9 +18,10 @@
         android:src="@drawable/icono"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.484"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.046">
+        app:layout_constraintVertical_bias="0.192">
 
 
     </de.hdodenhof.circleimageview.CircleImageView>
@@ -27,10 +33,10 @@
         android:text="log out"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.466"
+        app:layout_constraintHorizontal_bias="0.453"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textPerfil_Estado"
-        app:layout_constraintVertical_bias="0.215" />
+        app:layout_constraintVertical_bias="0.077" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButtonEditFoto"

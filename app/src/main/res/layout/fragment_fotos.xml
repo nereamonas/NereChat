@@ -6,6 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".ui.fotos.FotosFragment">
 
+    <include
+        android:id="@+id/chat_toolbarFotos"
+        layout="@layout/toolbar_principal"
+        android:background="#F7C6FF"></include>
+
     <TextView
         android:id="@+id/text_dashboard"
         android:layout_width="match_parent"

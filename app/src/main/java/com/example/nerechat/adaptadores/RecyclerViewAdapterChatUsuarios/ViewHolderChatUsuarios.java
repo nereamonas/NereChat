@@ -17,10 +17,15 @@ public class ViewHolderChatUsuarios extends RecyclerView.ViewHolder {
     public TextView info;
     public CircleImageView fotoPerfil;
 
+    public ImageView icRojo;
+    public ImageView icVerde;
+
     public ViewHolderChatUsuarios(@NonNull View itemView){
         super(itemView);
         nombreUsuario=itemView.findViewById(R.id.cvNombreUsuario);
         info=itemView.findViewById(R.id.cvInfo);
         fotoPerfil=itemView.findViewById(R.id.cvFoto);
+        icRojo=itemView.findViewById(R.id.cvFotoEstadoRojo);
+        icVerde=itemView.findViewById(R.id.cvFotoEstadoVerde);
     }
 }

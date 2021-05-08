@@ -1,30 +1,40 @@
 package com.example.nerechat.ui.chats;
 
+import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavOptions;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import androidx.appcompat.widget.Toolbar;
 
-import com.example.nerechat.IniciarSesionActivity;
-import com.example.nerechat.PerfilOtroUsActivity;
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.nerechat.R;
 import com.example.nerechat.adaptadores.RecyclerViewAdapterChatUsuarios.ViewHolderMensaje;
+import com.example.nerechat.base.BaseViewModel;
 import com.example.nerechat.helpClass.Mensaje;
-import com.example.nerechat.ui.perfil.PerfilFragment;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -34,13 +44,20 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ChatActivity extends AppCompatActivity {
+public class ChatFragment extends Fragment {
+
+    private BaseViewModel chatViewModel;
+
     //Se muestra el chat con una persona
 
     Toolbar toolbar;
@@ -52,7 +69,7 @@ public class ChatActivity extends AppCompatActivity {
 
     //Serán los datos del usuario con el que estamos hablando
     String pId,pNombreUsu,pFotoPerfil,pEstado;
-    String miFotoPerfil;
+    String miFotoPerfil, miNombreUsuario;
 
     FirebaseAuth mAuth;
     FirebaseUser mUser;
@@ -60,37 +77,48 @@ public class ChatActivity extends AppCompatActivity {
     FirebaseRecyclerOptions<Mensaje> options;
     FirebaseRecyclerAdapter<Mensaje, ViewHolderMensaje> adapter;
 
+    String UrlNotif="https://fcm.googleapis.com/fcm/send";
+    RequestQueue requestQueue;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        chatViewModel =
+                new ViewModelProvider(this).get(BaseViewModel.class);
+        View root=inflater.inflate(R.layout.fragment_chat, container, false);
+
+
 
         //Cogemos el extra que le hemos pasado. Hace referencia al idDelOtroUsuario
-        if (getIntent().hasExtra("usuario")) {
-            pId = getIntent().getExtras().getString("usuario");
-        }
 
+        pId = getArguments().getString("usuario");
 
-        recyclerView=findViewById(R.id.chat_recyclerView);
-        mensaje=findViewById(R.id.chat_mensaje);
-        send=findViewById(R.id.chat_send);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        barraPerfilImg=findViewById(R.id.barraImagenPErfil);
-        barraUsername=findViewById(R.id.barraNombreUsu);
-        barraStado=findViewById(R.id.barraEstado);
+        recyclerView=root.findViewById(R.id.chat_recyclerView2);
+        mensaje=root.findViewById(R.id.chat_mensaje2);
+        send=root.findViewById(R.id.chat_send2);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        barraPerfilImg=root.findViewById(R.id.barraImagenPErfil);
+        barraUsername=root.findViewById(R.id.barraNombreUsu);
+        barraStado=root.findViewById(R.id.barraEstado);
 
         //Cargamos los datos de firebase que necesitaremos
-        mAuth=FirebaseAuth.getInstance();
+        mAuth= FirebaseAuth.getInstance();
         mUser=mAuth.getCurrentUser();
         mDatabaseRef= FirebaseDatabase.getInstance().getReference().child("Perfil"); //La base de datos perfil
         mDatabaseRefMensajes= FirebaseDatabase.getInstance().getReference().child("MensajesChat"); //Y la base de datos mensajeChat donde se almacenarán todos los mensajes
+        cambiarEstado("Conectado");
 
-        getSupportActionBar().hide();
+        requestQueue= Volley.newRequestQueue(getContext());
+        ((AppCompatActivity)getActivity()).getSupportActionBar().hide();
         //Cargamos el toolbar y cargamos la informacion del otro usaurio en el toolbar
-        toolbar=findViewById(R.id.chat_toolbar);
+        toolbar=root.findViewById(R.id.chat_toolbar2);
         //setSupportActionBar(findViewById(R.id.chat_toolbar));
-        cargarInfoBarra();
 
+        BottomNavigationView nv=  ((AppCompatActivity)getActivity()).findViewById(R.id.nav_view);
+        nv.setVisibility(View.GONE);
+
+        cargarInfoBarra();
         cargarMiFotoPerfil(); //Buscamos mi foto de perfil porque se usara en los mensajes;
 
         //Cargamos todos los mensajes que se han mandado con ese usuario
@@ -106,38 +134,27 @@ public class ChatActivity extends AppCompatActivity {
         barraPerfilImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                abrirOtroUsPerfil();
-               /* Bundle bundle = new Bundle(); //Con el bundle podemos pasar datos
-                bundle.putString("usuario", pId);
-                NavOptions options = new NavOptions.Builder()
-                        .setLaunchSingleTop(true)
-                        .build();
-                Navigation.findNavController(v).navigate(R.id.action_navigation_chat_to_navigation_perfil, bundle,options);*/
-            }
-        });
-        barraUsername.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                abrirOtroUsPerfil();
-/*
                 Bundle bundle = new Bundle(); //Con el bundle podemos pasar datos
                 bundle.putString("usuario", pId);
                 NavOptions options = new NavOptions.Builder()
                         .setLaunchSingleTop(true)
                         .build();
-                Navigation.findNavController(v).navigate(R.id.action_navigation_chat_to_navigation_perfil, bundle,options);
-*/
+                Navigation.findNavController(v).navigate(R.id.action_chatFragment_to_perfilOtroUsFragment, bundle,options);
             }
         });
+        barraUsername.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle(); //Con el bundle podemos pasar datos
+                bundle.putString("usuario", pId);
+                NavOptions options = new NavOptions.Builder()
+                        .setLaunchSingleTop(true)
+                        .build();
+                Navigation.findNavController(v).navigate(R.id.action_chatFragment_to_perfilOtroUsFragment, bundle,options);
+            }
+        });
+        return root;
 
-    }
-
-    public void abrirOtroUsPerfil(){
-        Intent i = new Intent(this, PerfilOtroUsActivity.class);
-        //i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        i.putExtra("usuario", pId);
-        startActivity(i);
-        //finish();
     }
 
     public void cargarInfoBarra(){
@@ -170,6 +187,7 @@ public class ChatActivity extends AppCompatActivity {
                 if(snapshot.exists()){
                     //Si existe el usuario
                     miFotoPerfil=snapshot.child("fotoPerfil").getValue().toString(); //Cogemos mi foto de perfil
+                    miNombreUsuario=snapshot.child("nombreUsuario").getValue().toString();
                 }
             }
 
@@ -247,6 +265,8 @@ public class ChatActivity extends AppCompatActivity {
                         public void onSuccess(Object o) {
                             //Segundo subido correctamente
                             mensaje.setText(""); //Actualizamos el valor de mensaje a "" para q el usuario escriba otro mensaje
+
+                            mandarNotificacion(mensaj);
                         }
                     });
                 }
@@ -255,9 +275,51 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        finish();
+    public void mandarNotificacion(String mensaje){
+        JSONObject jsonObject= new JSONObject();
+        try{
+            jsonObject.put("to","/topics/"+pId);
+            JSONObject jsonObject1= new JSONObject();
+            jsonObject1.put("title","Mensaje de: "+miNombreUsuario);
+            jsonObject1.put("body",mensaje);
+
+            JSONObject jsonObject2= new JSONObject();
+            jsonObject2.put("userID",mUser.getUid());
+            jsonObject2.put("type","sms");
+
+
+            jsonObject.put("notification",jsonObject1);
+            jsonObject.put("data",jsonObject2);
+
+            JsonObjectRequest request= new JsonObjectRequest(Request.Method.POST, UrlNotif, jsonObject, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                }
+            }){
+                @Override
+                public Map<String,String> getHeaders() throws AuthFailureError {
+                    Map<String,String> map= new HashMap<>();
+                    map.put("content-type","application/json");
+                    map.put("authorization","key=AAAAiLCQj0o:APA91bEjfbUQE8VxAzxMDJZ8RpftfBB0qalOOiL-y-BMhY45Tk6pMakAtwxaDoI2SSeIjN4AYKPQLYt_yuL7Wy4N2KnbRb6IJ7IQB-iyOxPjGpnzcKCYdgWf0CyZcvMO-O7guX_KOjq6");
+                    return map;
+                }
+            };
+            requestQueue.add(request);
+        }catch(JSONException e){
+            e.printStackTrace();
+        }
+    }
+
+
+
+    public void cambiarEstado(String estado){
+        mDatabaseRef.child(mUser.getUid()).child("conectado").setValue(estado);
     }
 
 

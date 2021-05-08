@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_navigation_chatsamigos_to_navigation_chattodos"
             app:destination="@id/navigation_chattodos" />
+        <action
+            android:id="@+id/action_navigation_chatsamigos_to_chatFragment"
+            app:destination="@id/chatFragment" />
     </fragment>
 
     <fragment
@@ -40,13 +43,24 @@
         android:name="com.example.nerechat.ui.chats.ChatsTodosFragment"
         android:label="fragment_chats_todos"
         tools:layout="@layout/fragment_chats_todos" />
-    <activity
-        android:id="@+id/navigation_chat"
-        android:name="com.example.nerechat.ui.chats.ChatActivity"
-        android:label="activity_chat"
-        tools:layout="@layout/activity_chat" >
 
-    </activity>
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.example.nerechat.ui.chats.ChatFragment"
+        android:label="fragment_chat"
+        tools:layout="@layout/fragment_chat" >
+        <action
+            android:id="@+id/action_chatFragment_to_perfilOtroUsFragment"
+            app:destination="@id/perfilOtroUsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/perfilOtroUsFragment"
+        android:name="com.example.nerechat.ui.chats.PerfilOtroUsFragment"
+        android:label="fragment_perfil_otro_us"
+        tools:layout="@layout/fragment_perfil_otro_us" />
+    <action
+        android:id="@+id/action_global_chatFragment"
+        app:destination="@id/chatFragment" />
 
 
 </navigation>

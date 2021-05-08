@@ -33,6 +33,33 @@
                 app:layout_constraintVertical_bias="0.333"
                 app:srcCompat="@drawable/icono" />
 
+            <ImageView
+                android:id="@+id/cvFotoEstadoVerde"
+                android:layout_width="17dp"
+                android:layout_height="15dp"
+                android:src="@drawable/ic_verde"
+                app:layout_constraintBottom_toBottomOf="@+id/cvFoto"
+                app:layout_constraintEnd_toEndOf="@+id/cvFoto"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="@+id/cvFoto"
+                app:layout_constraintTop_toTopOf="@+id/cvFoto"
+                app:layout_constraintVertical_bias="1.0"
+                app:srcCompat="@drawable/ic_verde" />
+
+
+            <ImageView
+                android:id="@+id/cvFotoEstadoRojo"
+                android:layout_width="17dp"
+                android:layout_height="15dp"
+                android:src="@drawable/ic_rojo"
+                app:layout_constraintBottom_toBottomOf="@+id/cvFoto"
+                app:layout_constraintEnd_toEndOf="@+id/cvFoto"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="@+id/cvFoto"
+                app:layout_constraintTop_toTopOf="@+id/cvFoto"
+                app:layout_constraintVertical_bias="1.0"
+                app:srcCompat="@drawable/ic_rojo" />
+
             <TextView
                 android:id="@+id/cvNombreUsuario"
                 android:layout_width="234dp"
