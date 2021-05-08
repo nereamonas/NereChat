@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.nerechat.R;
 import com.example.nerechat.adaptadores.RecyclerViewAdapterChatUsuarios.ViewHolderChatUsuarios;
 import com.example.nerechat.base.BaseViewModel;
+import com.example.nerechat.helpClass.Mensaje;
 import com.example.nerechat.helpClass.Usuario;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -43,6 +44,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class ChatsAmigosFragment extends Fragment {
 
@@ -174,7 +182,18 @@ public class ChatsAmigosFragment extends Fragment {
                             //Si existe el usuario
                             Picasso.get().load(model.getFotoPerfil()).into(holder.fotoPerfil); //Mostramos la foto de perfil
                             holder.nombreUsuario.setText(model.getNombreUsuario()); //Mostramos el nombre de uusario
-                            holder.info.setText(model.getConectado()); //Mostramos la info
+                            ArrayList<Mensaje> lista= new ArrayList<Mensaje>();
+                            for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                                Mensaje mensaje = postSnapshot.getValue(Mensaje.class);
+                                lista.add(mensaje);
+                            }
+                            Log.d("Logs","Ultimo mensaje: "+lista.get(lista.size()-1).getMensaje());
+                            Mensaje ultimo=lista.get(lista.size()-1);
+                            String msg=ultimo.getMensaje();
+                            if (ultimo.getUsuario().equals(mUser.getUid())){
+                                msg="Tú: "+ultimo.getMensaje();
+                            }
+                            holder.info.setText(msg); //Mostramos la info
 
                             mDatabaseRef.child(model.getUid()).addValueEventListener(new ValueEventListener() {
                                 @Override
@@ -237,6 +256,5 @@ public class ChatsAmigosFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
     }
-
 
 }

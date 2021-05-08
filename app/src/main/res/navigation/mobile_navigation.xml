@@ -57,6 +57,9 @@
         <action
             android:id="@+id/action_navigation_chattodos_to_ajustesFragment"
             app:destination="@id/ajustesFragment" />
+        <action
+            android:id="@+id/action_navigation_chattodos_to_chatFragment"
+            app:destination="@id/chatFragment" />
     </fragment>
 
     <fragment

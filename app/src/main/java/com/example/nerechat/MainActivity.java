@@ -1,6 +1,7 @@
 package com.example.nerechat;
 
 import android.app.ActivityManager;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -26,8 +27,11 @@ import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.preference.PreferenceManager;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayDeque;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -162,12 +166,24 @@ public void onBackPressed() {
         mDatabaseRef.child(mUser.getUid()).child("conectado").setValue("Conectado");
 
     }
-
+*/
     @Override
     public void onStop() {
         super.onStop();
-        mDatabaseRef.child(mUser.getUid()).child("conectado").setValue("No está conectado");
+        String texto="";
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this); //Cogemos las preferencias
+        if (prefs.contains("ultimaHora")) { //Comprobamos si existe notif
+            Boolean bloqueado = prefs.getBoolean("ultimaHora", true);  //Comprobamos si las notificaciones estan activadas
+            Log.d("Logs", "estado visulizar ultimaHora: " + bloqueado);
+            if (!bloqueado) { //Si tenemos las notif activadas, lanzamos la notificacion
+                Date date = new Date();
+                SimpleDateFormat hora = new SimpleDateFormat("HH:mm");
+                texto = "Última vez a las " + hora.format(date);
+            }
+        }
+
+        mDatabaseRef.child(mUser.getUid()).child("conectado").setValue(texto);
 
     }
-*/
+
 }

@@ -1,5 +1,6 @@
 package com.example.nerechat.ui.chats;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -9,9 +10,11 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -169,7 +172,18 @@ public class ChatFragment extends Fragment {
                     pEstado=snapshot.child("conectado").getValue().toString(); //Cogemos su estado
                     Picasso.get().load(pFotoPerfil).into(barraPerfilImg); //Mostramos la foto de perfil en pantalla
                     barraUsername.setText(pNombreUsu);//Mostramos el nombre de usuario en pantalla
-                    barraStado.setText(pEstado); //Mostramos el estado en pantalla
+
+                    //Mirar si tiene la ultima hora para mostrarla
+                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext()); //Cogemos las preferencias
+                    if (prefs.contains("ultimaHora")) { //Comprobamos si existe notif
+                        Boolean bloqueado = prefs.getBoolean("ultimaHora", true);  //Comprobamos si las notificaciones estan activadas
+                        Log.d("Logs", "estado visulizar ultimaHora: " + bloqueado);
+                        if (bloqueado) { //Si esta bloqueado no mostramos nada
+                            barraStado.setText("");
+                        }else{
+                            barraStado.setText(pEstado); //no estan bloqueados asiq mostramos
+                        }
+                    }
                 }
             }
 

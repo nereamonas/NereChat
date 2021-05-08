@@ -106,6 +106,7 @@ public class IniciarSesionActivity extends BaseActivity {
                     if (task.isSuccessful()){
                         Log.d("Logs", "Success sign in ");
                         //Se ha registrado correctamente
+                        mUser=mAuth.getCurrentUser();
                         comprobarSiYaHaySesion();
                         progressDialog.dismiss(); //Cancelamos la barra de proceso
 

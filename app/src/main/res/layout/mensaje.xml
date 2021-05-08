@@ -10,7 +10,7 @@
     <TextView
         android:id="@+id/mensajeHoraUno"
         android:layout_width="16dp"
-        android:layout_height="8dp"
+        android:layout_height="8.5dp"
         android:layout_marginStart="8dp"
         android:text="00:00"
         android:textSize="6sp"
@@ -18,19 +18,17 @@
         app:layout_constraintEnd_toStartOf="@+id/mensajeFotoPerfilDos"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/mensajeFotoPerfilUno"
-        app:layout_constraintTop_toBottomOf="@+id/mensajeTextoDos"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/mensajeTextoUno" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/mensajeFotoPerfilUno"
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="6dp"
         android:src="@drawable/icono"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"></de.hdodenhof.circleimageview.CircleImageView>
+        app:layout_constraintTop_toTopOf="parent"></de.hdodenhof.circleimageview.CircleImageView>
 
     <TextView
         android:id="@+id/mensajeTextoUno"
@@ -58,7 +56,7 @@
         android:id="@+id/mensajeFotoPerfilDos"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="6dp"
         android:layout_marginEnd="8dp"
         android:src="@drawable/icono"
         app:layout_constraintEnd_toEndOf="parent"
@@ -87,7 +85,7 @@
     <TextView
         android:id="@+id/mensajeHoraDos"
         android:layout_width="18dp"
-        android:layout_height="8dp"
+        android:layout_height="8.5dp"
         android:layout_marginEnd="8dp"
         android:text="00:00"
         android:textSize="6sp"

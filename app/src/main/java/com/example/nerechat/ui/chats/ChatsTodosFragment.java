@@ -148,7 +148,7 @@ public class ChatsTodosFragment extends Fragment {
                 if(!mUser.getUid().equals(getRef(position).getKey().toString())){
                     Picasso.get().load(model.getFotoPerfil()).into(holder.fotoPerfil); //Mostramos la foto de perfil
                     holder.nombreUsuario.setText(model.getNombreUsuario()); //Mostramos el nombre de uusario
-                    holder.info.setText(model.getConectado()); //Mostramos la info
+                    holder.info.setText(""); //Mostramos la info
                 }else{ //Es nuestro perfil actual, por lo que tenemos q omitir este elemento
                     holder.itemView.setVisibility(View.GONE);
                     holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(0,0));
@@ -164,7 +164,7 @@ public class ChatsTodosFragment extends Fragment {
                         NavOptions options = new NavOptions.Builder()
                                 .setLaunchSingleTop(true)
                                 .build();
-                        Navigation.findNavController(view).navigate(R.id.action_navigation_chatsamigos_to_chatFragment, bundle,options);
+                        Navigation.findNavController(view).navigate(R.id.action_navigation_chattodos_to_chatFragment, bundle,options);
 
                     }
                 });

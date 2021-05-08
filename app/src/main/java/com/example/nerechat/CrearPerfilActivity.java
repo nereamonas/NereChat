@@ -100,12 +100,13 @@ public class CrearPerfilActivity extends BaseActivity {
                                     //Cogemos la fecha de hoy
                                     Date date = new Date();
                                     SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+                                    SimpleDateFormat hora = new SimpleDateFormat("HH:mm");
 
                                     //Ya tenemos la url de la foto de perfil de firebase storage. Ahora creamos un hashmap, donde guardamos el nombredeusuario, la foto de perfil y el estado
                                     HashMap hashMap = new HashMap<>();
                                     hashMap.put("nombreUsuario", name);
                                     hashMap.put("fotoPerfil", uri.toString());
-                                    hashMap.put("conectado", "No está conectado");
+                                    hashMap.put("conectado", "Última vez a las "+hora.format(date));
                                     hashMap.put("estado", "Heyy, ¡Estoy usando NereChat!");
                                     hashMap.put("fechaCreacion",formatter.format(date));
                                     hashMap.put("uid", mUser.getUid());
