@@ -9,4 +9,35 @@
         <item>reply</item>
         <item>reply_all</item>
     </string-array>
+
+
+    <!-- idioma Preference -->
+    <string-array name="idioma_entries">
+        <item>@string/ES</item>
+        <item>@string/EU</item>
+        <item>@string/EN</item>
+    </string-array>
+
+    <string-array name="idioma_values">
+        <item>es</item>
+        <item>eu</item>
+        <item>en</item>
+    </string-array>
+
+
+
+    <!-- Tema Preference -->
+    <string-array name="tema_entries">
+        <item>@string/ajustes_morado</item>
+        <item>@string/ajustes_naranja</item>
+        <item>@string/ajustes_verde</item>
+        <item>@string/ajustes_azul</item>
+    </string-array>
+
+    <string-array name="tema_values">
+        <item>morado</item>
+        <item>naranja</item>
+        <item>verde</item>
+        <item>azul</item>
+    </string-array>
 </resources>

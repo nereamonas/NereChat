@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.nerechat.base.BaseActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,14 +31,14 @@ import java.util.ArrayDeque;
 import java.util.Iterator;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     FirebaseAuth mAuth;
     FirebaseUser mUser;
     DatabaseReference mDatabaseRef;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         BottomNavigationView navView = findViewById(R.id.nav_view);
@@ -90,6 +91,8 @@ public class MainActivity extends AppCompatActivity {
 
                 String usuario = getIntent().getExtras().getString("usuario");
                 abrir_chat(usuario);
+            }else if(abrir.equals("ajustes")){
+                abrir_ajustes();
             }
         }
 
@@ -104,6 +107,14 @@ public class MainActivity extends AppCompatActivity {
                 .build();
         Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.action_global_chatFragment, bundle,options);
     }
+
+    public void abrir_ajustes(){
+        NavOptions options = new NavOptions.Builder()
+                .setLaunchSingleTop(true)
+                .build();
+        Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.action_global_ajustesFragment,null,options);
+    }
+
     public void abrir_chatAmigos(){
         NavOptions options = new NavOptions.Builder()
                 .setLaunchSingleTop(true)

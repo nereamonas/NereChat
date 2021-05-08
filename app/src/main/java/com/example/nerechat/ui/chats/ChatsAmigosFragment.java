@@ -61,7 +61,7 @@ public class ChatsAmigosFragment extends Fragment {
     TextView nohaychats;
 
     EditText toolbarSearchEditText;
-    ImageView toolbarImageSearch;
+    ImageView toolbarImageSearch, toolbarImagenAjustes;
     TextView toolbarTitulo;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -91,6 +91,7 @@ public class ChatsAmigosFragment extends Fragment {
         toolbarSearchEditText=root.findViewById(R.id.editTextToolbarSearch);
         toolbarImageSearch=root.findViewById(R.id.imageViewToolbarBuscar);
         toolbarTitulo=root.findViewById(R.id.toolbarBuscarTitulo);
+        toolbarImagenAjustes=root.findViewById(R.id.imageViewToolbarAjustes);
         toolbarTitulo.setText("Chats");
         toolbarSearchEditText.setVisibility(View.INVISIBLE);
         toolbarImageSearch.setOnClickListener(new View.OnClickListener() {
@@ -111,6 +112,16 @@ public class ChatsAmigosFragment extends Fragment {
                     InputMethodManager imm = (InputMethodManager) ((AppCompatActivity)getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.showSoftInput(toolbarSearchEditText, InputMethodManager.SHOW_IMPLICIT);
                 }
+            }
+        });
+        toolbarImagenAjustes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NavOptions options = new NavOptions.Builder()
+                        .setLaunchSingleTop(true)
+                        .build();
+                Navigation.findNavController(v).navigate(R.id.action_navigation_chatsamigos_to_ajustesFragment,null,options);
+
             }
         });
         toolbarSearchEditText.addTextChangedListener(new TextWatcher() {

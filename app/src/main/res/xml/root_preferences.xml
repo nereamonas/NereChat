@@ -1,5 +1,51 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
+
+    <PreferenceCategory app:title="@string/ajustes_idioma">
+    <ListPreference
+        app:defaultValue="es"
+        app:entries="@array/idioma_entries"
+        app:entryValues="@array/idioma_values"
+        app:key="idioma"
+        app:title="@string/ajustes_idioma"
+        app:icon="@drawable/ic_idioma"
+        app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
+
+    <PreferenceCategory app:title="@string/ajustes_configurar_notificaciones">
+
+        <SwitchPreferenceCompat
+            app:key="notif"
+            app:summaryOff="@string/ajustes_notificacionesDesactivadas"
+            app:summaryOn="@string/ajustes_notificacionesActivadas"
+            app:icon="@drawable/ic_notif"
+            app:title="@string/ajustes_notificaciones"
+            app:defaultValue="true"/>
+
+        <SwitchPreferenceCompat
+            app:key="notiftoast"
+            app:summaryOff="@string/ajustes_toastDesactivadas"
+            app:summaryOn="@string/ajustes_toastActivadas"
+            app:icon="@drawable/ic_notif"
+            app:title="@string/ajustes_toast"
+            app:defaultValue="true"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/ajustes_otros">
+        <ListPreference
+            app:defaultValue="morado"
+            app:entries="@array/tema_entries"
+            app:entryValues="@array/tema_values"
+            app:key="tema"
+            app:title="@string/ajustes_tema"
+            app:icon="@drawable/ic_color"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
     <PreferenceCategory app:title="@string/messages_header">
 
         <EditTextPreference
@@ -14,21 +60,6 @@
             app:key="reply"
             app:title="@string/reply_title"
             app:useSimpleSummaryProvider="true" />
-
-    </PreferenceCategory>
-
-    <PreferenceCategory app:title="@string/sync_header">
-
-        <SwitchPreferenceCompat
-            app:key="sync"
-            app:title="@string/sync_title" />
-
-        <SwitchPreferenceCompat
-            app:dependency="sync"
-            app:key="attachment"
-            app:summaryOff="@string/attachment_summary_off"
-            app:summaryOn="@string/attachment_summary_on"
-            app:title="@string/attachment_title" />
 
     </PreferenceCategory>
 

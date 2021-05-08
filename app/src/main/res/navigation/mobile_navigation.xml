@@ -16,19 +16,30 @@
         <action
             android:id="@+id/action_navigation_chatsamigos_to_chatFragment"
             app:destination="@id/chatFragment" />
+        <action
+            android:id="@+id/action_navigation_chatsamigos_to_ajustesFragment"
+            app:destination="@id/ajustesFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/navigation_fotos"
         android:name="com.example.nerechat.ui.fotos.FotosFragment"
         android:label="Fotos"
-        tools:layout="@layout/fragment_fotos" />
+        tools:layout="@layout/fragment_fotos" >
+        <action
+            android:id="@+id/action_navigation_fotos_to_ajustesFragment"
+            app:destination="@id/ajustesFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_perfil"
         android:name="com.example.nerechat.ui.perfil.PerfilFragment"
         android:label="Perfil"
-        tools:layout="@layout/fragment_perfil" />
+        tools:layout="@layout/fragment_perfil" >
+        <action
+            android:id="@+id/action_navigation_perfil_to_ajustesFragment"
+            app:destination="@id/ajustesFragment" />
+    </fragment>
     <action
         android:id="@+id/action_global_navigation_chatsamigos"
         app:destination="@id/navigation_chatsamigos" />
@@ -42,7 +53,11 @@
         android:id="@+id/navigation_chattodos"
         android:name="com.example.nerechat.ui.chats.ChatsTodosFragment"
         android:label="fragment_chats_todos"
-        tools:layout="@layout/fragment_chats_todos" />
+        tools:layout="@layout/fragment_chats_todos" >
+        <action
+            android:id="@+id/action_navigation_chattodos_to_ajustesFragment"
+            app:destination="@id/ajustesFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/chatFragment"
@@ -61,6 +76,13 @@
     <action
         android:id="@+id/action_global_chatFragment"
         app:destination="@id/chatFragment" />
+    <fragment
+        android:id="@+id/ajustesFragment"
+        android:name="com.example.nerechat.AjustesFragment"
+        android:label="AjustesFragment" />
+    <action
+        android:id="@+id/action_global_ajustesFragment"
+        app:destination="@id/ajustesFragment" />
 
 
 </navigation>

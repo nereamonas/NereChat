@@ -1,8 +1,11 @@
 package com.example.nerechat.base;
 
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 import java.util.Locale;
 
@@ -15,8 +18,9 @@ public class BaseActivity extends AppCompatActivity {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             //Cogemos de sharedPreferences el tema que tiene el usuario guardado. Y dependiendo del valor, le asignamos a la actividad un tema u otro
-            /*SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-            String tema = "";
+            super.onCreate(savedInstanceState);
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+            /*String tema = "";
             if (prefs.contains("tema")) {
                 tema = prefs.getString("tema", null);
             }
@@ -43,7 +47,7 @@ public class BaseActivity extends AppCompatActivity {
                     break;
             }
 
-
+*/
 
             //Haremos lo mismo con el idioma
             String idioma = "";
@@ -58,6 +62,7 @@ public class BaseActivity extends AppCompatActivity {
             getResources().updateConfiguration(config, null);
 
         }
+        /*
         public String returnTema(){
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
             String tema = "";
@@ -72,6 +77,5 @@ public class BaseActivity extends AppCompatActivity {
 
         }
         */
-            super.onCreate(savedInstanceState);
-        }
+
     }

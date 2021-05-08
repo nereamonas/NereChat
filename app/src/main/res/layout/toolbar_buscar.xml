@@ -16,12 +16,12 @@
             android:id="@+id/imageViewToolbarBuscar"
             android:layout_width="40dp"
             android:layout_height="47dp"
+            android:layout_marginEnd="3dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.774"
+            app:layout_constraintEnd_toStartOf="@+id/imageViewToolbarAjustes"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/toolbarBuscarTitulo"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.555"
             app:srcCompat="@drawable/ic_buscar"
             tools:srcCompat="@drawable/ic_buscar" />
 
@@ -52,7 +52,18 @@
             app:layout_constraintEnd_toStartOf="@+id/imageViewToolbarBuscar"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/toolbarBuscarTitulo"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.6" />
+
+        <ImageView
+            android:id="@+id/imageViewToolbarAjustes"
+            android:layout_width="37dp"
+            android:layout_height="37dp"
+            android:layout_marginEnd="3dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_ajustes" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.appcompat.widget.Toolbar>

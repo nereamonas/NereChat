@@ -5,4 +5,21 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="Ok">Ok</string>
     <string name="Cancelar">Cancelar</string>
+    <string name="ajustes_configurar_notificaciones">Configurar notificaciones</string>
+    <string name="ajustes_notificacionesDesactivadas">Notificaciones desactivadas</string>
+    <string name="ajustes_notificacionesActivadas">Notificaciones activadas</string>
+    <string name="ajustes_notificaciones">Notificaciones</string>
+    <string name="ajustes_toastDesactivadas">Toast desactivadas</string>
+    <string name="ajustes_toastActivadas">Toast activadas</string>
+    <string name="ajustes_toast">Toast</string>
+    <string name="ajustes_otros">Otros ajustes</string>
+    <string name="ajustes_tema">Tema</string>
+    <string name="ajustes_idioma">Hizkuntza</string>
+    <string name="ES">Gaztelania</string>
+    <string name="EN">Ingelera</string>
+    <string name="EU">Euskera</string>
+    <string name="ajustes_morado">Morado</string>
+    <string name="ajustes_verde">Verde</string>
+    <string name="ajustes_naranja">Naranja</string>
+    <string name="ajustes_azul">Azul</string>
 </resources>

@@ -17,7 +17,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class CrearCuentaActivity extends AppCompatActivity {
+public class CrearCuentaActivity extends BaseActivity {
     //Ventana para crear una nueva cuenta
 
     private TextInputLayout inputemail, inputpass, inputrepPass;

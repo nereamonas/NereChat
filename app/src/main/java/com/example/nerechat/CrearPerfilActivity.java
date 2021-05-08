@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.nerechat.base.BaseActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -32,7 +33,7 @@ import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class CrearPerfilActivity extends AppCompatActivity {
+public class CrearPerfilActivity extends BaseActivity {
     //Aparte de registrarnos con firebase auth, tenemos que crear un perfil, para poder añadir nuestra informacion, nombre de usuario, foto de perfil.
     //Para unir la authenticacion con el perfil, crearemos en la base de datos una nueva tabla llamada perfil, donde se guardarán todos los perfiles. de titulo tendra el user.uid y asi podemos unir el auth con el perfil
 
@@ -49,7 +50,7 @@ public class CrearPerfilActivity extends AppCompatActivity {
      ProgressDialog progressDialog;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crear_perfil);
 

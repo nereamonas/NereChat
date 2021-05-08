@@ -21,6 +21,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavOptions;
+import androidx.navigation.Navigation;
 
 import com.example.nerechat.CrearPerfilActivity;
 import com.example.nerechat.IniciarSesionActivity;
@@ -64,6 +66,9 @@ public class PerfilFragment extends Fragment {
     Uri uriImg;
 
 
+    ImageView toolbarImagenAjustes;
+    TextView toolbarTitulo;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         perfilViewModel =
@@ -82,6 +87,22 @@ public class PerfilFragment extends Fragment {
         mUser=mAuth.getCurrentUser(); //El usuario actual que tiene la sesion iniciada
         mDatabaseRef= FirebaseDatabase.getInstance().getReference().child("Perfil"); //La base de datos perfil
         mStorageRef= FirebaseStorage.getInstance().getReference().child("ImagenesPerfil"); //En Storage almacenaremos todas las imagenes de perfil que suban los usuarios, y en la base de datos guardamos la uri que hace referencia a la foto en storage
+
+
+        //Toolbar
+        toolbarImagenAjustes=root.findViewById(R.id.imageViewToolbarPrincipalAjustes);
+        toolbarTitulo=root.findViewById(R.id.toolbarPrincipalTitulo);
+        toolbarTitulo.setText("Perfil");
+        toolbarImagenAjustes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NavOptions options = new NavOptions.Builder()
+                        .setLaunchSingleTop(true)
+                        .build();
+                Navigation.findNavController(v).navigate(R.id.action_navigation_perfil_to_ajustesFragment,null,options);
+
+            }
+        });
 
         cargarInformacion();
 
