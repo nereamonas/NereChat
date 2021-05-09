@@ -86,7 +86,7 @@ public class ChatsTodosFragment extends Fragment {
         toolbarImageSearch=root.findViewById(R.id.imageViewToolbarBuscar);
         toolbarTitulo=root.findViewById(R.id.toolbarBuscarTitulo);
         toolbarImagenAjustes=root.findViewById(R.id.imageViewToolbarAjustes);
-        toolbarTitulo.setText("Nuevo chat");
+        toolbarTitulo.setText(getString(R.string.nav_todoslosusuarios));
         toolbarSearchEditText.setVisibility(View.INVISIBLE);
         toolbarImageSearch.setOnClickListener(new View.OnClickListener() {
             @Override

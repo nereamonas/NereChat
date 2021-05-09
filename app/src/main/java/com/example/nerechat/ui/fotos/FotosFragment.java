@@ -33,7 +33,7 @@ public class FotosFragment extends Fragment {
 
         toolbarImagenAjustes=root.findViewById(R.id.imageViewToolbarPrincipalAjustes);
         toolbarTitulo=root.findViewById(R.id.toolbarPrincipalTitulo);
-        toolbarTitulo.setText("Fotos");
+        toolbarTitulo.setText(getString(R.string.nav_fotos));
         toolbarImagenAjustes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

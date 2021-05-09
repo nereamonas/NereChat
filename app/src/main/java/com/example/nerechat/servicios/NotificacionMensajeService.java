@@ -25,6 +25,7 @@ public class NotificacionMensajeService extends FirebaseMessagingService{
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage){
         super.onMessageReceived(remoteMessage);
+        Log.d("Logs","Tamaño data recibido: ");
         if (remoteMessage.getData().size() > 0) {
             Log.d("Logs","Tamaño data recibido: "+remoteMessage.getData().size());
         }

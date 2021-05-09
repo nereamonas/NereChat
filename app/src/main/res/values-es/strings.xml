@@ -22,4 +22,24 @@
     <string name="ajustes_verde">Verde</string>
     <string name="ajustes_naranja">Naranja</string>
     <string name="ajustes_azul">Azul</string>
+    <string name="iniciarsesion_IniciarSesion">Iniciar sesión</string>
+    <string name="iniciarsesion_email">Correo electrónico</string>
+    <string name="iniciarsesion_contraseña">Contraseña</string>
+    <string name="iniciarsesion_crearunacuenta">Crear una cuenta</string>
+    <string name="registrate_registrate">Registrate</string>
+    <string name="registrate_repitelacontraseña">Repite la contraseña</string>
+    <string name="crearperfil_datosdeperfil">Datos de perfil</string>
+    <string name="crearperfil_nombredeusuario">Nombre de usuario</string>
+    <string name="crearperfil_guardar">Guardar</string>
+    <string name="perfil_Estado">Estado:</string>
+    <string name="perfil_nombreUsuario">Nombre de usuario:</string>
+    <string name="perfil_cerrarsesion">Cerrar sesión</string>
+    <string name="perfil_fechaunion">Fecha de unión:</string>
+    <string name="nav_chats">Chats</string>
+    <string name="nav_fotos">Fotos</string>
+    <string name="nav_perfil">Perfil</string>
+    <string name="nav_todoslosusuarios">Todos los usuarios</string>
+    <string name="ajustes_ocultarultimahora">Ocultar última hora</string>
+    <string name="ajustes_ultimahoraSi">Se visualiza la ultima conexion de los usuarios y todos ellos podrán ver tu última conexión</string>
+    <string name="ajustes_ultimahoraNo">Has ocultado tu ultima conexion. Nadie podrá ver tu ultima conexion, ni tu podrás ver la última conexion de nadie</string>
 </resources>

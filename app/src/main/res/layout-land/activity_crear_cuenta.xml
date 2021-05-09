@@ -11,7 +11,7 @@
         android:id="@+id/textViewRegistrar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Registrate"
+        android:text="@string/registrate_registrate"
         android:textColor="#000000"
         android:textColorLink="#FFFFFF"
         android:textSize="36sp"
@@ -40,7 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#FFFFFF"
-            android:hint="Repite la contraseña"
+            android:hint="@string/registrate_repitelacontraseña"
             android:inputType="textPassword"
             android:textColorHint="#000000" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -62,7 +62,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#FFFFFF"
-            android:hint="Email"
+            android:hint="@string/iniciarsesion_email"
             android:inputType="textEmailAddress"
             android:textColorHint="#000000" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -85,7 +85,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#FFFFFF"
-            android:hint="Contraseña"
+            android:hint="@string/iniciarsesion_contraseña"
             android:inputType="textPassword"
             android:textColorHint="#000000" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -95,7 +95,7 @@
         android:layout_width="200dp"
         android:layout_height="56dp"
         android:onClick="registrar"
-        android:text="Registrate"
+        android:text="@string/registrate_registrate"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.571"
@@ -107,7 +107,7 @@
         android:id="@+id/text_iniciarSesion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Iniciar sesion"
+        android:text="@string/iniciarsesion_IniciarSesion"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.797"

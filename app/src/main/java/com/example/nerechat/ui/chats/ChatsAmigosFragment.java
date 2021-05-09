@@ -92,7 +92,7 @@ public class ChatsAmigosFragment extends Fragment {
         toolbarImageSearch=root.findViewById(R.id.imageViewToolbarBuscar);
         toolbarTitulo=root.findViewById(R.id.toolbarBuscarTitulo);
         toolbarImagenAjustes=root.findViewById(R.id.imageViewToolbarAjustes);
-        toolbarTitulo.setText("Chats");
+        toolbarTitulo.setText(getString(R.string.nav_chats));
         toolbarSearchEditText.setVisibility(View.INVISIBLE);
         toolbarImageSearch.setOnClickListener(new View.OnClickListener() {
             @Override

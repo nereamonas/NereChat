@@ -11,7 +11,7 @@
         android:id="@+id/textViewLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/login"
+        android:text="@string/iniciarsesion_IniciarSesion"
         android:textColor="#000000"
         android:textColorLink="#FFFFFF"
         android:textSize="36sp"
@@ -41,7 +41,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#FFFFFF"
-            android:hint="Email"
+            android:hint="@string/iniciarsesion_email"
             android:inputType="textEmailAddress"
             android:textColorHint="#000000" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -63,7 +63,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#FFFFFF"
-            android:hint="Contraseña"
+            android:hint="@string/iniciarsesion_contraseña"
             android:inputType="textPassword"
             android:textColorHint="#000000" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -74,7 +74,7 @@
         android:layout_height="57dp"
         android:layout_marginBottom="212dp"
         android:onClick="iniciarSesion"
-        android:text="@string/login"
+        android:text="@string/iniciarsesion_IniciarSesion"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.437"
@@ -86,7 +86,7 @@
         android:id="@+id/text_crearCuenta"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Crear una cuenta"
+        android:text="@string/iniciarsesion_crearunacuenta"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"

@@ -64,14 +64,14 @@
     </PreferenceCategory>
 
 
-    <PreferenceCategory app:title="Ocultar ultima hora">
+    <PreferenceCategory app:title="@string/ajustes_ocultarultimahora">
 
         <SwitchPreferenceCompat
             app:key="ultimaHora"
-            app:summaryOff="Se visualiza la ultima conexion de los usuarios y todos ellos podrán ver tu última conexión"
-            app:summaryOn="Has ocultado tu ultima conexion. Nadie podrá ver tu ultima conexion, ni tu podrás ver la última conexion de nadie"
+            app:summaryOff="@string/ajustes_ultimahoraSi"
+            app:summaryOn="@string/ajustes_ultimahoraNo"
             app:icon="@drawable/ic_notif"
-            app:title="Ocultar ultima hora"
+            app:title="@string/ajustes_ocultarultimahora"
             app:defaultValue="false"/>
 
 

@@ -93,7 +93,7 @@ public class PerfilFragment extends Fragment {
         //Toolbar
         toolbarImagenAjustes=root.findViewById(R.id.imageViewToolbarPrincipalAjustes);
         toolbarTitulo=root.findViewById(R.id.toolbarPrincipalTitulo);
-        toolbarTitulo.setText("Perfil");
+        toolbarTitulo.setText(getString(R.string.nav_perfil));
         toolbarImagenAjustes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
