@@ -183,6 +183,8 @@ public class ChatFragment extends Fragment {
                         }else{
                             barraStado.setText(pEstado); //no estan bloqueados asiq mostramos
                         }
+                    }else{
+                        barraStado.setText(pEstado); //si no se ha establecido nada en ajustes mostramos
                     }
                 }
             }
