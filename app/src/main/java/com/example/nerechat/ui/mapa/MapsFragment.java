@@ -132,6 +132,7 @@ public class MapsFragment extends BaseFragment implements GoogleMap.OnPolylineCl
                         public void onClick(DialogInterface dialogo1, int id) {
                             selectMarker=marker; //el marcador actual lo guardamos
                             calculateDirections(marker); //Calcularemos las direcciones
+
                         }
                     });
                     dialogo.setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {  //En el caso de no, no haremos nada
@@ -399,8 +400,8 @@ public class MapsFragment extends BaseFragment implements GoogleMap.OnPolylineCl
         }
 */
         ImageView imagen = new ImageView(getContext());
-        Uri uri=Uri.parse(foto);
-        imagen.setImageURI(uri);
+        //Uri uri=Uri.parse(foto);
+        //imagen.setImageURI(uri);
         Picasso.get().load(foto).into(imagen); //Muestro la foto del otro
 
 
@@ -411,7 +412,7 @@ public class MapsFragment extends BaseFragment implements GoogleMap.OnPolylineCl
         mIconGenerator.setContentView(imagen);
 
         Bitmap icon=mIconGenerator.makeIcon();
-        map.addMarker(new MarkerOptions().position(posicion).title(usuario)).setIcon(BitmapDescriptorFactory.fromBitmap(icon));
+        map.addMarker(new MarkerOptions().position(posicion).title(usuario).snippet("Toca para calcular el trayecto hasta "+usuario).icon(BitmapDescriptorFactory.fromBitmap(icon)));
 
         Log.d("Logs","Añadir marca"+ usuario+"imagen: "+foto);
        // map.addMarker(new MarkerOptions().position(posicion).title("Usuario: "+usuario));
@@ -486,7 +487,7 @@ public class MapsFragment extends BaseFragment implements GoogleMap.OnPolylineCl
                     polyline.setClickable(true); //Es clicable, para hacer que cuando se clicke se ponga de color azul
                     mPolylineData.add(new PolylineData(polyline,route.legs[0]));
                     onPolylineClick(polyline);
-                    selectMarker.setVisible(false);
+                    //selectMarker.setVisible(false);
                     if(cont==1){  //En la primera que nos ofrezca la cogeremos por defecto y lo ponemos de color azul para q resalte mas
                         polyline.setColor(ContextCompat.getColor(getActivity(), R.color.blue));
                         polyline.setZIndex(1);
@@ -510,10 +511,11 @@ public class MapsFragment extends BaseFragment implements GoogleMap.OnPolylineCl
                 polylineData.getPolyline().setZIndex(1);
 
                 LatLng endLoc= new LatLng(polylineData.getLeg().endLocation.lat, polylineData.getLeg().endLocation.lng);
+                selectMarker.setTitle(getString(R.string.maps_trayecto)+" "+cont);
+                selectMarker.setSnippet((getString(R.string.maps_duracion)+": "+polylineData.getLeg().duration+", "+getString(R.string.maps_kilometros)+": "+polylineData.getLeg().distance));
+                //Marker marker=map.addMarker(new MarkerOptions().position(endLoc).title(getString(R.string.maps_trayecto)+" "+cont).snippet(getString(R.string.maps_duracion)+": "+polylineData.getLeg().duration+", "+getString(R.string.maps_kilometros)+": "+polylineData.getLeg().distance));//Cambiamos el titulo del marcador
 
-                Marker marker=map.addMarker(new MarkerOptions().position(endLoc).title(getString(R.string.maps_trayecto)+" "+cont).snippet(getString(R.string.maps_duracion)+": "+polylineData.getLeg().duration+", "+getString(R.string.maps_kilometros)+": "+polylineData.getLeg().distance));//Cambiamos el titulo del marcador
-
-                marker.showInfoWindow(); //Lo visualizamos
+                //marker.showInfoWindow(); //Lo visualizamos
             }
             else{ //Si no es la linea seleccionada
                 polylineData.getPolyline().setColor(ContextCompat.getColor(getActivity(), R.color.grey)); //Lo ponemos de color gris
