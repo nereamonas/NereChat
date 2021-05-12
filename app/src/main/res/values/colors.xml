@@ -10,6 +10,7 @@
     <color name="azul_clarito">#D5F2FF</color>
     <color name="azul_medio">#7AD6FF</color>
     <color name="azul_medioOscuro">#1584DC</color>
+    <color name="azul_oscuro">#61699C</color>
     <color name="grey">#AAAAAA</color>
     <color name="blue">#1584DC</color>
 </resources>

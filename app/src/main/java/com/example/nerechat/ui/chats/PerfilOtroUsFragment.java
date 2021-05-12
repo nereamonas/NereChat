@@ -71,7 +71,7 @@ public class PerfilOtroUsFragment extends Fragment {
     public void cargarInformacion(){
 
         //Tenemos que coger de la base de datos la informacion del otro usuario. como tenemos su UID es sencillo
-        mDatabaseRef.child(pId).addValueEventListener(new ValueEventListener() {
+        mDatabaseRef.child(pId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {

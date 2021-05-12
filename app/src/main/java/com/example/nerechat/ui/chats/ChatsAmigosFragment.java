@@ -178,7 +178,7 @@ public class ChatsAmigosFragment extends Fragment {
             @Override
             protected void onBindViewHolder(@NonNull ViewHolderChatUsuarios holder, int position, @NonNull Usuario model) {
                 //Por cada elemento tendremos q añadirlo al holder, pero tenemos que mirar si es nuestro perfil actual, ya que en ese caso no deberiamos mostrarlo, porque una persona no va a hablar con si mismo
-                mDatabaseRefMensajes.child(mUser.getUid()).child(model.getUid()).addValueEventListener(new ValueEventListener() {
+                mDatabaseRefMensajes.child(mUser.getUid()).child(model.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if(snapshot.exists()){
@@ -196,10 +196,11 @@ public class ChatsAmigosFragment extends Fragment {
                             String msg=ultimo.getMensaje();
                             if (ultimo.getUsuario().equals(mUser.getUid())){
                                 msg="Tú: "+ultimo.getMensaje();
+                                holder.info.setTextColor(getContext().getResources().getColor(R.color.azul_oscuro));
                             }
                             holder.info.setText(msg); //Mostramos la info
 
-                            mDatabaseRef.child(model.getUid()).addValueEventListener(new ValueEventListener() {
+                            mDatabaseRef.child(model.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     if (snapshot.exists()) {

@@ -46,7 +46,7 @@ public class InicioAbrirActivity extends AppCompatActivity {
             Log.d("Logs", "mUser: "+mUser.getUid());
             //Pero podemos haber abandonado la app sin llegar a crear el perfil del todo.
             //Comprobamos si tenemos algun perfil creado en la base de datos, de ser asi vamos a la pantalla principal, y en el caso de no tener perfil, llevamos a la pantalla de crear un perfil
-            mDatabaseRef.child(mUser.getUid()).addValueEventListener(new ValueEventListener() {
+            mDatabaseRef.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if(snapshot.exists()){//Comporbamos que ese mUser, tenga creado un perfil. si ya tiene el perfil creado vamos directamente a mainActivicity

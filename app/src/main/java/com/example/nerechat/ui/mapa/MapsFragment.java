@@ -583,7 +583,7 @@ public class MapsFragment extends BaseFragment implements GoogleMap.OnPolylineCl
                     MapaElement mapa=d.getValue(MapaElement.class);
                     //Ahora cogemos el nombre del usuario y su foto
                     //Tenemos que coger de la base de datos la informacion del otro usuario. como tenemos su UID es sencillo
-                    mDatabaseRef.child(mapa.getUsuario()).addValueEventListener(new ValueEventListener() {
+                    mDatabaseRef.child(mapa.getUsuario()).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             if(snapshot.exists()){

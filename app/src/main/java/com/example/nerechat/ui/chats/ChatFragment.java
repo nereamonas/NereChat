@@ -205,7 +205,7 @@ public class ChatFragment extends Fragment {
 
     public void cargarMiFotoPerfil(){
         //Tenemos que coger de la base de datos la informacion del otro usuario. como tenemos su UID es sencillo
-        mDatabaseRef.child(mUser.getUid()).addValueEventListener(new ValueEventListener() {
+        mDatabaseRef.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
