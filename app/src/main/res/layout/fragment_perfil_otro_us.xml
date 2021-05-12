@@ -6,19 +6,17 @@
     android:layout_height="match_parent"
     tools:context=".ui.chats.PerfilOtroUsFragment">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/circleImageViewPerfilOtroUsE"
-        android:layout_width="188dp"
-        android:layout_height="150dp"
-        android:src="@drawable/icono"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.046">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/circleImageViewPerfilOtroUsE"
+            android:layout_width="188dp"
+            android:layout_height="150dp"
+            android:src="@drawable/icono"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.046"></de.hdodenhof.circleimageview.CircleImageView>
 
-
-    </de.hdodenhof.circleimageview.CircleImageView>
 
     <TextView
         android:id="@+id/textPerfilOtroUs_tituloNombreUs"

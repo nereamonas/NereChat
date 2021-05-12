@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -65,8 +66,10 @@ public class PerfilFragment extends Fragment {
     FloatingActionButton floatingButtonCambiarFoto;
     TextView nombreUsu,estado;
     Uri uriImg;
+    String foto;
 
 
+    boolean imagenCompleta;
     ImageView toolbarImagenAjustes;
     TextView toolbarTitulo;
 
@@ -205,6 +208,18 @@ public class PerfilFragment extends Fragment {
         });
 
 
+        circleImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle(); //Con el bundle podemos pasar datos
+                bundle.putString("imagen", foto);
+                NavOptions options = new NavOptions.Builder()
+                        .setLaunchSingleTop(true)
+                        .build();
+                Navigation.findNavController(v).navigate(R.id.action_navigation_perfil_to_verImagenFragment, bundle,options);
+
+            }
+        });
 
         return root;
     }
@@ -220,6 +235,7 @@ public class PerfilFragment extends Fragment {
                     //Si existe el usuario
                     nombreUsu.setText(snapshot.child("nombreUsuario").getValue().toString()); //Cogemos su nombre de usuario
                     estado.setText(snapshot.child("estado").getValue().toString()); //Cogemos su foto de perfil
+                    foto=snapshot.child("fotoPerfil").getValue().toString();
                     Picasso.get().load(snapshot.child("fotoPerfil").getValue().toString()).into(circleImageView); //Mostramos la foto de perfil en pantalla
                 }
             }

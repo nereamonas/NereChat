@@ -1,6 +1,7 @@
 package com.example.nerechat.adaptadores.RecyclerViewAdapterChatUsuarios;
 
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,6 +20,8 @@ public class ViewHolderMensaje extends RecyclerView.ViewHolder {
     public TextView mensajeTextoDos;
     public TextView mensajeHoraUno;
     public TextView mensajeHoraDos;
+    public ImageView imageLikeUno;
+    public ImageView imageLikeDos;
 
     public ViewHolderMensaje(@NonNull View itemView){
         super(itemView);
@@ -28,5 +31,7 @@ public class ViewHolderMensaje extends RecyclerView.ViewHolder {
         mensajeTextoDos=itemView.findViewById(R.id.mensajeTextoDos);
         mensajeHoraUno=itemView.findViewById(R.id.mensajeHoraUno);
         mensajeHoraDos=itemView.findViewById(R.id.mensajeHoraDos);
+        imageLikeUno=itemView.findViewById(R.id.imageLikeUno);
+        imageLikeDos=itemView.findViewById(R.id.imageLikeDos);
     }
 }

@@ -42,6 +42,9 @@
         <action
             android:id="@+id/action_navigation_perfil_to_ajustesFragment"
             app:destination="@id/ajustesFragment" />
+        <action
+            android:id="@+id/action_navigation_perfil_to_verImagenFragment"
+            app:destination="@id/verImagenFragment" />
     </fragment>
     <action
         android:id="@+id/action_global_navigation_chatsamigos"
@@ -78,7 +81,11 @@
         android:id="@+id/perfilOtroUsFragment"
         android:name="com.example.nerechat.ui.chats.PerfilOtroUsFragment"
         android:label="fragment_perfil_otro_us"
-        tools:layout="@layout/fragment_perfil_otro_us" />
+        tools:layout="@layout/fragment_perfil_otro_us" >
+        <action
+            android:id="@+id/action_perfilOtroUsFragment_to_verImagenFragment"
+            app:destination="@id/verImagenFragment" />
+    </fragment>
     <action
         android:id="@+id/action_global_chatFragment"
         app:destination="@id/chatFragment" />
@@ -102,6 +109,18 @@
     <action
         android:id="@+id/action_global_navigation_mapa"
         app:destination="@id/navigation_mapa" />
+    <fragment
+        android:id="@+id/verImagenFragment"
+        android:name="com.example.nerechat.VerImagenFragment"
+        android:label="fragment_ver_imagen"
+        tools:layout="@layout/fragment_ver_imagen" >
+        <action
+            android:id="@+id/action_verImagenFragment_to_navigation_perfil"
+            app:destination="@id/navigation_perfil" />
+        <action
+            android:id="@+id/action_verImagenFragment_to_perfilOtroUsFragment"
+            app:destination="@id/perfilOtroUsFragment" />
+    </fragment>
 
 
 </navigation>

@@ -52,6 +52,16 @@
 
     </TextView>
 
+
+    <ImageView
+        android:id="@+id/imageLikeUno"
+        android:layout_width="9dp"
+        android:layout_height="8dp"
+        android:layout_marginStart="2dp"
+        app:layout_constraintStart_toEndOf="@+id/mensajeHoraUno"
+        app:layout_constraintTop_toTopOf="@+id/mensajeHoraUno"
+        app:srcCompat="@mipmap/ic_like" />
+
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/mensajeFotoPerfilDos"
         android:layout_width="45dp"
@@ -95,5 +105,14 @@
         app:layout_constraintStart_toEndOf="@+id/mensajeFotoPerfilUno"
         app:layout_constraintTop_toBottomOf="@+id/mensajeTextoDos"
         app:layout_constraintVertical_bias="0.0" />
+
+    <ImageView
+        android:id="@+id/imageLikeDos"
+        android:layout_width="9dp"
+        android:layout_height="8dp"
+        android:layout_marginEnd="2dp"
+        app:layout_constraintEnd_toStartOf="@+id/mensajeHoraDos"
+        app:layout_constraintTop_toTopOf="@+id/mensajeHoraDos"
+        app:srcCompat="@mipmap/ic_like" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

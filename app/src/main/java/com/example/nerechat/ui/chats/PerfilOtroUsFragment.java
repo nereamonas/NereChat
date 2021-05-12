@@ -3,17 +3,23 @@ package com.example.nerechat.ui.chats;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavOptions;
+import androidx.navigation.Navigation;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.nerechat.R;
 import com.example.nerechat.base.BaseViewModel;
+import com.example.nerechat.helpClass.ZoomImageView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -36,10 +42,11 @@ public class PerfilOtroUsFragment extends Fragment {
 
     String pId;
 
-    CircleImageView circleImageView;
+    CircleImageView imageView;
     TextView nombreUsu,estado,fechaUnion;
 
-
+    boolean imagenCompleta;
+    String fotoPerfilurl="";
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -48,7 +55,8 @@ public class PerfilOtroUsFragment extends Fragment {
                 new ViewModelProvider(this).get(BaseViewModel.class);
         View root=inflater.inflate(R.layout.fragment_perfil_otro_us, container, false);
 
-        circleImageView=root.findViewById(R.id.circleImageViewPerfilOtroUsE);
+        //circleImageView=root.findViewById(R.id.circleImageViewPerfilOtroUsE);
+        imageView=root.findViewById(R.id.circleImageViewPerfilOtroUsE);
         nombreUsu=root.findViewById(R.id.textPerfilOtroUs_NombreUs);
 
         fechaUnion=root.findViewById(R.id.textPerfilOtroUs_fechaunion);
@@ -63,6 +71,20 @@ public class PerfilOtroUsFragment extends Fragment {
         FirebaseMessaging.getInstance().subscribeToTopic(mUser.getUid()); //Para recibir las notif d ese id
 
         cargarInformacion();
+
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle(); //Con el bundle podemos pasar datos
+                bundle.putString("imagen", fotoPerfilurl);
+                NavOptions options = new NavOptions.Builder()
+                        .setLaunchSingleTop(true)
+                        .build();
+                Navigation.findNavController(v).navigate(R.id.action_perfilOtroUsFragment_to_verImagenFragment, bundle,options);
+
+
+            }
+        });
 
         return root;
     }
@@ -80,7 +102,8 @@ public class PerfilOtroUsFragment extends Fragment {
                     nombreUsu.setText(snapshot.child("nombreUsuario").getValue().toString()); //Cogemos su nombre de usuario
                     estado.setText(snapshot.child("estado").getValue().toString()); //Cogemos su foto de perfil
                     fechaUnion.setText(snapshot.child("fechaCreacion").getValue().toString()); //Cogemos su foto de perfil
-                    Picasso.get().load(snapshot.child("fotoPerfil").getValue().toString()).into(circleImageView); //Mostramos la foto de perfil en pantalla
+                    fotoPerfilurl=snapshot.child("fotoPerfil").getValue().toString();
+                    Picasso.get().load(snapshot.child("fotoPerfil").getValue().toString()).into(imageView); //Mostramos la foto de perfil en pantalla
                 }
             }
 
