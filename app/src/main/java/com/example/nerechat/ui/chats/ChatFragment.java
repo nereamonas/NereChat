@@ -298,7 +298,7 @@ public class ChatFragment extends Fragment {
                                             for (DataSnapshot d: snapshot.getChildren()) { //Por cada datasnapshot (es decir cada foto subida a firebase)
                                                 Mensaje mensaje=d.getValue(Mensaje.class);
                                                 if(mensaje.getUsuario()==model.getUsuario()&&mensaje.getHora()==model.getHora()&&mensaje.getMensaje()==model.getMensaje()){
-                                                    mDatabaseRefMensajes.child(mUser.getUid()).child(pId).child(d.getKey()).removeValue();
+                                                    mDatabaseRefMensajes.child(pId).child(mUser.getUid()).child(d.getKey()).removeValue();
                                                 }
                                             }
                                         }
@@ -346,6 +346,13 @@ public class ChatFragment extends Fragment {
                 return new ViewHolderMensaje(view);
             }
         };
+        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                //messagesList.smoothScrollToPosition(adapter.getItemCount());
+                Log.d("Logs","cantidad adapter: "+adapter.getItemCount());
+                ((LinearLayoutManager)recyclerView.getLayoutManager()).scrollToPositionWithOffset(adapter.getItemCount() - 1,200);
+            }
+        });
 
         adapter.startListening();
         recyclerView.setAdapter(adapter);
