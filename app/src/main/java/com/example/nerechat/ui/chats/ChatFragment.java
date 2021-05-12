@@ -1,9 +1,11 @@
 package com.example.nerechat.ui.chats;
 
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -13,7 +15,7 @@ import androidx.navigation.Navigation;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -33,8 +36,10 @@ import com.example.nerechat.R;
 import com.example.nerechat.adaptadores.RecyclerViewAdapterChatUsuarios.ViewHolderMensaje;
 import com.example.nerechat.base.BaseViewModel;
 import com.example.nerechat.helpClass.Mensaje;
+import com.example.nerechat.ui.mapa.MapaElement;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -45,6 +50,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.RemoteMessage;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -162,7 +169,7 @@ public class ChatFragment extends Fragment {
 
     public void cargarInfoBarra(){
         //Tenemos que coger de la base de datos la informacion del otro usuario. como tenemos su UID es sencillo
-        mDatabaseRef.child(pId).addValueEventListener(new ValueEventListener() {
+        mDatabaseRef.child(pId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
@@ -187,6 +194,7 @@ public class ChatFragment extends Fragment {
                         barraStado.setText(pEstado); //si no se ha establecido nada en ajustes mostramos
                     }
                 }
+                mDatabaseRef.removeEventListener(this);
             }
 
             @Override
@@ -205,6 +213,7 @@ public class ChatFragment extends Fragment {
                     miFotoPerfil=snapshot.child("fotoPerfil").getValue().toString(); //Cogemos mi foto de perfil
                     miNombreUsuario=snapshot.child("nombreUsuario").getValue().toString();
                 }
+                mDatabaseRef.removeEventListener(this);
             }
 
             @Override
@@ -219,6 +228,7 @@ public class ChatFragment extends Fragment {
         adapter= new FirebaseRecyclerAdapter<Mensaje, ViewHolderMensaje>(options) {
             @Override
             protected void onBindViewHolder(@NonNull ViewHolderMensaje holder, int position, @NonNull Mensaje model) {
+
                 //Tenemos dos opciones. Que el mensaje lo hayamos mandado nosotros, o que nosotros seamos los receptores del mensaje
                 if (model.getUsuario().equals(mUser.getUid())){ //En el caso de que el mensaje lo haya mandado yo
                     holder.mensajeTextoUno.setVisibility(View.GONE); //Oculto la info del otro
@@ -231,6 +241,85 @@ public class ChatFragment extends Fragment {
                     holder.mensajeTextoDos.setText(model.getMensaje()); //Pongo mi mezu
                     holder.mensajeHoraDos.setText(model.getHora());
                     Picasso.get().load(miFotoPerfil).into(holder.mensajeFotoPerfilDos);
+                    holder.mensajeTextoDos.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View v) {
+                            //Preguntamos si quiere eliminar el mensaje
+
+                            AlertDialog.Builder dialogo = new AlertDialog.Builder(v.getContext());
+                            dialogo.setTitle("Eliminar mensaje");
+                            dialogo.setMessage("Quieres eliminar el mensaje "+model.getMensaje()+"?");
+
+                            dialogo.setPositiveButton("Solo para mi", new DialogInterface.OnClickListener() {  //Botón si. es decir, queremos eliminar la rutina
+                                public void onClick(DialogInterface dialogo1, int id) {
+                                    //Si dice que si quiere eliminar. Actualizamos la lista y lo borramos de la base de datos
+                                    //Cogemos el id del elemento seleccionado por el usuario
+                                    Toast.makeText(getContext(),"Has eliminado el mensaje "+model.getMensaje()+"solo para ti",Toast.LENGTH_SHORT).show();
+
+                                    mDatabaseRefMensajes.child(mUser.getUid()).child(pId).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            for (DataSnapshot d: snapshot.getChildren()) { //Por cada datasnapshot (es decir cada foto subida a firebase)
+                                                Mensaje mensaje=d.getValue(Mensaje.class);
+                                                if(mensaje.getUsuario()==model.getUsuario()&&mensaje.getHora()==model.getHora()&&mensaje.getMensaje()==model.getMensaje()){
+                                                    mDatabaseRefMensajes.child(mUser.getUid()).child(pId).child(d.getKey()).removeValue();
+                                                }
+                                            }
+                                        }
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+                                        }
+                                    });
+                                    Log.d("Logs", "mensaje eliminado");
+                                }
+                            });
+
+                            dialogo.setNegativeButton("Para todos", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialogo1, int id) {
+                                    Toast.makeText(getContext(),"Has eliminado el mensaje "+model.getMensaje()+" para todos",Toast.LENGTH_SHORT).show();
+
+                                    mDatabaseRefMensajes.child(mUser.getUid()).child(pId).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            for (DataSnapshot d: snapshot.getChildren()) { //Por cada datasnapshot (es decir cada foto subida a firebase)
+                                                Mensaje mensaje=d.getValue(Mensaje.class);
+                                                if(mensaje.getUsuario()==model.getUsuario()&&mensaje.getHora()==model.getHora()&&mensaje.getMensaje()==model.getMensaje()){
+                                                    mDatabaseRefMensajes.child(mUser.getUid()).child(pId).child(d.getKey()).removeValue();
+                                                }
+                                            }
+                                        }
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+                                        }
+                                    });
+                                    mDatabaseRefMensajes.child(pId).child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            for (DataSnapshot d: snapshot.getChildren()) { //Por cada datasnapshot (es decir cada foto subida a firebase)
+                                                Mensaje mensaje=d.getValue(Mensaje.class);
+                                                if(mensaje.getUsuario()==model.getUsuario()&&mensaje.getHora()==model.getHora()&&mensaje.getMensaje()==model.getMensaje()){
+                                                    mDatabaseRefMensajes.child(mUser.getUid()).child(pId).child(d.getKey()).removeValue();
+                                                }
+                                            }
+                                        }
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+                                        }
+                                    });
+                                    Log.d("Logs", "mensaje eliminado");
+                                }
+                            });
+                            //En el caso de que el usuario diga que no quiere borrarlo, pues no hará nada. se cerrará el dialogo
+                            dialogo.setNeutralButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialogo1, int id) {
+                                    Log.d("Logs", "no se eliminara el mensaje");
+                                }
+                            });
+                            dialogo.show();
+
+                            return false;
+                        }
+                    });
                 }else{
                     holder.mensajeTextoUno.setVisibility(View.VISIBLE);//Pongo visible la info del otro usuario
                     holder.mensajeFotoPerfilUno.setVisibility(View.VISIBLE);
@@ -242,13 +331,18 @@ public class ChatFragment extends Fragment {
                     holder.mensajeTextoUno.setText(model.getMensaje()); //Muestro en la pantalla el mensaje del otro
                     holder.mensajeHoraUno.setText(model.getHora());
                     Picasso.get().load(pFotoPerfil).into(holder.mensajeFotoPerfilUno); //Muestro la foto del otro
+
                 }
+
+
             }
 
             @NonNull
             @Override
             public ViewHolderMensaje onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.mensaje,parent,false);
+
+
                 return new ViewHolderMensaje(view);
             }
         };
@@ -307,7 +401,7 @@ public class ChatFragment extends Fragment {
             jsonObject.put("notification",jsonObject1);
             jsonObject.put("data",jsonObject2);
 
-            JsonObjectRequest request= new JsonObjectRequest(Request.Method.POST, UrlNotif, jsonObject, new Response.Listener<JSONObject>() {
+            JsonObjectRequest request= new JsonObjectRequest(Request.Method.POST, UrlNotif,jsonObject, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
 

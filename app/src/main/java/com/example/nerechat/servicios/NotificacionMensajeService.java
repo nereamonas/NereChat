@@ -25,7 +25,7 @@ public class NotificacionMensajeService extends FirebaseMessagingService{
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage){
         super.onMessageReceived(remoteMessage);
-        Log.d("Logs","Tamaño data recibido: ");
+        Log.d("Logs","Notificacion recibida");
         if (remoteMessage.getData().size() > 0) {
             Log.d("Logs","Tamaño data recibido: "+remoteMessage.getData().size());
         }
@@ -35,35 +35,40 @@ public class NotificacionMensajeService extends FirebaseMessagingService{
                 Boolean activadas = prefs.getBoolean("notif", true);  //Comprobamos si las notificaciones estan activadas
                 Log.d("Logs", "estado notificaciones: " + activadas);
                 if (activadas) { //Si tenemos las notif activadas, lanzamos la notificacion
-                    NotificationManager elManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                    NotificationCompat.Builder elBuilder = new NotificationCompat.Builder(this, "IdCanal");
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        NotificationChannel elCanal = new NotificationChannel("IdCanalRecordatorioDiario", "NombreCanal",
-                                NotificationManager.IMPORTANCE_DEFAULT);
-                        elManager.createNotificationChannel(elCanal);
-                    }
-                    Intent intent = null;
-
-                    if (remoteMessage.getData().get("type").equals("sms")) {
-                        intent = new Intent(this, MainActivity.class);
-                        intent.putExtra("abrir", "chat");
-                        intent.putExtra("usuario", remoteMessage.getData().get("userID"));
-                    }
-
-                    PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-                    elBuilder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_chat))
-                            .setSmallIcon(R.drawable.ic_chat)
-                            .setContentTitle(remoteMessage.getNotification().getTitle()) //Cogemos el titulo
-                            .setContentText(remoteMessage.getNotification().getBody()) //Cogemos el cuerpo
-                            .setVibrate(new long[]{0, 1000, 500, 1000})
-                            .setAutoCancel(true)
-                            .setContentIntent(pendingIntent);
-
-                    elManager.notify(1, elBuilder.build());
-                    Log.d("Logs", "Mensaje: Notificacion recibida: " + remoteMessage.getNotification().getBody());
+                    lanzarNotif(remoteMessage);
                 }
+            }else{
+                lanzarNotif(remoteMessage);
             }
         }
+    }
+    public void lanzarNotif(RemoteMessage remoteMessage){
+        NotificationManager elManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationCompat.Builder elBuilder = new NotificationCompat.Builder(this, "IdCanal");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel elCanal = new NotificationChannel("IdCanalRecordatorioDiario", "NombreCanal",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            elManager.createNotificationChannel(elCanal);
+        }
+        Intent intent = null;
+
+        if (remoteMessage.getData().get("type").equals("sms")) {
+            intent = new Intent(this, MainActivity.class);
+            intent.putExtra("abrir", "chat");
+            intent.putExtra("usuario", remoteMessage.getData().get("userID"));
+        }
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        elBuilder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_chat))
+                .setSmallIcon(R.drawable.ic_chat)
+                .setContentTitle(remoteMessage.getNotification().getTitle()) //Cogemos el titulo
+                .setContentText(remoteMessage.getNotification().getBody()) //Cogemos el cuerpo
+                .setVibrate(new long[]{0, 1000, 500, 1000})
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent);
+
+        elManager.notify(1, elBuilder.build());
+        Log.d("Logs", "Mensaje: Notificacion recibida: " + remoteMessage.getNotification().getBody());
     }
 }

@@ -42,4 +42,13 @@
     <string name="ajustes_ocultarultimahora">Ezkutatu azken ordua</string>
     <string name="ajustes_ultimahoraSi">Erabiltzaileen azken konexioa bistaratzen da eta guztiek zure azken konexioa ikusi ahal izango dute</string>
     <string name="ajustes_ultimahoraNo">Azken konexioa ezkutatu duzu. Inork ezingo du zure azken konexioa ikusi, ezta zuk ere inoren azken konexioa ikusi</string>
+    <string name="maps_calculardistancia">Calcular distancia</string>
+    <string name="maps_quierescalcularelcaminohastaestepunto">Quieres calcular la distancia hasta ese punto?</string>
+    <string name="si">Si</string>
+    <string name="no">No</string>
+    <string name="maps_puntoInicial">Punto inicial</string>
+    <string name="maps_tocaparacalculareltrayecto">Toca para calcular el trayecto</string>
+    <string name="maps_trayecto">"Trayecto: "</string>
+    <string name="maps_duracion">"Duracion: "</string>
+    <string name="maps_kilometros">"Kilometros: "</string>
 </resources>

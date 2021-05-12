@@ -94,6 +94,14 @@
         android:name="com.example.nerechat.chatbot.ChatbotFragment"
         android:label="fragment_chatbot"
         tools:layout="@layout/fragment_chatbot" />
+    <fragment
+        android:id="@+id/navigation_mapa"
+        android:name="com.example.nerechat.ui.mapa.MapsFragment"
+        android:label="fragment_mapa"
+        tools:layout="@layout/fragment_maps" />
+    <action
+        android:id="@+id/action_global_navigation_mapa"
+        app:destination="@id/navigation_mapa" />
 
 
 </navigation>

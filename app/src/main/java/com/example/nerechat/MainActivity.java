@@ -6,14 +6,20 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.nerechat.base.BaseActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -49,7 +55,7 @@ public class MainActivity extends BaseActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_chatsamigos, R.id.navigation_fotos, R.id.navigation_perfil)
+                R.id.navigation_chatsamigos, R.id.navigation_mapa, R.id.navigation_fotos, R.id.navigation_perfil)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
@@ -61,6 +67,20 @@ public class MainActivity extends BaseActivity {
 
 
         mDatabaseRef.child(mUser.getUid()).child("conectado").setValue("Conectado");
+
+        FirebaseMessaging.getInstance().subscribeToTopic(mUser.getUid()).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d("Logs","SUSCRITO EL USUARIO A NOTIFICACIONES");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+                Log.d("Logs","NO SE HA PODIDO SUSCRIBIR EL USUARIO A NOTIFIACIONES");
+            }
+        });
+        Log.d("Logs","NO SE HA PODIDO SUSCRIBIR EL USUARIO A NOTIFIACIONESxxxxxxxxxxxxxxxxxxxxxxxxx");
 
         //Poner visible la navegacion de abajo
         BottomNavigationView nv= findViewById(R.id.nav_view);
@@ -78,7 +98,10 @@ public class MainActivity extends BaseActivity {
                 if (id == R.id.navigation_chatsamigos) {  //Si clicamos en rutinas, abriremos con navigation, la ventana donde se muestran las rutinas. he igual con todos
                     Log.d("Logs", "navigation_chatsamigos");
                     abrir_chatAmigos();
-                } else if (id == R.id.navigation_fotos) {
+                } else if (id==R.id.navigation_mapa){
+                    Log.d("Logs", "navigation_mapa");
+                    abrir_mapa();
+                }else if (id == R.id.navigation_fotos) {
                     Log.d("Logs", "navigation_fotos");
                     abrir_fotos();
                 }else if (id==R.id.navigation_perfil){
@@ -119,6 +142,12 @@ public class MainActivity extends BaseActivity {
         Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.action_global_ajustesFragment,null,options);
     }
 
+    public void abrir_mapa(){
+        NavOptions options = new NavOptions.Builder()
+                .setLaunchSingleTop(true)
+                .build();
+        Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.action_global_navigation_mapa,null,options);
+    }
     public void abrir_chatAmigos(){
         NavOptions options = new NavOptions.Builder()
                 .setLaunchSingleTop(true)

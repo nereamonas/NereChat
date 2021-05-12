@@ -59,4 +59,13 @@
     <string name="ajustes_ocultarultimahora">Ocultar última hora</string>
     <string name="ajustes_ultimahoraSi">Se visualiza la ultima conexion de los usuarios y todos ellos podrán ver tu última conexión</string>
     <string name="ajustes_ultimahoraNo">Has ocultado tu ultima conexion. Nadie podrá ver tu ultima conexion, ni tu podrás ver la última conexion de nadie</string>
+    <string name="maps_calculardistancia">Calcular distancia</string>
+    <string name="maps_quierescalcularelcaminohastaestepunto">Quieres calcular la distancia hasta ese punto?</string>
+    <string name="si">Si</string>
+    <string name="no">No</string>
+    <string name="maps_puntoInicial">Punto inicial</string>
+    <string name="maps_tocaparacalculareltrayecto">Toca para calcular el trayecto</string>
+    <string name="maps_trayecto">"Trayecto: "</string>
+    <string name="maps_duracion">"Duracion: "</string>
+    <string name="maps_kilometros">"Kilometros: "</string>
 </resources>
