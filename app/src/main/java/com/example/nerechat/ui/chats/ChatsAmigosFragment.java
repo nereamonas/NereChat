@@ -201,6 +201,33 @@ public class ChatsAmigosFragment extends Fragment {
                             holder.info.setText(msg); //Mostramos la info
                             holder.textHoraUltimoMensaje.setText(ultimo.getHora());
 
+                            Log.d("Logs","MMsssssssssssM ");
+
+                            //Conseguir cuantos mensajes estan sin leer
+                            mDatabaseRefMensajes.child(model.getUid()).child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        int mensajesLeidos=0;
+                                        Log.d("Logs","MMM ");
+                                        for (DataSnapshot d: snapshot.getChildren()) { //Por cada datasnapshot (es decir cada foto subida a firebase)
+                                            Mensaje mensaje= d.getValue(Mensaje.class);
+                                            Log.d("Logs","MMM "+mensaje.getLeido()+"  "+mensaje.getMensaje());
+                                            if(mensaje.getLeido().equals("no") && mensaje.getUsuario().equals(model.getUid())){
+                                                mensajesLeidos++;
+                                            }
+                                        }
+                                        if(mensajesLeidos!=0){
+                                            holder.textViewMensajesSinLeer.setText(""+mensajesLeidos);
+                                            holder.textHoraUltimoMensaje.setTextColor(getContext().getResources().getColor(R.color.verde));
+                                            holder.textViewMensajesSinLeer.setTextColor(getContext().getResources().getColor(R.color.verde));
+                                        }
+                                    }
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+                                    }
+                                });
+
+
 
                             mDatabaseRef.child(model.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
