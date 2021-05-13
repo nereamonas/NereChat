@@ -22,6 +22,8 @@ public class ViewHolderMensaje extends RecyclerView.ViewHolder {
     public TextView mensajeHoraDos;
     public ImageView imageLikeUno;
     public ImageView imageLikeDos;
+    public ImageView imageDobleCheckDos;
+
 
     public ViewHolderMensaje(@NonNull View itemView){
         super(itemView);
@@ -33,5 +35,6 @@ public class ViewHolderMensaje extends RecyclerView.ViewHolder {
         mensajeHoraDos=itemView.findViewById(R.id.mensajeHoraDos);
         imageLikeUno=itemView.findViewById(R.id.imageLikeUno);
         imageLikeDos=itemView.findViewById(R.id.imageLikeDos);
+        imageDobleCheckDos=itemView.findViewById(R.id.imageDobleCheckDos);
     }
 }

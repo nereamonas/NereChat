@@ -19,6 +19,8 @@ public class ViewHolderChatUsuarios extends RecyclerView.ViewHolder {
 
     public ImageView icRojo;
     public ImageView icVerde;
+    public TextView textHoraUltimoMensaje;
+    public TextView textViewMensajesSinLeer;
 
     public ViewHolderChatUsuarios(@NonNull View itemView){
         super(itemView);
@@ -27,5 +29,7 @@ public class ViewHolderChatUsuarios extends RecyclerView.ViewHolder {
         fotoPerfil=itemView.findViewById(R.id.cvFoto);
         icRojo=itemView.findViewById(R.id.cvFotoEstadoRojo);
         icVerde=itemView.findViewById(R.id.cvFotoEstadoVerde);
+        textHoraUltimoMensaje=itemView.findViewById(R.id.textHoraUltimoMensaje);
+        textViewMensajesSinLeer=itemView.findViewById(R.id.textViewMensajesSinLeer);
     }
 }

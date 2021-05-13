@@ -132,7 +132,7 @@ public class ChatFragment extends Fragment {
 
         cargarInfoBarra();
         cargarMiFotoPerfil(); //Buscamos mi foto de perfil porque se usara en los mensajes;
-
+        cambiarMensajesALeido();
         //Cargamos todos los mensajes que se han mandado con ese usuario
         cargarMensajes();
 
@@ -240,6 +240,7 @@ public class ChatFragment extends Fragment {
                     holder.mensajeTextoDos.setVisibility(View.VISIBLE); //Pongo visible la info del mio
                     holder.mensajeFotoPerfilDos.setVisibility(View.VISIBLE);
                     holder.mensajeHoraDos.setVisibility(View.VISIBLE);
+                    holder.imageDobleCheckDos.setVisibility(View.VISIBLE);
 
                     if(!model.getReaccion().equals("")){
                         holder.imageLikeDos.setVisibility(View.VISIBLE);
@@ -252,6 +253,9 @@ public class ChatFragment extends Fragment {
                         }
                     }else{
                         holder.imageLikeDos.setVisibility(View.GONE);
+                    }
+                    if(model.getLeido().equals("si")){
+                        holder.imageDobleCheckDos.setImageDrawable(getContext().getResources().getDrawable(R.mipmap.ic_doblecheck_azul));
                     }
 
                     holder.mensajeTextoDos.setText(model.getMensaje()); //Pongo mi mezu
@@ -655,6 +659,7 @@ public class ChatFragment extends Fragment {
                     holder.mensajeFotoPerfilDos.setVisibility(View.GONE);
                     holder.mensajeHoraDos.setVisibility(View.GONE);
                     holder.imageLikeDos.setVisibility(View.GONE);
+                    holder.imageDobleCheckDos.setVisibility(View.GONE);
 
                     if(!model.getReaccion().equals("")){
                         holder.imageLikeUno.setVisibility(View.VISIBLE);
@@ -845,6 +850,22 @@ public class ChatFragment extends Fragment {
 
     public void cambiarEstado(String estado){
         mDatabaseRef.child(mUser.getUid()).child("conectado").setValue(estado);
+    }
+
+    public void cambiarMensajesALeido(){
+
+        mDatabaseRefMensajes.child(pId).child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot d: snapshot.getChildren()) { //Por cada datasnapshot (es decir cada foto subida a firebase)
+                    mDatabaseRefMensajes.child(pId).child(mUser.getUid()).child(d.getKey()).child("leido").setValue("si");
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+
     }
 
 

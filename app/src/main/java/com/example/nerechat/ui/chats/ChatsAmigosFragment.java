@@ -199,6 +199,8 @@ public class ChatsAmigosFragment extends Fragment {
                                 holder.info.setTextColor(getContext().getResources().getColor(R.color.azul_oscuro));
                             }
                             holder.info.setText(msg); //Mostramos la info
+                            holder.textHoraUltimoMensaje.setText(ultimo.getHora());
+
 
                             mDatabaseRef.child(model.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
