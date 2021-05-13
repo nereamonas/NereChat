@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/popupReaccionar_like"
+        android:icon="@mipmap/ic_like"
+        android:title="Like" />
+    <item
+        android:id="@+id/popupReaccionar_feliz"
+        android:icon="@mipmap/ic_feliz"
+        android:title="Feliz"/>
+    <item
+        android:id="@+id/popupReaccionar_enfadado"
+        android:icon="@mipmap/ic_enfadado"
+        android:title="Enfadado"/>
+</menu>

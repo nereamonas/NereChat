@@ -5,14 +5,14 @@ public class Mensaje {
     private String mensaje;
     private String usuario;
     private String hora;
-    private String like;
+    private String reaccion;
     public Mensaje(){}
 
-    public Mensaje(String mensaje, String usuario, String hora, String like) {
+    public Mensaje(String mensaje, String usuario, String hora, String reaccion) {
         this.mensaje = mensaje;
         this.usuario = usuario;
         this.hora=hora;
-        this.like=like;
+        this.reaccion=reaccion;
     }
 
     public String getMensaje() {
@@ -25,7 +25,7 @@ public class Mensaje {
 
     public String getHora(){ return hora;}
 
-    public String getLike(){ return like;}
+    public String getReaccion(){ return reaccion;}
 
     public void setMensaje(String mensaje) {
         this.mensaje = mensaje;
@@ -37,5 +37,5 @@ public class Mensaje {
 
     public void setHora(String hora){ this.hora=hora;}
 
-    public void setLike(String like){ this.like=like;}
+    public void setReaccion(String reaccion){ this.reaccion=reaccion;}
 }

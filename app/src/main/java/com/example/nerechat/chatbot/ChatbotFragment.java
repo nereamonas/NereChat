@@ -188,6 +188,9 @@ public class ChatbotFragment extends Fragment implements BotReply {
                     holder.mensajeFotoPerfilDos.setVisibility(View.VISIBLE);
                     holder.mensajeHoraDos.setVisibility(View.VISIBLE);
 
+                    holder.imageLikeDos.setVisibility(View.GONE);
+                    holder.imageLikeUno.setVisibility(View.GONE);
+
                     holder.mensajeTextoDos.setText(model.getMensaje()); //Pongo mi mezu
                     holder.mensajeHoraDos.setText(model.getHora());
                     Picasso.get().load(miFotoPerfil).into(holder.mensajeFotoPerfilDos);
@@ -198,6 +201,9 @@ public class ChatbotFragment extends Fragment implements BotReply {
                     holder.mensajeTextoDos.setVisibility(View.GONE);//Oculto la info del mio
                     holder.mensajeFotoPerfilDos.setVisibility(View.GONE);
                     holder.mensajeHoraDos.setVisibility(View.GONE);
+
+                    holder.imageLikeDos.setVisibility(View.GONE);
+                    holder.imageLikeUno.setVisibility(View.GONE);
 
                     holder.mensajeTextoUno.setText(model.getMensaje()); //Muestro en la pantalla el mensaje del otro
                     holder.mensajeHoraUno.setText(model.getHora());
