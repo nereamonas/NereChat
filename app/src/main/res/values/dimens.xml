@@ -4,4 +4,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="marker_imagen">50dp</dimen>
     <dimen name="marker_padding">2dp</dimen>
+    <dimen name="textsize">50sp</dimen>
+    <dimen name="marker_imagen2">200dp</dimen>
+    <dimen name="marker_padding2">2dp</dimen>
 </resources>

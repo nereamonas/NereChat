@@ -198,21 +198,21 @@ public class ChatsAmigosFragment extends Fragment {
                                 msg="Tú: "+ultimo.getMensaje();
                                 holder.info.setTextColor(getContext().getResources().getColor(R.color.azul_oscuro));
                             }
+                            if(ultimo.getMensaje().contains("https://firebasestorage.googleapis.com/")) {
+                                msg="IMAGEN";
+                            }
                             holder.info.setText(msg); //Mostramos la info
                             holder.textHoraUltimoMensaje.setText(ultimo.getHora());
 
-                            Log.d("Logs","MMsssssssssssM ");
 
                             //Conseguir cuantos mensajes estan sin leer
                             mDatabaseRefMensajes.child(model.getUid()).child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         int mensajesLeidos=0;
-                                        Log.d("Logs","MMM ");
                                         for (DataSnapshot d: snapshot.getChildren()) { //Por cada datasnapshot (es decir cada foto subida a firebase)
                                             Mensaje mensaje= d.getValue(Mensaje.class);
-                                            Log.d("Logs","MMM "+mensaje.getLeido()+"  "+mensaje.getMensaje());
-                                            if(mensaje.getLeido().equals("no") && mensaje.getUsuario().equals(model.getUid())){
+                                           if(mensaje.getLeido().equals("no") && mensaje.getUsuario().equals(model.getUid())){
                                                 mensajesLeidos++;
                                             }
                                         }

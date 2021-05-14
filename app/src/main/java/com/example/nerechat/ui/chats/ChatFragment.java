@@ -1,10 +1,18 @@
 package com.example.nerechat.ui.chats;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
@@ -17,7 +25,12 @@ import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.os.Message;
+import android.provider.MediaStore;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ImageSpan;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,6 +47,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.nerechat.CrearPerfilActivity;
 import com.example.nerechat.R;
 import com.example.nerechat.adaptadores.RecyclerViewAdapterChatUsuarios.ViewHolderMensaje;
 import com.example.nerechat.base.BaseViewModel;
@@ -41,7 +55,9 @@ import com.example.nerechat.helpClass.Mensaje;
 import com.example.nerechat.ui.mapa.MapaElement;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -54,17 +70,29 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.RemoteMessage;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.google.maps.android.ui.IconGenerator;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import static android.app.Activity.RESULT_OK;
 
 public class ChatFragment extends Fragment {
 
@@ -75,7 +103,7 @@ public class ChatFragment extends Fragment {
     Toolbar toolbar;
     RecyclerView recyclerView;
     EditText mensaje;
-    ImageView send;
+    ImageView send,seleccionarImagen;
     CircleImageView barraPerfilImg;
     TextView barraUsername,barraStado;
 
@@ -86,11 +114,14 @@ public class ChatFragment extends Fragment {
     FirebaseAuth mAuth;
     FirebaseUser mUser;
     DatabaseReference mDatabaseRef,mDatabaseRefMensajes;
+    StorageReference mStorageRef;
     FirebaseRecyclerOptions<Mensaje> options;
     FirebaseRecyclerAdapter<Mensaje, ViewHolderMensaje> adapter;
 
     String UrlNotif="https://fcm.googleapis.com/fcm/send";
     RequestQueue requestQueue;
+
+    int codigoRequestGaleria=4;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -113,12 +144,15 @@ public class ChatFragment extends Fragment {
         barraPerfilImg=root.findViewById(R.id.barraImagenPErfil);
         barraUsername=root.findViewById(R.id.barraNombreUsu);
         barraStado=root.findViewById(R.id.barraEstado);
+        seleccionarImagen=root.findViewById(R.id.chat_seleccionarImagen);
 
         //Cargamos los datos de firebase que necesitaremos
         mAuth= FirebaseAuth.getInstance();
         mUser=mAuth.getCurrentUser();
         mDatabaseRef= FirebaseDatabase.getInstance().getReference().child("Perfil"); //La base de datos perfil
         mDatabaseRefMensajes= FirebaseDatabase.getInstance().getReference().child("MensajesChat"); //Y la base de datos mensajeChat donde se almacenarán todos los mensajes
+        mStorageRef= FirebaseStorage.getInstance().getReference().child("FotosMensajes"); //En Storage almacenaremos todas las imagenes de perfil que suban los usuarios, y en la base de datos guardamos la uri que hace referencia a la foto en storage
+
         cambiarEstado("Conectado");
 
         requestQueue= Volley.newRequestQueue(getContext());
@@ -139,7 +173,16 @@ public class ChatFragment extends Fragment {
         send.setOnClickListener(new View.OnClickListener() { //Cuando clickemos en el boton send será que queremos mandar un mensaje. Asique mandamos el mensaje
             @Override
             public void onClick(View v) {
-                mandarMensaje();
+                mandarMensaje(null);
+            }
+        });
+
+        seleccionarImagen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);  //Creamos un intent de la galeria. para abrir la galeria
+                startActivityForResult(gallery,codigoRequestGaleria); //Abrimos la actividad y pasamos el cogido de resultado para recibir cuando se finalice el intent
+
             }
         });
 
@@ -166,6 +209,42 @@ public class ChatFragment extends Fragment {
             }
         });
         return root;
+
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        //Recogeremos la informacion de fin de actividad de elegir la foto de la galeria
+        super.onActivityResult(requestCode, resultCode, data);
+
+        Log.d("Logs","onActivityResult");
+        if(requestCode == codigoRequestGaleria){ //Si la respuesta viene de la galeria y es correcta.
+            if(resultCode == RESULT_OK){ //Si to do ha ido bien
+                //Cargamos la imagen
+                Uri uri=data.getData(); //Cogemos la uri de la imagen cargada y la guardamos en un aldagai
+                Log.d("Logs","URL de la imagen de la galeria: "+uri);
+
+                if (uri!=null) { //Y se debe haber seleccionado una foto de la galeria
+                    String uuid= UUID.randomUUID().toString();
+                    mStorageRef.child(uuid).putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) { //Si se ha subido correctamente
+                            //Cogemos la url
+                            mStorageRef.child(uuid).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    //Cogemos la fecha de hoy
+                                    mandarMensaje(uri);
+
+                                }
+                            });
+                        }
+                    });
+
+                }
+            }
+        }
 
     }
 
@@ -258,7 +337,37 @@ public class ChatFragment extends Fragment {
                         holder.imageDobleCheckDos.setImageDrawable(getContext().getResources().getDrawable(R.mipmap.ic_doblecheck_azul));
                     }
 
-                    holder.mensajeTextoDos.setText(model.getMensaje()); //Pongo mi mezu
+                    if(model.getMensaje().contains("https://firebasestorage.googleapis.com/")){
+
+                        ImageView imagen = new ImageView(getContext());
+                        //Uri uri=Uri.parse(model.getMensaje());
+                        //imagen.setImageURI(uri);
+                        Picasso.get().load(model.getMensaje()).into(imagen); //Muestro la foto del otro
+
+                        //imagen.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_verde));
+                        IconGenerator mIconGenerator = new IconGenerator(getActivity().getApplicationContext());
+                        imagen.setLayoutParams(new ViewGroup.LayoutParams((int)getContext().getResources().getDimension(R.dimen.marker_imagen2),(int)getContext().getResources().getDimension(R.dimen.marker_imagen2)));
+                        int padding=(int) getContext().getResources().getDimension(R.dimen.marker_padding);
+                        imagen.setPadding(padding,padding,padding,padding);
+                        mIconGenerator.setContentView(imagen);
+
+                        Bitmap icon=mIconGenerator.makeIcon();
+
+                        //Drawable d=new BitmapDrawable(Resources.getSystem(), icon);
+                        SpannableStringBuilder ssb=new SpannableStringBuilder("I");
+
+                        //BitmapDescriptorFactory.fromBitmap(icon)
+                        //ImageSpan is=new ImageSpan(getContext(),imagen.getDrawable());
+
+                        ssb.setSpan(new ImageSpan(getContext(),icon),0,1, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+
+                        holder.mensajeTextoDos.setTextSize(TypedValue.COMPLEX_UNIT_SP,
+                                getResources().getDimension(R.dimen.textsize));
+                        holder.mensajeTextoDos.setText(ssb,TextView.BufferType.SPANNABLE);
+
+                    }else {
+                        holder.mensajeTextoDos.setText(model.getMensaje()); //Pongo mi mezu
+                    }
                     holder.mensajeHoraDos.setText(model.getHora());
                     Picasso.get().load(miFotoPerfil).into(holder.mensajeFotoPerfilDos);
                     holder.mensajeTextoDos.setOnClickListener(new View.OnClickListener() {
@@ -676,10 +785,294 @@ public class ChatFragment extends Fragment {
                     holder.mensajeTextoUno.setText(model.getMensaje()); //Muestro en la pantalla el mensaje del otro
                     holder.mensajeHoraUno.setText(model.getHora());
                     Picasso.get().load(pFotoPerfil).into(holder.mensajeFotoPerfilUno); //Muestro la foto del otro
-                    holder.mensajeTextoDos.setOnClickListener(new View.OnClickListener() {
+                    holder.mensajeTextoUno.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+
+                            //POPUP MENU
+                            //Creating the instance of PopupMenu
+                            PopupMenu popup = new PopupMenu(getContext(), holder.mensajeTextoDos);
+                            //Inflating the Popup using xml file
+                            popup.getMenuInflater().inflate(R.menu.popup_menu_mensaje, popup.getMenu());
+
+                            //registering popup with OnMenuItemClickListener
+                            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                                public boolean onMenuItemClick(MenuItem item) {
+                                    int id = item.getItemId();
+                                    if (id == R.id.popupMenu_EliminarMensaje) {  //Si clicamos en rutinas, abriremos con navigation, la ventana donde se muestran las rutinas. he igual con todos
+                                        Log.d("Logs", "popupMenu_EliminarMensaje");
+                                        //abrir_chatAmigos();
+                                        //Preguntamos si quiere eliminar el mensaje
+
+                                        AlertDialog.Builder dialogo = new AlertDialog.Builder(v.getContext());
+                                        dialogo.setTitle("Eliminar mensaje");
+                                        dialogo.setMessage("Quieres eliminar el mensaje "+model.getMensaje()+"?");
+
+                                        dialogo.setPositiveButton("Solo para mi", new DialogInterface.OnClickListener() {  //Botón si. es decir, queremos eliminar la rutina
+                                            public void onClick(DialogInterface dialogo1, int id) {
+                                                //Si dice que si quiere eliminar. Actualizamos la lista y lo borramos de la base de datos
+                                                //Cogemos el id del elemento seleccionado por el usuario
+                                                Toast.makeText(getContext(),"Has eliminado el mensaje "+model.getMensaje()+"solo para ti",Toast.LENGTH_SHORT).show();
+
+                                                mDatabaseRefMensajes.child(mUser.getUid()).child(pId).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                        for (DataSnapshot d: snapshot.getChildren()) { //Por cada datasnapshot (es decir cada foto subida a firebase)
+                                                            Mensaje mensaje=d.getValue(Mensaje.class);
+                                                            if(mensaje.getUsuario().equals(model.getUsuario())&&mensaje.getHora().equals(model.getHora())&&mensaje.getMensaje().equals(model.getMensaje())){
+                                                                mDatabaseRefMensajes.child(mUser.getUid()).child(pId).child(d.getKey()).removeValue();
+                                                            }
+                                                        }
+                                                    }
+                                                    @Override
+                                                    public void onCancelled(@NonNull DatabaseError error) {
+                                                    }
+                                                });
+                                                Log.d("Logs", "mensaje eliminado");
+                                            }
+                                        });
+
+                                        //En el caso de que el usuario diga que no quiere borrarlo, pues no hará nada. se cerrará el dialogo
+                                        dialogo.setNeutralButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialogo1, int id) {
+                                                Log.d("Logs", "no se eliminara el mensaje");
+                                            }
+                                        });
+                                        dialogo.show();
+
+                                    } else if (id==R.id.popupMenu_emoji){
+
+                                        //POPUP MENU
+                                        //Creating the instance of PopupMenu
+                                        PopupMenu popupReaccionar = new PopupMenu(getContext(), holder.mensajeTextoDos);
+                                        //Inflating the Popup using xml file
+                                        popupReaccionar.getMenuInflater().inflate(R.menu.popup_reaccionar, popupReaccionar.getMenu());
+
+                                        //registering popup with OnMenuItemClickListener
+                                        popupReaccionar.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                                            public boolean onMenuItemClick(MenuItem item) {
+                                                int id = item.getItemId();
+                                                if (id == R.id.popupReaccionar_like) {
+                                                    if(model.getReaccion().equals("like")){
+
+                                                        Toast.makeText(getContext(),"Has quitado el like",Toast.LENGTH_SHORT).show();
+                                                        mDatabaseRefMensajes.child(mUser.getUid()).child(pId).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                            @Override
+                                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                for (DataSnapshot d: snapshot.getChildren()) { //Por cada datasnapshot (es decir cada foto subida a firebase)
+                                                                    Mensaje mensaje=d.getValue(Mensaje.class);
+                                                                    if(mensaje.getUsuario().equals(model.getUsuario())&&mensaje.getHora().equals(model.getHora())&&mensaje.getMensaje().equals(model.getMensaje())){
+                                                                        mDatabaseRefMensajes.child(mUser.getUid()).child(pId).child(d.getKey()).child("reaccion").setValue("");
+                                                                    }
+                                                                }
+                                                            }
+                                                            @Override
+                                                            public void onCancelled(@NonNull DatabaseError error) {
+                                                            }
+                                                        });
+                                                        mDatabaseRefMensajes.child(pId).child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                            @Override
+                                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                for (DataSnapshot d: snapshot.getChildren()) { //Por cada datasnapshot (es decir cada foto subida a firebase)
+                                                                    Mensaje mensaje=d.getValue(Mensaje.class);
+                                                                    if(mensaje.getUsuario().equals(model.getUsuario())&&mensaje.getHora().equals(model.getHora())&&mensaje.getMensaje().equals(model.getMensaje())){
+                                                                        mDatabaseRefMensajes.child(pId).child(mUser.getUid()).child(d.getKey()).child("reaccion").setValue("");
+                                                                    }
+                                                                }
+                                                            }
+                                                            @Override
+                                                            public void onCancelled(@NonNull DatabaseError error) {
+                                                            }
+                                                        });
+                                                    }else{
+
+                                                        Toast.makeText(getContext(),"Te ha gustado el mensaje",Toast.LENGTH_SHORT).show();
+                                                        mDatabaseRefMensajes.child(mUser.getUid()).child(pId).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                            @Override
+                                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                for (DataSnapshot d: snapshot.getChildren()) { //Por cada datasnapshot (es decir cada foto subida a firebase)
+                                                                    Mensaje mensaje=d.getValue(Mensaje.class);
+                                                                    if(mensaje.getUsuario().equals(model.getUsuario())&&mensaje.getHora().equals(model.getHora())&&mensaje.getMensaje().equals(model.getMensaje())){
+                                                                        mDatabaseRefMensajes.child(mUser.getUid()).child(pId).child(d.getKey()).child("reaccion").setValue("like");
+                                                                    }
+                                                                }
+                                                                mDatabaseRefMensajes.child(pId).child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                    @Override
+                                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                        for (DataSnapshot d: snapshot.getChildren()) { //Por cada datasnapshot (es decir cada foto subida a firebase)
+                                                                            Mensaje mensaje=d.getValue(Mensaje.class);
+                                                                            if(mensaje.getUsuario().equals(model.getUsuario())&&mensaje.getHora().equals(model.getHora())&&mensaje.getMensaje().equals(model.getMensaje())){
+                                                                                mDatabaseRefMensajes.child(pId).child(mUser.getUid()).child(d.getKey()).child("reaccion").setValue("like");
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                    @Override
+                                                                    public void onCancelled(@NonNull DatabaseError error) {
+                                                                    }
+                                                                });
+                                                            }
+                                                            @Override
+                                                            public void onCancelled(@NonNull DatabaseError error) {
+                                                            }
+                                                        });
+
+                                                    }
+                                                }else if (id == R.id.popupReaccionar_feliz) {
+                                                    if(model.getReaccion().equals("feliz")){
+
+                                                        Toast.makeText(getContext(),"Has quitado el estado feliz",Toast.LENGTH_SHORT).show();
+                                                        mDatabaseRefMensajes.child(mUser.getUid()).child(pId).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                            @Override
+                                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                for (DataSnapshot d: snapshot.getChildren()) { //Por cada datasnapshot (es decir cada foto subida a firebase)
+                                                                    Mensaje mensaje=d.getValue(Mensaje.class);
+                                                                    if(mensaje.getUsuario().equals(model.getUsuario())&&mensaje.getHora().equals(model.getHora())&&mensaje.getMensaje().equals(model.getMensaje())){
+                                                                        mDatabaseRefMensajes.child(mUser.getUid()).child(pId).child(d.getKey()).child("reaccion").setValue("");
+                                                                    }
+                                                                }
+                                                            }
+                                                            @Override
+                                                            public void onCancelled(@NonNull DatabaseError error) {
+                                                            }
+                                                        });
+                                                        mDatabaseRefMensajes.child(pId).child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                            @Override
+                                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                for (DataSnapshot d: snapshot.getChildren()) { //Por cada datasnapshot (es decir cada foto subida a firebase)
+                                                                    Mensaje mensaje=d.getValue(Mensaje.class);
+                                                                    if(mensaje.getUsuario().equals(model.getUsuario())&&mensaje.getHora().equals(model.getHora())&&mensaje.getMensaje().equals(model.getMensaje())){
+                                                                        mDatabaseRefMensajes.child(pId).child(mUser.getUid()).child(d.getKey()).child("reaccion").setValue("");
+                                                                    }
+                                                                }
+                                                            }
+                                                            @Override
+                                                            public void onCancelled(@NonNull DatabaseError error) {
+                                                            }
+                                                        });
+                                                    }else{
+
+                                                        Toast.makeText(getContext(),"REaccion feliz",Toast.LENGTH_SHORT).show();
+                                                        mDatabaseRefMensajes.child(mUser.getUid()).child(pId).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                            @Override
+                                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                for (DataSnapshot d: snapshot.getChildren()) { //Por cada datasnapshot (es decir cada foto subida a firebase)
+                                                                    Mensaje mensaje=d.getValue(Mensaje.class);
+                                                                    if(mensaje.getUsuario().equals(model.getUsuario())&&mensaje.getHora().equals(model.getHora())&&mensaje.getMensaje().equals(model.getMensaje())){
+                                                                        mDatabaseRefMensajes.child(mUser.getUid()).child(pId).child(d.getKey()).child("reaccion").setValue("feliz");
+                                                                    }
+                                                                }
+                                                                mDatabaseRefMensajes.child(pId).child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                    @Override
+                                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                        for (DataSnapshot d: snapshot.getChildren()) { //Por cada datasnapshot (es decir cada foto subida a firebase)
+                                                                            Mensaje mensaje=d.getValue(Mensaje.class);
+                                                                            if(mensaje.getUsuario().equals(model.getUsuario())&&mensaje.getHora().equals(model.getHora())&&mensaje.getMensaje().equals(model.getMensaje())){
+                                                                                mDatabaseRefMensajes.child(pId).child(mUser.getUid()).child(d.getKey()).child("reaccion").setValue("feliz");
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                    @Override
+                                                                    public void onCancelled(@NonNull DatabaseError error) {
+                                                                    }
+                                                                });
+                                                            }
+                                                            @Override
+                                                            public void onCancelled(@NonNull DatabaseError error) {
+                                                            }
+                                                        });
+
+                                                    }
+                                                }else if (id == R.id.popupReaccionar_enfadado) {
+                                                    if(model.getReaccion().equals("enfadado")){
+
+                                                        Toast.makeText(getContext(),"Has quitado el estado enfadado",Toast.LENGTH_SHORT).show();
+                                                        mDatabaseRefMensajes.child(mUser.getUid()).child(pId).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                            @Override
+                                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                for (DataSnapshot d: snapshot.getChildren()) { //Por cada datasnapshot (es decir cada foto subida a firebase)
+                                                                    Mensaje mensaje=d.getValue(Mensaje.class);
+                                                                    if(mensaje.getUsuario().equals(model.getUsuario())&&mensaje.getHora().equals(model.getHora())&&mensaje.getMensaje().equals(model.getMensaje())){
+                                                                        mDatabaseRefMensajes.child(mUser.getUid()).child(pId).child(d.getKey()).child("reaccion").setValue("");
+                                                                    }
+                                                                }
+                                                            }
+                                                            @Override
+                                                            public void onCancelled(@NonNull DatabaseError error) {
+                                                            }
+                                                        });
+                                                        mDatabaseRefMensajes.child(pId).child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                            @Override
+                                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                for (DataSnapshot d: snapshot.getChildren()) { //Por cada datasnapshot (es decir cada foto subida a firebase)
+                                                                    Mensaje mensaje=d.getValue(Mensaje.class);
+                                                                    if(mensaje.getUsuario().equals(model.getUsuario())&&mensaje.getHora().equals(model.getHora())&&mensaje.getMensaje().equals(model.getMensaje())){
+                                                                        mDatabaseRefMensajes.child(pId).child(mUser.getUid()).child(d.getKey()).child("reaccion").setValue("");
+                                                                    }
+                                                                }
+                                                            }
+                                                            @Override
+                                                            public void onCancelled(@NonNull DatabaseError error) {
+                                                            }
+                                                        });
+                                                    }else{
+
+                                                        Toast.makeText(getContext(),"estado enfadado",Toast.LENGTH_SHORT).show();
+                                                        mDatabaseRefMensajes.child(mUser.getUid()).child(pId).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                            @Override
+                                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                for (DataSnapshot d: snapshot.getChildren()) { //Por cada datasnapshot (es decir cada foto subida a firebase)
+                                                                    Mensaje mensaje=d.getValue(Mensaje.class);
+                                                                    if(mensaje.getUsuario().equals(model.getUsuario())&&mensaje.getHora().equals(model.getHora())&&mensaje.getMensaje().equals(model.getMensaje())){
+                                                                        mDatabaseRefMensajes.child(mUser.getUid()).child(pId).child(d.getKey()).child("reaccion").setValue("enfadado");
+                                                                    }
+                                                                }
+                                                                mDatabaseRefMensajes.child(pId).child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                    @Override
+                                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                        for (DataSnapshot d: snapshot.getChildren()) { //Por cada datasnapshot (es decir cada foto subida a firebase)
+                                                                            Mensaje mensaje=d.getValue(Mensaje.class);
+                                                                            if(mensaje.getUsuario().equals(model.getUsuario())&&mensaje.getHora().equals(model.getHora())&&mensaje.getMensaje().equals(model.getMensaje())){
+                                                                                mDatabaseRefMensajes.child(pId).child(mUser.getUid()).child(d.getKey()).child("reaccion").setValue("enfadado");
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                    @Override
+                                                                    public void onCancelled(@NonNull DatabaseError error) {
+                                                                    }
+                                                                });
+                                                            }
+                                                            @Override
+                                                            public void onCancelled(@NonNull DatabaseError error) {
+                                                            }
+                                                        });
+
+                                                    }
+                                                }
+                                                return true;
+                                            }
+                                        });
+                                        popupReaccionar.show();//showing popup menu
+                                        //abrir_mapa();
+                                    }else if (id == R.id.popupMenu_editarMensaje) {
+                                        Log.d("Logs", "popupMenu_editarMensaje");
+                                        //abrir_fotos();
+                                    }
+                                    return true;
+                                }
+                            });
+
+
+                            popup.show();//showing popup menu
+
+
+                        }
+                    });
+                    holder.mensajeTextoUno.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View v) {
+                            Log.d("Logs", "popupMenu_like");
                             if(model.getReaccion().equals("like")){
+
                                 Toast.makeText(getContext(),"Has quitado el like",Toast.LENGTH_SHORT).show();
                                 mDatabaseRefMensajes.child(mUser.getUid()).child(pId).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
@@ -721,26 +1114,28 @@ public class ChatFragment extends Fragment {
                                                 mDatabaseRefMensajes.child(mUser.getUid()).child(pId).child(d.getKey()).child("reaccion").setValue("like");
                                             }
                                         }
-                                    }
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
-                                    }
-                                });
-                                mDatabaseRefMensajes.child(pId).child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        for (DataSnapshot d: snapshot.getChildren()) { //Por cada datasnapshot (es decir cada foto subida a firebase)
-                                            Mensaje mensaje=d.getValue(Mensaje.class);
-                                            if(mensaje.getUsuario().equals(model.getUsuario())&&mensaje.getHora().equals(model.getHora())&&mensaje.getMensaje().equals(model.getMensaje())){
-                                                mDatabaseRefMensajes.child(pId).child(mUser.getUid()).child(d.getKey()).child("reaccion").setValue("like");
+                                        mDatabaseRefMensajes.child(pId).child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                for (DataSnapshot d: snapshot.getChildren()) { //Por cada datasnapshot (es decir cada foto subida a firebase)
+                                                    Mensaje mensaje=d.getValue(Mensaje.class);
+                                                    if(mensaje.getUsuario().equals(model.getUsuario())&&mensaje.getHora().equals(model.getHora())&&mensaje.getMensaje().equals(model.getMensaje())){
+                                                        mDatabaseRefMensajes.child(pId).child(mUser.getUid()).child(d.getKey()).child("reaccion").setValue("like");
+                                                    }
+                                                }
                                             }
-                                        }
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {
+                                            }
+                                        });
                                     }
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError error) {
                                     }
                                 });
+
                             }
+                            return false;
                         }
                     });
                 }
@@ -770,10 +1165,10 @@ public class ChatFragment extends Fragment {
     }
 
 
-    public void mandarMensaje(){
+    public void mandarMensaje(Uri uri){
         //Mandar un mensaje.
         String mensaj=mensaje.getText().toString();
-        if(!mensaj.equals("")){ //El mensaje debe ser distinto de "", sino no se mandara
+        if((!mensaj.equals("")|| uri!=null)){ //El mensaje debe ser distinto de "", sino no se mandara
             Date date = new Date();
             SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
             mensaje.setText(""); //Actualizamos el valor de mensaje a "" para q el usuario escriba otro mensaje
@@ -781,7 +1176,11 @@ public class ChatFragment extends Fragment {
 
             //Creamos un hashMap que subiremos a la base de datos en la tabla MensajesChat, y guardaremos el mensaje enviado y el Uid del usuario que lo ha mandado, en este caso yo
             HashMap hashMap=new HashMap();
-            hashMap.put("mensaje",mensaj);
+            if(uri!=null){
+                hashMap.put("mensaje",uri.toString());
+            }else {
+                hashMap.put("mensaje", mensaj);
+            }
             hashMap.put("usuario",mUser.getUid());
             hashMap.put("hora",formatter.format(date));
             hashMap.put("reaccion","");
