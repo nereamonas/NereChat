@@ -1,6 +1,7 @@
 package com.example.nerechat.ui.chats;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -178,7 +179,7 @@ public class ChatsAmigosFragment extends Fragment {
             @Override
             protected void onBindViewHolder(@NonNull ViewHolderChatUsuarios holder, int position, @NonNull Usuario model) {
                 //Por cada elemento tendremos q añadirlo al holder, pero tenemos que mirar si es nuestro perfil actual, ya que en ese caso no deberiamos mostrarlo, porque una persona no va a hablar con si mismo
-                mDatabaseRefMensajes.child(mUser.getUid()).child(model.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                mDatabaseRefMensajes.child(mUser.getUid()).child(model.getUid()).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if(snapshot.exists()){
@@ -194,12 +195,14 @@ public class ChatsAmigosFragment extends Fragment {
                             Log.d("Logs","Ultimo mensaje: "+lista.get(lista.size()-1).getMensaje());
                             Mensaje ultimo=lista.get(lista.size()-1);
                             String msg=ultimo.getMensaje();
-                            if (ultimo.getUsuario().equals(mUser.getUid())){
-                                msg="Tú: "+ultimo.getMensaje();
-                                holder.info.setTextColor(getContext().getResources().getColor(R.color.azul_oscuro));
-                            }
-                            if(ultimo.getMensaje().contains("https://firebasestorage.googleapis.com/")) {
+                             if(ultimo.getMensaje().contains("https://firebasestorage.googleapis.com/")) {
                                 msg="IMAGEN";
+                            }
+                            if (ultimo.getUsuario().equals(mUser.getUid())){
+                                msg="Tú: "+msg;
+                                holder.info.setTextColor(Color.parseColor("#61699C"));
+                            }else{
+                                holder.info.setTextColor(Color.parseColor("#AAAAAA"));
                             }
                             holder.info.setText(msg); //Mostramos la info
                             holder.textHoraUltimoMensaje.setText(ultimo.getHora());
@@ -218,8 +221,10 @@ public class ChatsAmigosFragment extends Fragment {
                                         }
                                         if(mensajesLeidos!=0){
                                             holder.textViewMensajesSinLeer.setText(""+mensajesLeidos);
-                                            holder.textHoraUltimoMensaje.setTextColor(getContext().getResources().getColor(R.color.verde));
-                                            holder.textViewMensajesSinLeer.setTextColor(getContext().getResources().getColor(R.color.verde));
+                                            holder.textHoraUltimoMensaje.setTextColor(Color.parseColor("#50DA2A"));
+                                            holder.textViewMensajesSinLeer.setTextColor(Color.parseColor("#50DA2A"));
+                                            holder.info.setTextColor(Color.parseColor("#50DA2A"));
+
                                         }
                                     }
                                     @Override

@@ -252,6 +252,7 @@ public class ChatFragment extends Fragment {
                     Picasso.get().load(pFotoPerfil).into(barraPerfilImg); //Mostramos la foto de perfil en pantalla
                     barraUsername.setText(pNombreUsu);//Mostramos el nombre de usuario en pantalla
 
+                    mantenerEstadoActualizado();
                     //Mirar si tiene la ultima hora para mostrarla
                     SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext()); //Cogemos las preferencias
                     if (prefs.contains("ultimaHora")) { //Comprobamos si existe notif
@@ -346,7 +347,6 @@ public class ChatFragment extends Fragment {
                                         ImageSpan image = new ImageSpan(getContext(), myBitmap);
                                         span.setSpan(image, 0, 1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
 
-                                        holder.mensajeTextoDos.setTextSize(TypedValue.COMPLEX_UNIT_SP,getResources().getDimension(R.dimen.textsize));
                                         holder.mensajeTextoDos.setText(span, TextView.BufferType.SPANNABLE);
 
                                     }
@@ -517,7 +517,7 @@ public class ChatFragment extends Fragment {
                                                                 mDatabaseRefMensajes.child(pId).child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                                                                     @Override
                                                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                                        for (DataSnapshot d : snapshot.getChildren()) { //Por cada datasnapshot (es decir cada foto subida a firebase)
+                                                                     for (DataSnapshot d : snapshot.getChildren()) { //Por cada datasnapshot (es decir cada foto subida a firebase)
                                                                             Mensaje mensaje = d.getValue(Mensaje.class);
                                                                             if (mensaje.getUsuario().equals(model.getUsuario()) && mensaje.getHora().equals(model.getHora()) && mensaje.getMensaje().equals(model.getMensaje())) {
                                                                                 mDatabaseRefMensajes.child(pId).child(mUser.getUid()).child(d.getKey()).child("reaccion").setValue("like");
@@ -878,7 +878,6 @@ public class ChatFragment extends Fragment {
                                         ImageSpan image = new ImageSpan(getContext(), myBitmap);
                                         span.setSpan(image, 0, 1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
 
-                                        holder.mensajeTextoUno.setTextSize(TypedValue.COMPLEX_UNIT_SP,getResources().getDimension(R.dimen.textsize));
                                         holder.mensajeTextoUno.setText(span, TextView.BufferType.SPANNABLE);
 
                                     }
@@ -1287,11 +1286,13 @@ public class ChatFragment extends Fragment {
             public void onItemRangeInserted(int positionStart, int itemCount) {
                 //messagesList.smoothScrollToPosition(adapter.getItemCount());
                 Log.d("Logs", "cantidad adapter: " + adapter.getItemCount());
+                cambiarMensajesALeido();
                 ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPositionWithOffset(adapter.getItemCount() - 1, 200);
             }
         });
 
         adapter.startListening();
+
         recyclerView.setAdapter(adapter);
     }
 
@@ -1382,12 +1383,33 @@ public class ChatFragment extends Fragment {
     }
 
     public void cambiarMensajesALeido() {
-
+//Cambio los mensajes que no sean enviados por mi a leido
         mDatabaseRefMensajes.child(pId).child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot d : snapshot.getChildren()) { //Por cada datasnapshot (es decir cada foto subida a firebase)
-                    mDatabaseRefMensajes.child(pId).child(mUser.getUid()).child(d.getKey()).child("leido").setValue("si");
+                    Mensaje mensaje = d.getValue(Mensaje.class);
+                    String usuario=mensaje.getUsuario();
+                    if(!usuario.equals(mUser.getUid())){
+                        mDatabaseRefMensajes.child(pId).child(mUser.getUid()).child(d.getKey()).child("leido").setValue("si");
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+
+        mDatabaseRefMensajes.child(mUser.getUid()).child(pId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot d : snapshot.getChildren()) { //Por cada datasnapshot (es decir cada foto subida a firebase)
+                    Mensaje mensaje = d.getValue(Mensaje.class);
+                    String usuario=mensaje.getUsuario();
+                    if(!usuario.equals(mUser.getUid())){ //Cambio los mensajes que no sean enviados por mi a leido
+                        mDatabaseRefMensajes.child(mUser.getUid()).child(pId).child(d.getKey()).child("leido").setValue("si");
+                    }
                 }
             }
 
@@ -1397,17 +1419,29 @@ public class ChatFragment extends Fragment {
         });
 
     }
+    ValueEventListener eventListenerEstado=null;
+    public void mantenerEstadoActualizado(){
+        eventListenerEstado=mDatabaseRef.child(pId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    pEstado = snapshot.child("conectado").getValue().toString();
+                    barraStado.setText(pEstado); //no estan bloqueados asiq mostramos
+                }
+            }
 
-
-    public Drawable loadImageFromURL(String url, String name) {
-        try {
-            InputStream is = (InputStream) new URL(url).getContent();
-            Drawable d = Drawable.createFromStream(is, name);
-            return d;
-        } catch (Exception e) {
-            return null;
-        }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
     }
 
-
+    @Override
+    public void onDetach() {
+        adapter.stopListening();
+        recyclerView=null;
+        adapter=null;
+        mDatabaseRef.removeEventListener(eventListenerEstado);
+        super.onDetach();
+    }
 }

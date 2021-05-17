@@ -4,6 +4,9 @@ package com.example.nerechat.ui.mapa;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.appcompat.view.menu.MenuPopupHelper;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -18,6 +21,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -158,32 +162,40 @@ public class MapsFragment extends BaseFragment implements GoogleMap.OnPolylineCl
         //mText = new MutableLiveData<>();
         View root=inflater.inflate(R.layout.fragment_maps, container, false);
 
-        Button IW_terrain=root.findViewById(R.id.IW_terrain);
-        Button IW_satellite=root.findViewById(R.id.IW_satellite);
-        Button IW_normal=root.findViewById(R.id.IW_normal);
-        Button IW_hybrid=root.findViewById(R.id.IW_hybrid);
-        IW_terrain.setOnClickListener(new View.OnClickListener() {
+        Button IW_vista=root.findViewById(R.id.IW_vista);
+        IW_vista.setTextColor(getResources().getColor(R.color.white));
+        IW_vista.setBackgroundColor(getResources().getColor(R.color.azul_oscuro));
+
+        IW_vista.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-            }
-        });
-        IW_hybrid.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-            }
-        });
-        IW_normal.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-            }
-        });
-        IW_satellite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+
+                //POPUP MENU
+                //Creating the instance of PopupMenu
+                PopupMenu popup = new PopupMenu(getContext(), IW_vista);
+                //Inflating the Popup using xml file
+                popup.getMenuInflater().inflate(R.menu.popup_maps, popup.getMenu());
+
+                //registering popup with OnMenuItemClickListener
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+                        int id = item.getItemId();
+                        if (id == R.id.popupMaps_relieve) {
+                            map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+                        } else if (id == R.id.popupMaps_hibrido) {
+                            map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                        } else if (id == R.id.popupMaps_satelite) {
+                            map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                        }else if (id == R.id.popupMaps_normal) {
+                            map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                        }
+                        return true;
+                    }
+                });
+                MenuPopupHelper menuHelper = new MenuPopupHelper(getContext(), (MenuBuilder) popup.getMenu(),IW_vista);
+                menuHelper.setForceShowIcon(true);
+                menuHelper.show();
+
             }
         });
 

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/popupMaps_relieve"
+        android:icon="@mipmap/ic_maps_relieve"
+        android:title="Relieve" />
+    <item
+        android:id="@+id/popupMaps_hibrido"
+        android:icon="@mipmap/ic_maps_hibrido"
+        android:title="Hibrido"/>
+    <item
+        android:id="@+id/popupMaps_satelite"
+        android:icon="@mipmap/ic_maps_satelite"
+        android:title="Satelite"/>
+    <item
+        android:id="@+id/popupMaps_normal"
+        android:icon="@mipmap/ic_maps_normal"
+        android:title="Normal"/>
+</menu>
