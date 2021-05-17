@@ -6,17 +6,13 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.lifecycle.MutableLiveData;
 
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -28,12 +24,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.nerechat.R;
-import com.example.nerechat.adaptadores.RecyclerViewAdapterChatUsuarios.ViewHolderMensaje;
 import com.example.nerechat.base.BaseFragment;
-import com.example.nerechat.helpClass.Mensaje;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -54,7 +49,6 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.api.gax.grpc.ProtoOperationTransformers;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -69,12 +63,7 @@ import com.google.maps.android.ui.IconGenerator;
 import com.google.maps.internal.PolylineEncoding;
 import com.google.maps.model.DirectionsResult;
 import com.google.maps.model.DirectionsRoute;
-import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -358,61 +347,38 @@ public class MapsFragment extends BaseFragment implements GoogleMap.OnPolylineCl
     }
 
     public void crearPunto(LatLng posicion, String usuario, String foto) { //Creamos un punto. igual q el punto inicial, pero tendra otro titulo diferente
-        // URL url= null;
-        //try {
-        //url = new URL(foto);
-        //Bitmap icon= BitmapFactory.decodeStream(url.openConnection().getInputStream());
-        // map.addMarker(new MarkerOptions().position(posicion).title("Usuario: "+usuario)).setIcon(BitmapDescriptorFactory.fromBitmap(icon));
-       /* } catch (MalformedURLException e) {
-            map.addMarker(new MarkerOptions().position(posicion).title("Usuario: "+usuario));
-            e.printStackTrace();
-        } catch (IOException e) {
-            map.addMarker(new MarkerOptions().position(posicion).title("Usuario: "+usuario));
-            e.printStackTrace();
-        }*/
-
-        /*
-       // AsyncTask.execute(new Runnable() {
-       //     @Override
-        //    public void run() {
-                Log.d("Logs","Foto: "+foto);
-                try {
-                    URL   url = new URL(foto);
-                   bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-
-                    map.addMarker(new MarkerOptions().position(posicion).title("Usuario: "+usuario)).setIcon(BitmapDescriptorFactory.fromBitmap(bmp));
-
-                    Log.d("Logs","yesss "+ usuario);
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-         //   }
-        //});
-        if(bmp!=null){
-
-            map.addMarker(new MarkerOptions().position(posicion).title("Usuario: "+usuario)).setIcon(BitmapDescriptorFactory.fromBitmap(bmp));
-
-        }else {
-
-            map.addMarker(new MarkerOptions().position(posicion).title("Usuario: " + usuario));
-        }
-*/
-        ImageView imagen = new ImageView(getContext());
-        //Uri uri=Uri.parse(foto);
-        //imagen.setImageURI(uri);
-        Picasso.get().load(foto).into(imagen); //Muestro la foto del otro
 
 
-        IconGenerator mIconGenerator = new IconGenerator(getActivity().getApplicationContext());
-        imagen.setLayoutParams(new ViewGroup.LayoutParams((int)getContext().getResources().getDimension(R.dimen.marker_imagen),(int)getContext().getResources().getDimension(R.dimen.marker_imagen)));
-        int padding=(int) getContext().getResources().getDimension(R.dimen.marker_padding);
-        imagen.setPadding(padding,padding,padding,padding);
-        mIconGenerator.setContentView(imagen);
+        Glide.with(getContext())
+                .load(foto)
+                .asBitmap()
+                .placeholder(R.drawable.place_holder_image)
+                .error(R.drawable.place_holder_image)
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(final Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                        Bitmap bitmap=resource;
 
-        Bitmap icon=mIconGenerator.makeIcon();
-        map.addMarker(new MarkerOptions().position(posicion).title(usuario).snippet("Toca para calcular el trayecto hasta "+usuario).icon(BitmapDescriptorFactory.fromBitmap(icon)));
+                        ImageView imagen = new ImageView(getContext());
+                        imagen.setImageBitmap(bitmap);
+                        IconGenerator mIconGenerator = new IconGenerator(getActivity().getApplicationContext());
+                        imagen.setLayoutParams(new ViewGroup.LayoutParams((int)getContext().getResources().getDimension(R.dimen.marker_imagen),(int)getContext().getResources().getDimension(R.dimen.marker_imagen)));
+                        int padding=(int) getContext().getResources().getDimension(R.dimen.marker_padding);
+                        imagen.setPadding(padding,padding,padding,padding);
+                        mIconGenerator.setContentView(imagen);
+
+                        Bitmap icon=mIconGenerator.makeIcon();
+                        map.addMarker(new MarkerOptions().position(posicion).title(usuario).snippet("Toca para calcular el trayecto hasta "+usuario).icon(BitmapDescriptorFactory.fromBitmap(icon)));
+
+                    }
+                    @Override
+                    public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                        super.onLoadFailed(e, errorDrawable);
+                    }
+                });
+
+
+
 
         Log.d("Logs","Añadir marca"+ usuario+"imagen: "+foto);
        // map.addMarker(new MarkerOptions().position(posicion).title("Usuario: "+usuario));
