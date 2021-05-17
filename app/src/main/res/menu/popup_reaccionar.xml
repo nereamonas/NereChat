@@ -3,7 +3,7 @@
     <item
         android:id="@+id/popupReaccionar_like"
         android:icon="@mipmap/ic_like"
-        android:title="Like" />
+        android:title="Me gusta" />
     <item
         android:id="@+id/popupReaccionar_feliz"
         android:icon="@mipmap/ic_feliz"

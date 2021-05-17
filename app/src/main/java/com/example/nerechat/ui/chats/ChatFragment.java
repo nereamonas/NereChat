@@ -15,6 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.appcompat.view.menu.MenuPopupHelper;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -381,6 +383,7 @@ public class ChatFragment extends Fragment {
                             //Inflating the Popup using xml file
                             popup.getMenuInflater().inflate(R.menu.popup_menu_mensaje, popup.getMenu());
 
+
                             //registering popup with OnMenuItemClickListener
                             popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                                 public boolean onMenuItemClick(MenuItem item) {
@@ -672,18 +675,85 @@ public class ChatFragment extends Fragment {
                                                 return true;
                                             }
                                         });
-                                        popupReaccionar.show();//showing popup menu
+                                        MenuPopupHelper menuHelperReaccionar = new MenuPopupHelper(getContext(), (MenuBuilder) popupReaccionar.getMenu(),holder.mensajeFotoPerfilDos);
+                                        menuHelperReaccionar.setForceShowIcon(true);
+                                        menuHelperReaccionar.show();
+                                        //popupReaccionar.show();//showing popup menu
                                                     //abrir_mapa();
                                     }else if (id == R.id.popupMenu_editarMensaje) {
                                         Log.d("Logs", "popupMenu_editarMensaje");
                                         //abrir_fotos();
+
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                        builder.setTitle("Escribe el mensaje editado");
+                                        //Añadimos en la alerta un edit text
+                                        final EditText input = new EditText(getContext());  //Creamos un edit text. para q el usuairo pueda insertar el titulo
+                                        builder.setView(input);
+                                        //Si el usuario da al ok
+                                        builder.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {  //Si el usuario acepta, mostramos otra alerta con los ejercicios que puede agregar
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                String mensajeNuevo = input.getText().toString();
+
+                                                if (!mensajeNuevo.equals("")){  //Comprobamos que haya ingresado un titulo, ya que si el titulo es nulo, no se creará la rutina
+
+                                                    mDatabaseRefMensajes.child(mUser.getUid()).child(pId).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                            for (DataSnapshot d: snapshot.getChildren()) { //Por cada datasnapshot (es decir cada foto subida a firebase)
+                                                                Mensaje mensaje=d.getValue(Mensaje.class);
+                                                                if(mensaje.getUsuario().equals(model.getUsuario())&&mensaje.getHora().equals(model.getHora())&&mensaje.getMensaje().equals(model.getMensaje())){
+                                                                    mDatabaseRefMensajes.child(mUser.getUid()).child(pId).child(d.getKey()).child("mensaje").setValue("Editado: "+mensajeNuevo);
+                                                                }
+                                                            }
+                                                            mDatabaseRefMensajes.child(pId).child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                @Override
+                                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                    for (DataSnapshot d: snapshot.getChildren()) { //Por cada datasnapshot (es decir cada foto subida a firebase)
+                                                                        Mensaje mensaje=d.getValue(Mensaje.class);
+                                                                        if(mensaje.getUsuario().equals(model.getUsuario())&&mensaje.getHora().equals(model.getHora())&&mensaje.getMensaje().equals(model.getMensaje())){
+                                                                            mDatabaseRefMensajes.child(pId).child(mUser.getUid()).child(d.getKey()).child("mensaje").setValue("Editado: "+mensajeNuevo);
+                                                                        }
+                                                                    }
+                                                                }
+                                                                @Override
+                                                                public void onCancelled(@NonNull DatabaseError error) {
+                                                                }
+                                                            });
+                                                        }
+                                                        @Override
+                                                        public void onCancelled(@NonNull DatabaseError error) {
+                                                        }
+                                                    });
+
+
+                                                }
+
+                                            }
+                                        });
+
+                                        //Si se cancela, no se creará la rutina y se cancelará el dialogo
+                                        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.cancel();
+                                            }
+                                        });
+
+                                        builder.show();
                                     }
                                     return true;
                                 }
                             });
 
+                            MenuPopupHelper menuHelper = new MenuPopupHelper(getContext(), (MenuBuilder) popup.getMenu(),holder.mensajeFotoPerfilDos);
+                            menuHelper.setForceShowIcon(true);
 
-                            popup.show();//showing popup menu
+                            if(model.getMensaje().contains("https://firebasestorage.googleapis.com/")) {
+                                popup.getMenu().findItem(R.id.popupMenu_editarMensaje).setEnabled(false);
+                            }
+                            menuHelper.show();
+                            //popup.show();//showing popup menu
 
 
 
@@ -782,7 +852,39 @@ public class ChatFragment extends Fragment {
                     }else{
                         holder.imageLikeUno.setVisibility(View.GONE);
                     }
-                    holder.mensajeTextoUno.setText(model.getMensaje()); //Muestro en la pantalla el mensaje del otro
+
+                    if(model.getMensaje().contains("https://firebasestorage.googleapis.com/")){
+
+                        ImageView imagen = new ImageView(getContext());
+                        //Uri uri=Uri.parse(model.getMensaje());
+                        //imagen.setImageURI(uri);
+                        Picasso.get().load(model.getMensaje()).into(imagen); //Muestro la foto del otro
+
+                        //imagen.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_verde));
+                        IconGenerator mIconGenerator = new IconGenerator(getActivity().getApplicationContext());
+                        imagen.setLayoutParams(new ViewGroup.LayoutParams((int)getContext().getResources().getDimension(R.dimen.marker_imagen2),(int)getContext().getResources().getDimension(R.dimen.marker_imagen2)));
+                        int padding=(int) getContext().getResources().getDimension(R.dimen.marker_padding);
+                        imagen.setPadding(padding,padding,padding,padding);
+                        mIconGenerator.setContentView(imagen);
+
+                        Bitmap icon=mIconGenerator.makeIcon();
+
+                        //Drawable d=new BitmapDrawable(Resources.getSystem(), icon);
+                        SpannableStringBuilder ssb=new SpannableStringBuilder("I");
+
+                        //BitmapDescriptorFactory.fromBitmap(icon)
+                        //ImageSpan is=new ImageSpan(getContext(),imagen.getDrawable());
+
+                        ssb.setSpan(new ImageSpan(getContext(),icon),0,1, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+
+                        holder.mensajeTextoUno.setTextSize(TypedValue.COMPLEX_UNIT_SP,
+                                getResources().getDimension(R.dimen.textsize));
+                        holder.mensajeTextoUno.setText(ssb,TextView.BufferType.SPANNABLE);
+
+                    }else {
+                        holder.mensajeTextoUno.setText(model.getMensaje()); //Pongo mi mezu
+                    }
+
                     holder.mensajeHoraUno.setText(model.getHora());
                     Picasso.get().load(pFotoPerfil).into(holder.mensajeFotoPerfilUno); //Muestro la foto del otro
                     holder.mensajeTextoUno.setOnClickListener(new View.OnClickListener() {
@@ -1051,18 +1153,24 @@ public class ChatFragment extends Fragment {
                                                 return true;
                                             }
                                         });
-                                        popupReaccionar.show();//showing popup menu
+                                        MenuPopupHelper menuHelperReaccionar = new MenuPopupHelper(getContext(), (MenuBuilder) popupReaccionar.getMenu(),holder.mensajeFotoPerfilUno);
+                                        menuHelperReaccionar.setForceShowIcon(true);
+                                        menuHelperReaccionar.show();
+                                        //popupReaccionar.show();//showing popup menu
                                         //abrir_mapa();
                                     }else if (id == R.id.popupMenu_editarMensaje) {
-                                        Log.d("Logs", "popupMenu_editarMensaje");
-                                        //abrir_fotos();
+
+
                                     }
                                     return true;
                                 }
                             });
 
-
-                            popup.show();//showing popup menu
+                            MenuPopupHelper menuHelper = new MenuPopupHelper(getContext(), (MenuBuilder) popup.getMenu(),holder.mensajeFotoPerfilUno);
+                            menuHelper.setForceShowIcon(true);
+                            popup.getMenu().findItem(R.id.popupMenu_editarMensaje).setVisible(false);
+                            menuHelper.show();
+                            //popup.show();//showing popup menu
 
 
                         }
