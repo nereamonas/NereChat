@@ -190,6 +190,7 @@ public class ChatbotFragment extends Fragment implements BotReply {
 
                     holder.imageLikeDos.setVisibility(View.GONE);
                     holder.imageLikeUno.setVisibility(View.GONE);
+                    holder.imageDobleCheckDos.setVisibility(View.GONE);
 
                     holder.mensajeTextoDos.setText(model.getMensaje()); //Pongo mi mezu
                     holder.mensajeHoraDos.setText(model.getHora());
@@ -204,6 +205,7 @@ public class ChatbotFragment extends Fragment implements BotReply {
 
                     holder.imageLikeDos.setVisibility(View.GONE);
                     holder.imageLikeUno.setVisibility(View.GONE);
+                    holder.imageDobleCheckDos.setVisibility(View.GONE);
 
                     holder.mensajeTextoUno.setText(model.getMensaje()); //Muestro en la pantalla el mensaje del otro
                     holder.mensajeHoraUno.setText(model.getHora());
