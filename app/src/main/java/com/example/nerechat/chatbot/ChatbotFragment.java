@@ -1,13 +1,11 @@
 package com.example.nerechat.chatbot;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.nerechat.MainActivity;
 import com.example.nerechat.R;
 import com.example.nerechat.adaptadores.RecyclerViewAdapterChatUsuarios.ViewHolderMensaje;
 import com.example.nerechat.helpClass.Mensaje;
@@ -50,11 +47,8 @@ import com.squareup.picasso.Picasso;
 
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 import de.hdodenhof.circleimageview.CircleImageView;

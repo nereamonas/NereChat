@@ -36,7 +36,7 @@
 
     <PreferenceCategory app:title="@string/ajustes_otros">
         <ListPreference
-            app:defaultValue="morado"
+            app:defaultValue="azul"
             app:entries="@array/tema_entries"
             app:entryValues="@array/tema_values"
             app:key="tema"

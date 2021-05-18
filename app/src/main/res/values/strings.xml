@@ -97,4 +97,14 @@
     <string name="alerta_Escribeelmensajeeditado">Escribe el mensaje editado</string>
     <string name="alerta_Guardar">Guardar</string>
     <string name="alerta_Cancelar">Cancelar</string>
+    <string name="toast_estadoactualizado">Estado actualizado</string>
+    <string name="toast_Elestadonosehapodidoactualizar">El estado no se ha podido actualizar</string>
+    <string name="toast_Nombredeusarioactualizado">Nombre de usuario actualizado</string>
+    <string name="toast_Elnombredeusuarionosehapodidoactualizar">El nombre de usuario no se ha podido actualizar</string>
+    <string name="toast_Fotodeperfilactualizada">Foto de perfil actualizada</string>
+    <string name="toast_nosehapodidocrearelperfil">No se ha podido crear el perfil</string>
+    <string name="toast_nosehapodidocrearlacuenta">No se ha podido crear la cuenta</string>
+    <string name="toast_Tienesqueseleccionarunafotodeperfil">Tienes que seleccionar una foto de perfil</string>
+    <string name="toast_Elnombredeusuarionoesvalido">El nombre de usuario no es válido</string>
+    <string name="toast_Nosehapodidoiniciarsesion">No se ha podido iniciar sesion. Revisa los datos</string>
 </resources>

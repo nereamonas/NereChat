@@ -1,7 +1,6 @@
 package com.example.nerechat;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -100,7 +99,8 @@ public class CrearCuentaActivity extends BaseActivity {
                         }else{
                             progressDialog.dismiss();//Cancelamos el dialogo de progreso
                             //Mostrar alerta de q no se ha podido registrar
-                            Toast.makeText(CrearCuentaActivity.this,"No se ha podido registrar",Toast.LENGTH_SHORT).show();
+
+                            Toast.makeText(CrearCuentaActivity.this,getString(R.string.toast_nosehapodidocrearlacuenta),Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

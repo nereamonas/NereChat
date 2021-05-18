@@ -80,4 +80,14 @@
     <string name="alerta_Escribeelmensajeeditado">Write the edited message</string>
     <string name="alerta_Guardar">Save</string>
     <string name="alerta_Cancelar">Cancel</string>
+    <string name="toast_estadoactualizado">Status updated</string>
+    <string name="toast_Elestadonosehapodidoactualizar">Status could not be updated</string>
+    <string name="toast_Nombredeusarioactualizado">Username updated</string>
+    <string name="toast_Elnombredeusuarionosehapodidoactualizar">Username could not be updated</string>
+    <string name="toast_Fotodeperfilactualizada">Updated profile picture</string>
+    <string name="toast_nosehapodidocrearelperfil">Profile could not be created</string>
+    <string name="toast_nosehapodidocrearlacuenta">Account could not be created</string>
+    <string name="toast_Tienesqueseleccionarunafotodeperfil">You have to select a profile photo</string>
+    <string name="toast_Elnombredeusuarionoesvalido">Username is not valid</string>
+    <string name="toast_Nosehapodidoiniciarsesion">Login failed. Check the data</string>
 </resources>

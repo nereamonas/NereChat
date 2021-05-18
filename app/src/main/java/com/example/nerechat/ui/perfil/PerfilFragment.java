@@ -23,17 +23,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.preference.PreferenceManager;
 
-import com.example.nerechat.CrearPerfilActivity;
 import com.example.nerechat.IniciarSesionActivity;
 import com.example.nerechat.R;
 import com.example.nerechat.base.BaseViewModel;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -47,8 +44,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
-
-import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -98,6 +93,7 @@ public class PerfilFragment extends Fragment {
         mStorageRef= FirebaseStorage.getInstance().getReference().child("ImagenesPerfil"); //En Storage almacenaremos todas las imagenes de perfil que suban los usuarios, y en la base de datos guardamos la uri que hace referencia a la foto en storage
 
 
+
         //Toolbar
 
         toolbar=root.findViewById(R.id.chat_toolbarPerfil);
@@ -145,13 +141,20 @@ public class PerfilFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String nuevoEstado = input.getText().toString();
-
+                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext()); //Cogemos las preferencias
+                        boolean activadas=false;
+                        if (prefs.contains("notiftoast")) { //Comprobamos si existe notif
+                            activadas = prefs.getBoolean("notiftoast", true);  //Comprobamos si las notificaciones estan activadas
+                        }
                         // actualizar
                         if (nuevoEstado != "") {
                             mDatabaseRef.child(mUser.getUid()).child("estado").setValue(nuevoEstado);
-                            Toast.makeText(getContext(), "Estado actualizado", Toast.LENGTH_SHORT).show();
+                            estado.setText(nuevoEstado);
+                            if(activadas)
+                            Toast.makeText(getContext(), getString(R.string.toast_estadoactualizado), Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(getContext(), "El estado no see ha podido actualizar", Toast.LENGTH_SHORT).show();
+                            if(activadas)
+                            Toast.makeText(getContext(), getString(R.string.toast_Elestadonosehapodidoactualizar), Toast.LENGTH_SHORT).show();
                         }
 
                     }
@@ -183,13 +186,20 @@ public class PerfilFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String nuevoNombreDeUsuario = input.getText().toString();
-
+                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext()); //Cogemos las preferencias
+                        boolean activadas=false;
+                        if (prefs.contains("notiftoast")) { //Comprobamos si existe notif
+                            activadas = prefs.getBoolean("notiftoast", true);  //Comprobamos si las notificaciones estan activadas
+                        }
                         // actualizar
                         if (nuevoNombreDeUsuario != "") {
                             mDatabaseRef.child(mUser.getUid()).child("nombreUsuario").setValue(nuevoNombreDeUsuario);
-                            Toast.makeText(getContext(), "Nombre de uusario actualizado", Toast.LENGTH_SHORT).show();
+                            nombreUsu.setText(nuevoNombreDeUsuario);
+                            if(activadas)
+                            Toast.makeText(getContext(), getString(R.string.toast_Nombredeusarioactualizado), Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(getContext(), "El nombre de usuario no see ha podido actualizar", Toast.LENGTH_SHORT).show();
+                            if(activadas)
+                            Toast.makeText(getContext(), getString(R.string.toast_Elnombredeusuarionosehapodidoactualizar), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -267,13 +277,21 @@ public class PerfilFragment extends Fragment {
                 mStorageRef.child(mUser.getUid()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
-                        mDatabaseRef.child(mUser.getUid()).child("fotoPerfil").setValue(uri);
-                        Toast.makeText(getContext(), "Imagen actualizada", Toast.LENGTH_SHORT).show();
+                        mDatabaseRef.child(mUser.getUid()).child("fotoPerfil").setValue(uri.toString());
+                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext()); //Cogemos las preferencias
+                        boolean activadas=false;
+                        if (prefs.contains("notiftoast")) { //Comprobamos si existe notif
+                            activadas = prefs.getBoolean("notiftoast", true);  //Comprobamos si las notificaciones estan activadas
+                        }
+                        if(activadas)
+                        Toast.makeText(getContext(), getString(R.string.toast_Fotodeperfilactualizada), Toast.LENGTH_SHORT).show();
                     }
+
                 });
             }
         });
     }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

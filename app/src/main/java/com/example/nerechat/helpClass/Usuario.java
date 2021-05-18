@@ -1,11 +1,5 @@
 package com.example.nerechat.helpClass;
 
-import android.net.Uri;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import de.hdodenhof.circleimageview.CircleImageView;
-
 public class Usuario {
     private String nombreUsuario;
     private String fotoPerfil;

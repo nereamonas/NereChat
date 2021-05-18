@@ -2,7 +2,6 @@ package com.example.nerechat;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -15,10 +14,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.nerechat.base.BaseActivity;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -123,7 +120,8 @@ public class CrearPerfilActivity extends BaseActivity {
                                         public void onFailure(@NonNull Exception e) {
                                             //No se ha podido crear el usuario
                                             progressDialog.dismiss();  //Cancelamos la barra de progreso
-                                            Toast.makeText(CrearPerfilActivity.this, "Ha ocurrido algun error al crear el perfil", Toast.LENGTH_SHORT).show();
+
+                                            Toast.makeText(CrearPerfilActivity.this, getString(R.string.toast_nosehapodidocrearelperfil), Toast.LENGTH_SHORT).show();
                                         }
                                     });
                                 }
@@ -131,10 +129,10 @@ public class CrearPerfilActivity extends BaseActivity {
                     }
                 });
             }else{
-                Toast.makeText(this,"Tienes que seleccionar una foto de perfil",Toast.LENGTH_SHORT).show();;
+                Toast.makeText(this,getString(R.string.toast_Tienesqueseleccionarunafotodeperfil),Toast.LENGTH_SHORT).show();;
             }
         }else{
-            Toast.makeText(this,"El nombre de usuario no es valido",Toast.LENGTH_SHORT).show();;
+            Toast.makeText(this,getString(R.string.toast_Elnombredeusuarionoesvalido),Toast.LENGTH_SHORT).show();;
         }
 
     }

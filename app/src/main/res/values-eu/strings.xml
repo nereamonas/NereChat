@@ -80,4 +80,14 @@
     <string name="alerta_Escribeelmensajeeditado">Idatzi editatutako mezua</string>
     <string name="alerta_Guardar">Gorde</string>
     <string name="alerta_Cancelar">Utzi</string>
+    <string name="toast_estadoactualizado">Egoera eguneratu da</string>
+    <string name="toast_Elestadonosehapodidoactualizar">Ezin izan da egoera eguneratu</string>
+    <string name="toast_Nombredeusarioactualizado">Erabiltzaile izena eguneratu da</string>
+    <string name="toast_Elnombredeusuarionosehapodidoactualizar">Ezin izan da erabiltzaile izena eguneratu</string>
+    <string name="toast_Fotodeperfilactualizada">Profileko argazkia eguneratu da</string>
+    <string name="toast_nosehapodidocrearelperfil">Ezin izan da profila sortu</string>
+    <string name="toast_nosehapodidocrearlacuenta">Ezin izan da kontua sortu</string>
+    <string name="toast_Tienesqueseleccionarunafotodeperfil">Profileko argazkia hautatu behar duzu</string>
+    <string name="toast_Elnombredeusuarionoesvalido">Erabiltzaile izenak ez du balio</string>
+    <string name="toast_Nosehapodidoiniciarsesion">Errorea saioa hastean. Egiaztatu datuak</string>
 </resources>

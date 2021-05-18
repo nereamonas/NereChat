@@ -1,7 +1,6 @@
 package com.example.nerechat;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -18,11 +17,8 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 public class IniciarSesionActivity extends BaseActivity {
     //Pagina de inicio de sesion
@@ -112,7 +108,7 @@ public class IniciarSesionActivity extends BaseActivity {
                         Log.d("Logs", "No se ha podido sign in ");
                         progressDialog.dismiss();
                         //Mostrar alerta de q no se ha podido registrar
-                        Toast.makeText(IniciarSesionActivity.this,"No se ha podido iniciar sesion. Revisa los datos",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(IniciarSesionActivity.this,getString(R.string.toast_Nosehapodidoiniciarsesion),Toast.LENGTH_SHORT).show();
                     }
                 }
             });
