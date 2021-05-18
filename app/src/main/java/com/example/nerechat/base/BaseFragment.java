@@ -4,6 +4,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
+
+import com.example.nerechat.R;
 
 public class BaseFragment extends Fragment {
     //Vamos a crear esta clase que será la base de los fragmentos. Cada vez q se cree un fragment, en vez d heredar directamente de Fragment
@@ -13,7 +16,7 @@ public class BaseFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         //Cogemos de sharedPreferences el tema que tiene el usuario guardado. Y dependiendo del valor, le asignamos al fragmento un tema u otro
-        /*
+
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         String tema = "";
         if (prefs.contains("tema")) {
@@ -21,37 +24,43 @@ public class BaseFragment extends Fragment {
         }
         switch (tema) {
             case "morado":
-                getContext().setTheme(R.style.Theme_Morado);
-                getActivity().setTheme(R.style.Theme_Morado);
+                getContext().setTheme(R.style.morado);
+                getActivity().setTheme(R.style.morado);
                 //((AppCompatActivity)getActivity()).getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#DA6CED")));
                 super.onCreate(savedInstanceState);
                 break;
             case "naranja":
-                getContext().setTheme(R.style.Theme_Naranja);
-                getActivity().setTheme(R.style.Theme_Naranja);
+                getContext().setTheme(R.style.naranja);
+                getActivity().setTheme(R.style.naranja);
                 //((AppCompatActivity)getActivity()).getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FF9800")));
                 super.onCreate(savedInstanceState);
                 break;
             case "verde":
-                getContext().setTheme(R.style.Theme_Verde);
-                getActivity().setTheme(R.style.Theme_Verde);
+                getContext().setTheme(R.style.verde);
+                getActivity().setTheme(R.style.verde);
                 //((AppCompatActivity)getActivity()).getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#8BC34A")));
                 super.onCreate(savedInstanceState);
                 break;
             case "azul":
-                getContext().setTheme(R.style.Theme_Azul);
-                getActivity().setTheme(R.style.Theme_Azul);
+                getContext().setTheme(R.style.azul);
+                getActivity().setTheme(R.style.azul);
+                //((AppCompatActivity)getActivity()).getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#86E9F6")));
+                super.onCreate(savedInstanceState);
+                break;
+            case "verdeazul":
+                getContext().setTheme(R.style.verdeazul);
+                getActivity().setTheme(R.style.verdeazul);
                 //((AppCompatActivity)getActivity()).getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#86E9F6")));
                 super.onCreate(savedInstanceState);
                 break;
             default:
-                getContext().setTheme(R.style.Theme_Morado);
-                getActivity().setTheme(R.style.Theme_Morado);
+                getContext().setTheme(R.style.azul);
+                getActivity().setTheme(R.style.azul);
                 super.onCreate(savedInstanceState);
                 break;
         }
-*/
 
-        super.onCreate(savedInstanceState);
+
+        //super.onCreate(savedInstanceState);
     }
 }

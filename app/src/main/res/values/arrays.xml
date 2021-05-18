@@ -32,6 +32,7 @@
         <item>@string/ajustes_naranja</item>
         <item>@string/ajustes_verde</item>
         <item>@string/ajustes_azul</item>
+        <item>@string/ajustes_verdeAzulado</item>
     </string-array>
 
     <string-array name="tema_values">
@@ -39,5 +40,7 @@
         <item>naranja</item>
         <item>verde</item>
         <item>azul</item>
+        <item>verdeazul</item>
     </string-array>
+    <string name="ajustes_verdeAzulado" >Verde azulado</string>
 </resources>

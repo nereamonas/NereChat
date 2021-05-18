@@ -7,6 +7,7 @@
     android:background="@color/azul_medioOscuro">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/toolbatPrincipalLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/azul_medioOscuro">

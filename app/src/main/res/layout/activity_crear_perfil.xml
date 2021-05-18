@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@mipmap/fondoazul"
     tools:context=".CrearPerfilActivity">
 
 
@@ -38,8 +39,9 @@
 
     <EditText
         android:id="@+id/editTextNombreUsuario"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="226dp"
+        android:layout_height="50dp"
+        android:background="@drawable/fondo_text_input"
         android:ems="10"
         android:hint="@string/crearperfil_nombredeusuario"
         android:inputType="textPersonName"

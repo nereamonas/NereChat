@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/fondologin"
+    android:background="@mipmap/fondoazul"
     tools:context=".CrearCuentaActivity">
 
     <TextView
@@ -25,7 +25,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/inputLCrearEmail"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
         android:layout_width="377dp"
         android:layout_height="100dp"
         android:layout_marginTop="8dp"
@@ -40,7 +40,7 @@
             android:id="@+id/inputCrearEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#FFFFFF"
+            android:background="@drawable/fondo_text_input"
             android:hint="@string/iniciarsesion_email"
             android:inputType="textEmailAddress"
             android:textColorHint="#000000" />
@@ -48,7 +48,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/inputLCrearPass"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
         android:layout_width="374dp"
         android:layout_height="97dp"
         android:layout_marginTop="8dp"
@@ -63,7 +63,7 @@
             android:id="@+id/inputCrearPass"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#FFFFFF"
+            android:background="@drawable/fondo_text_input"
             android:hint="@string/iniciarsesion_contraseña"
             android:inputType="textPassword"
             android:textColorHint="#000000" />
@@ -72,7 +72,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/inputLCrearRepPass"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
         android:layout_width="374dp"
         android:layout_height="101dp"
         android:layout_marginTop="8dp"
@@ -87,7 +87,7 @@
             android:id="@+id/inputCrearRepPass"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#FFFFFF"
+            android:background="@drawable/fondo_text_input"
             android:hint="@string/registrate_repitelacontraseña"
             android:inputType="textPassword"
             android:textColorHint="#000000" />

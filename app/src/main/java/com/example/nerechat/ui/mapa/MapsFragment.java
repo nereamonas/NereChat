@@ -163,8 +163,8 @@ public class MapsFragment extends BaseFragment implements GoogleMap.OnPolylineCl
         View root=inflater.inflate(R.layout.fragment_maps, container, false);
 
         Button IW_vista=root.findViewById(R.id.IW_vista);
-        IW_vista.setTextColor(getResources().getColor(R.color.white));
-        IW_vista.setBackgroundColor(getResources().getColor(R.color.azul_oscuro));
+       // IW_vista.setTextColor(getResources().getColor(R.color.white));
+       // IW_vista.setBackgroundColor(getResources().getColor(R.color.azul_oscuro));
 
         IW_vista.setOnClickListener(new View.OnClickListener() {
             @Override

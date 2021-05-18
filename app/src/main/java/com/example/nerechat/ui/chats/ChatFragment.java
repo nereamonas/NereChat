@@ -19,6 +19,7 @@ import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.view.menu.MenuPopupHelper;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavOptions;
@@ -99,6 +100,7 @@ public class ChatFragment extends Fragment {
     CircleImageView barraPerfilImg;
     TextView barraUsername, barraStado;
 
+    ConstraintLayout constraintLayout;
     //Serán los datos del usuario con el que estamos hablando
     String pId, pNombreUsu, pFotoPerfil, pEstado;
     String miFotoPerfil, miNombreUsuario;
@@ -112,6 +114,8 @@ public class ChatFragment extends Fragment {
 
     String UrlNotif = "https://fcm.googleapis.com/fcm/send";
     RequestQueue requestQueue;
+
+    String tema;
 
     int codigoRequestGaleria = 4;
 
@@ -151,10 +155,17 @@ public class ChatFragment extends Fragment {
         //Cargamos el toolbar y cargamos la informacion del otro usaurio en el toolbar
         toolbar = root.findViewById(R.id.chat_toolbar);
         //setSupportActionBar(findViewById(R.id.chat_toolbar));
+        constraintLayout=root.findViewById(R.id.toolbarChatLayout);
 
         BottomNavigationView nv = ((AppCompatActivity) getActivity()).findViewById(R.id.nav_view);
         nv.setVisibility(View.GONE);
 
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        if (prefs.contains("tema")) {
+            tema = prefs.getString("tema", null);
+        }
+        comprobarColores();
         cargarInfoBarra();
         cargarMiFotoPerfil(); //Buscamos mi foto de perfil porque se usara en los mensajes;
         cambiarMensajesALeido();
@@ -1269,7 +1280,14 @@ public class ChatFragment extends Fragment {
                         }
                     });
                 }
+                if(tema.equals("morado")||tema.equals("naranja")||tema.equals("verde")||tema.equals("verdeazul")){
+                    holder.mensajeTextoDos.setBackground(getResources().getDrawable(R.drawable.fondo_mensaje_uno_blanco));
+                    holder.mensajeTextoUno.setBackground(getResources().getDrawable(R.drawable.fondo_mensaje_dos_blanco));
+                }else{
 
+                    holder.mensajeTextoDos.setBackground(getResources().getDrawable(R.drawable.fondo_mensaje_uno));
+                    holder.mensajeTextoUno.setBackground(getResources().getDrawable(R.drawable.fondo_mensaje_dos));
+                }
 
             }
 
@@ -1444,4 +1462,34 @@ public class ChatFragment extends Fragment {
         mDatabaseRef.removeEventListener(eventListenerEstado);
         super.onDetach();
     }
+
+    public void comprobarColores(){
+        switch (tema) {
+            case "morado":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.toolbar_morado,getContext().getTheme()));
+                constraintLayout.setBackgroundColor(getResources().getColor(R.color.toolbar_morado,getContext().getTheme()));
+                break;
+            case "naranja":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.toolbar_naranja,getContext().getTheme()));
+                constraintLayout.setBackgroundColor(getResources().getColor(R.color.toolbar_naranja,getContext().getTheme()));
+                break;
+            case "verde":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.toolbar_verde,getContext().getTheme()));
+                constraintLayout.setBackgroundColor(getResources().getColor(R.color.toolbar_verde,getContext().getTheme()));
+                break;
+            case "azul":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.azul_medioOscuro,getContext().getTheme()));
+                constraintLayout.setBackgroundColor(getResources().getColor(R.color.azul_medioOscuro,getContext().getTheme()));
+                break;
+            case "verdeazul":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.toolbar_verdeazul,getContext().getTheme()));
+                constraintLayout.setBackgroundColor(getResources().getColor(R.color.toolbar_verdeazul,getContext().getTheme()));
+                break;
+            default:
+                toolbar.setBackgroundColor(getResources().getColor(R.color.azul_medioOscuro,getContext().getTheme()));
+                constraintLayout.setBackgroundColor(getResources().getColor(R.color.azul_medioOscuro,getContext().getTheme()));
+                break;
+        }
+    }
+
 }

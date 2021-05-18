@@ -1,6 +1,8 @@
 package com.example.nerechat.ui.chats;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
@@ -16,10 +18,13 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -64,6 +69,8 @@ public class ChatsAmigosFragment extends Fragment {
     EditText toolbarSearchEditText;
     ImageView toolbarImageSearch, toolbarImagenAjustes;
     TextView toolbarTitulo;
+    Toolbar toolbar;
+    ConstraintLayout constraintLayout;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -87,7 +94,12 @@ public class ChatsAmigosFragment extends Fragment {
         nohaychats.setVisibility(View.VISIBLE);
         cargarUsuarios("");
 
+        floatButton=root.findViewById(R.id.floatingActionButtonNuevoContacto);
+        imgChatbot=root.findViewById(R.id.imgChatbot);
 
+        toolbar=root.findViewById(R.id.chat_toolbarChatAmigos);
+        constraintLayout=root.findViewById(R.id.toolbarBuscarLayout);
+        comprobarColores();
         //Toolbar
         toolbarSearchEditText=root.findViewById(R.id.editTextToolbarSearch);
         toolbarImageSearch=root.findViewById(R.id.imageViewToolbarBuscar);
@@ -140,7 +152,6 @@ public class ChatsAmigosFragment extends Fragment {
         BottomNavigationView nv=  ((AppCompatActivity)getActivity()).findViewById(R.id.nav_view);
         nv.setVisibility(View.VISIBLE);
 
-        floatButton=root.findViewById(R.id.floatingActionButtonNuevoContacto);
         floatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -151,7 +162,6 @@ public class ChatsAmigosFragment extends Fragment {
             }
         });
 
-        imgChatbot=root.findViewById(R.id.imgChatbot);
 
         imgChatbot.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -294,6 +304,47 @@ public class ChatsAmigosFragment extends Fragment {
         adapter.startListening();
         recyclerView.setAdapter(adapter);
 
+    }
+
+    public void comprobarColores(){
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        String tema = "";
+        if (prefs.contains("tema")) {
+            tema = prefs.getString("tema", null);
+        }
+        switch (tema) {
+            case "morado":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.toolbar_morado,getContext().getTheme()));
+                imgChatbot.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.toolbar_morado_claro)));
+                constraintLayout.setBackgroundColor(getResources().getColor(R.color.toolbar_morado,getContext().getTheme()));
+                break;
+            case "naranja":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.toolbar_naranja,getContext().getTheme()));
+                constraintLayout.setBackgroundColor(getResources().getColor(R.color.toolbar_naranja,getContext().getTheme()));
+                imgChatbot.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.toolbar_naranja_claro)));
+                break;
+            case "verde":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.toolbar_verde,getContext().getTheme()));
+                constraintLayout.setBackgroundColor(getResources().getColor(R.color.toolbar_verde,getContext().getTheme()));
+                imgChatbot.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.toolbar_verde_claro)));
+                break;
+            case "azul":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.azul_medioOscuro,getContext().getTheme()));
+                constraintLayout.setBackgroundColor(getResources().getColor(R.color.azul_medioOscuro,getContext().getTheme()));
+                imgChatbot.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.azul_clarito)));
+                break;
+            case "verdeazul":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.toolbar_verdeazul,getContext().getTheme()));
+                constraintLayout.setBackgroundColor(getResources().getColor(R.color.toolbar_verdeazul,getContext().getTheme()));
+                imgChatbot.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.toolbar_verdeazul_claro)));
+                break;
+            default:
+                toolbar.setBackgroundColor(getResources().getColor(R.color.azul_medioOscuro,getContext().getTheme()));
+                constraintLayout.setBackgroundColor(getResources().getColor(R.color.azul_medioOscuro,getContext().getTheme()));
+                imgChatbot.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.azul_clarito)));
+                break;
+        }
     }
 
 }

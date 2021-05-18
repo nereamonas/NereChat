@@ -10,8 +10,16 @@
     <color name="azul_clarito">#D5F2FF</color>
     <color name="azul_medio">#7AD6FF</color>
     <color name="azul_medioOscuro">#1584DC</color>
-    <color name="azul_oscuro">#61699C</color>
+    <color name="azul_oscuro">#3747A6</color>
     <color name="grey">#AAAAAA</color>
     <color name="blue">#1584DC</color>
     <color name="verde">#50DA2A</color>
+    <color name="toolbar_verdeazul">#FF03DAC5</color>
+    <color name="toolbar_verdeazul_claro">#ADFFF7</color>
+    <color name="toolbar_naranja">#FF9800</color>
+    <color name="toolbar_naranja_claro">#FBD8A3</color>
+    <color name="toolbar_morado">#BC44D1</color>
+    <color name="toolbar_morado_claro">#F6C3FF</color>
+    <color name="toolbar_verde">#8BC34A</color>
+    <color name="toolbar_verde_claro">#E7FFCC</color>
 </resources>

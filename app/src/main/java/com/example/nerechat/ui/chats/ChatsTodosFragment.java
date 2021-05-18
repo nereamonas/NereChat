@@ -2,15 +2,19 @@ package com.example.nerechat.ui.chats;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -56,6 +60,8 @@ public class ChatsTodosFragment extends Fragment {
     EditText toolbarSearchEditText;
     ImageView toolbarImageSearch,toolbarImagenAjustes;
     TextView toolbarTitulo;
+    Toolbar toolbar;
+    ConstraintLayout constraintLayout;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -82,6 +88,9 @@ public class ChatsTodosFragment extends Fragment {
 
         //Toolbar
 
+        toolbar=root.findViewById(R.id.chat_toolbarChatTodos);
+        constraintLayout=root.findViewById(R.id.toolbarBuscarLayout);
+        comprobarColores();
         toolbarSearchEditText=root.findViewById(R.id.editTextToolbarSearch);
         toolbarImageSearch=root.findViewById(R.id.imageViewToolbarBuscar);
         toolbarTitulo=root.findViewById(R.id.toolbarBuscarTitulo);
@@ -183,5 +192,39 @@ public class ChatsTodosFragment extends Fragment {
 
     }
 
+    public void comprobarColores(){
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        String tema = "";
+        if (prefs.contains("tema")) {
+            tema = prefs.getString("tema", null);
+        }
+        switch (tema) {
+            case "morado":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.toolbar_morado,getContext().getTheme()));
+                constraintLayout.setBackgroundColor(getResources().getColor(R.color.toolbar_morado,getContext().getTheme()));
+                break;
+            case "naranja":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.toolbar_naranja,getContext().getTheme()));
+                constraintLayout.setBackgroundColor(getResources().getColor(R.color.toolbar_naranja,getContext().getTheme()));
+                break;
+            case "verde":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.toolbar_verde,getContext().getTheme()));
+                constraintLayout.setBackgroundColor(getResources().getColor(R.color.toolbar_verde,getContext().getTheme()));
+                break;
+            case "azul":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.azul_medioOscuro,getContext().getTheme()));
+                constraintLayout.setBackgroundColor(getResources().getColor(R.color.azul_medioOscuro,getContext().getTheme()));
+                break;
+            case "verdeazul":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.toolbar_verdeazul,getContext().getTheme()));
+                constraintLayout.setBackgroundColor(getResources().getColor(R.color.toolbar_verdeazul,getContext().getTheme()));
+                break;
+            default:
+                toolbar.setBackgroundColor(getResources().getColor(R.color.azul_medioOscuro,getContext().getTheme()));
+                constraintLayout.setBackgroundColor(getResources().getColor(R.color.azul_medioOscuro,getContext().getTheme()));
+                break;
+        }
+    }
 
 }

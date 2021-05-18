@@ -2,12 +2,88 @@
     <!-- Base application theme. -->
     <style name="Theme.NereChat" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorPrimary">@color/azul_medioOscuro</item>
+        <item name="colorPrimaryVariant">#3747A6</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_700</item>
+        <item name="colorSecondary">#9FDBF6</item>
+        <item name="colorSecondaryVariant">@color/azul_medio</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item> -->
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="azul" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/azul_medioOscuro</item>
+        <item name="colorPrimaryVariant">#3747A6</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">#9FDBF6</item>
+        <item name="colorSecondaryVariant">@color/azul_medio</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item> -->
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+    </style>
+    <style name="verdeazul" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">#00CCB9</item>
+        <item name="colorPrimaryVariant">#009688</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">#2EE6D6</item>
+        <item name="colorSecondaryVariant">#3DC6BA</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item> -->
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+    </style>
+    <style name="naranja" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">#FFAB2E</item>
+        <item name="colorPrimaryVariant">#FF6F22</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">#FF9800</item>
+        <item name="colorSecondaryVariant">#FF5722</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item> -->
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+    </style>
+    <style name="morado" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">#CD3BE6</item>
+        <item name="colorPrimaryVariant">#9C27B0</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">#CF5BE3</item>
+        <item name="colorSecondaryVariant">#841997</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item> -->
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+    </style>
+    <style name="verde" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">#A3EC4F</item>
+        <item name="colorPrimaryVariant">#76AA3A</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">#86C63C</item>
+        <item name="colorSecondaryVariant">#4CAF50</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item> -->

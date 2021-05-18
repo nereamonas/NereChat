@@ -7,6 +7,8 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
+import com.example.nerechat.R;
+
 import java.util.Locale;
 
 public class BaseActivity extends AppCompatActivity {
@@ -18,36 +20,39 @@ public class BaseActivity extends AppCompatActivity {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             //Cogemos de sharedPreferences el tema que tiene el usuario guardado. Y dependiendo del valor, le asignamos a la actividad un tema u otro
-            super.onCreate(savedInstanceState);
+
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-            /*String tema = "";
+            String tema = "";
             if (prefs.contains("tema")) {
                 tema = prefs.getString("tema", null);
             }
             switch (tema) {
                 case "morado":
-                    this.setTheme(R.style.Theme_Morado);
+                    this.setTheme(R.style.morado);
                     super.onCreate(savedInstanceState);
                     break;
                 case "naranja":
-                    this.setTheme(R.style.Theme_Naranja);
+                    this.setTheme(R.style.naranja);
                     super.onCreate(savedInstanceState);
                     break;
                 case "verde":
-                    this.setTheme(R.style.Theme_Verde);
+                    this.setTheme(R.style.verde);
                     super.onCreate(savedInstanceState);
                     break;
                 case "azul":
-                    this.setTheme(R.style.Theme_Azul);
+                    this.setTheme(R.style.azul);
+                    super.onCreate(savedInstanceState);
+                    break;
+                case "verdeazul":
+                    this.setTheme(R.style.verdeazul);
                     super.onCreate(savedInstanceState);
                     break;
                 default:
-                    this.setTheme(R.style.Theme_Morado);
+                    this.setTheme(R.style.azul);
                     super.onCreate(savedInstanceState);
                     break;
             }
 
-*/
 
             //Haremos lo mismo con el idioma
             String idioma = "";
