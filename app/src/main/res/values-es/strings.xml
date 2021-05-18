@@ -90,4 +90,14 @@
     <string name="toast_Tienesqueseleccionarunafotodeperfil">Tienes que seleccionar una foto de perfil</string>
     <string name="toast_Elnombredeusuarionoesvalido">El nombre de usuario no es válido</string>
     <string name="toast_Nosehapodidoiniciarsesion">No se ha podido iniciar sesion. Revisa los datos</string>
+    <string name="progressDialog_enviandoImagen">Enviando imagen...</string>
+    <string name="progressDialog_porfavorespere">Por favor, espere</string>
+    <string name="progressDialog_Iniciandosesion">Iniciando sesión...</string>
+    <string name="error_Elemailnoescorrecto">El email no es correcto</string>
+    <string name="error_Lacontraseñatienequetenerunminimode6caracteres">La contraseña tiene que tener un minimo de 6 caracteres</string>
+    <string name="error_Lascontraseñasnocoinciden">Las contraseñas no coinciden</string>
+    <string name="progressDialog_Registrando">Registrando...</string>
+    <string name="progressDialog_Porfavoresperamientrasseregistra">Por favor espera mientras se registra</string>
+    <string name="progressDialog_Creandoperfil">Creando perfil</string>
+    <string name="progressDialog_Porfavoresperehastaqueseacabedecrearelperfil">Por favor espere hasta que se acabe de crear el perfil</string>
 </resources>

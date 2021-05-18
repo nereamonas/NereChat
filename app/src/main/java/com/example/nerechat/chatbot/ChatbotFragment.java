@@ -214,7 +214,11 @@ public class ChatbotFragment extends Fragment implements BotReply {
                 return new ViewHolderMensaje(view);
             }
         };
-
+        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                ((LinearLayoutManager)recyclerView.getLayoutManager()).scrollToPositionWithOffset(adapter.getItemCount() - 1,200);
+            }
+        });
         adapter.startListening();
         recyclerView.setAdapter(adapter);
     }

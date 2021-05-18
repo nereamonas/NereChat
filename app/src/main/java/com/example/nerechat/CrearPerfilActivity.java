@@ -81,8 +81,8 @@ public class CrearPerfilActivity extends BaseActivity {
         if (!name.equals("")){ //El nombre debe ser distinto de null
             if (uriImg!=null) { //Y se debe haber seleccionado una foto de la galeria
                 //Mostramos un progress dialog para informar de que se esta creando el perfil
-                progressDialog.setTitle("Creando perfil");
-                progressDialog.setMessage("Por favor espere hasta que se acabe de crear el perfil");
+                progressDialog.setTitle(getString(R.string.progressDialog_Creandoperfil));
+                progressDialog.setMessage(getString(R.string.progressDialog_Porfavoresperehastaqueseacabedecrearelperfil));
                 progressDialog.setCanceledOnTouchOutside(false);
                 progressDialog.show();
 

@@ -90,4 +90,14 @@
     <string name="toast_Tienesqueseleccionarunafotodeperfil">Profileko argazkia hautatu behar duzu</string>
     <string name="toast_Elnombredeusuarionoesvalido">Erabiltzaile izenak ez du balio</string>
     <string name="toast_Nosehapodidoiniciarsesion">Errorea saioa hastean. Egiaztatu datuak</string>
+    <string name="progressDialog_enviandoImagen">Irudia bidaltzen ...</string>
+    <string name="progressDialog_porfavorespere">Itxaron mesedez</string>
+    <string name="progressDialog_Iniciandosesion">Saioa hasten ...</string>
+    <string name="error_Elemailnoescorrecto">Mezu elektronikoa ez da zuzena</string>
+    <string name="error_Lacontraseñatienequetenerunminimode6caracteres">Pasahitzak gutxienez 6 karaktere izan behar ditu</string>
+    <string name="error_Lascontraseñasnocoinciden">Pasahitzak ez datoz bat</string>
+    <string name="progressDialog_Registrando">Izena ematen ...</string>
+    <string name="progressDialog_Porfavoresperamientrasseregistra">Mesedez, itxaron erregistratu bitartean</string>
+    <string name="progressDialog_Creandoperfil">Profila sortzen</string>
+    <string name="progressDialog_Porfavoresperehastaqueseacabedecrearelperfil">Itxaron profila sortzen amaitu arte</string>
 </resources>

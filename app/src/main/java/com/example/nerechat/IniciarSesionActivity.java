@@ -82,15 +82,15 @@ public class IniciarSesionActivity extends BaseActivity {
         String pass=inputpass.getEditText().getText().toString();
 
         if (email.equals("")||!email.contains("@")) { //Pasa que el email sea valido tiene q ser !="" y contener un @. Si no es asi saltamos un error
-            inputemail.setError("El email no es correcto"); //Los tipo input nos permiten mostrar el error directamente, lo que viene muy bien para los inicio de sesion
+            inputemail.setError(getString(R.string.error_Elemailnoescorrecto)); //Los tipo input nos permiten mostrar el error directamente, lo que viene muy bien para los inicio de sesion
             inputemail.requestFocus();
         }else if(pass.equals("")||pass.length()<6){ //La contraseña tiene que tener un minimo de 6 caracteres (Es una restriccion de las pass de firebase). Si no se cumple mostramos mensaje de error
-            inputpass.setError("La contraseña tiene que tener un minimo de 6 caracteres");
+            inputpass.setError(getString(R.string.error_Lacontraseñatienequetenerunminimode6caracteres));
             inputpass.requestFocus();
         }else{//Los datos son correctos asique procedemos a iniciar sesion
             //Mostramos el dialog bar. Que se mantendrá activo hasta que se complete el inicioi de sesion
-            progressDialog.setTitle("Iniciando sesion...");
-            progressDialog.setMessage("Porfavor espera");
+            progressDialog.setTitle(getString(R.string.progressDialog_Iniciandosesion));
+            progressDialog.setMessage(getString(R.string.progressDialog_porfavorespere));
             progressDialog.setCanceledOnTouchOutside(false);
             progressDialog.show();
 

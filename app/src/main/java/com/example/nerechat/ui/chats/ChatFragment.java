@@ -1,5 +1,6 @@
 package com.example.nerechat.ui.chats;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -54,6 +55,7 @@ import com.example.nerechat.base.BaseViewModel;
 import com.example.nerechat.helpClass.Mensaje;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -108,6 +110,7 @@ public class ChatFragment extends Fragment {
 
     String UrlNotif = "https://fcm.googleapis.com/fcm/send";
     RequestQueue requestQueue;
+    ProgressDialog progressDialog;
 
     String tema;
     boolean toastActivadas=false;
@@ -142,6 +145,8 @@ public class ChatFragment extends Fragment {
         mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("Perfil"); //La base de datos perfil
         mDatabaseRefMensajes = FirebaseDatabase.getInstance().getReference().child("MensajesChat"); //Y la base de datos mensajeChat donde se almacenarán todos los mensajes
         mStorageRef = FirebaseStorage.getInstance().getReference().child("FotosMensajes"); //En Storage almacenaremos todas las imagenes de perfil que suban los usuarios, y en la base de datos guardamos la uri que hace referencia a la foto en storage
+
+        progressDialog=new ProgressDialog(getContext());
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext()); //Cogemos las preferencias
         if (prefs.contains("notiftoast")) { //Comprobamos si existe notif
@@ -225,6 +230,11 @@ public class ChatFragment extends Fragment {
                 Uri uri = data.getData(); //Cogemos la uri de la imagen cargada y la guardamos en un aldagai
                 Log.d("Logs", "URL de la imagen de la galeria: " + uri);
 
+                progressDialog.setTitle(getString(R.string.progressDialog_enviandoImagen));
+                progressDialog.setMessage(getString(R.string.progressDialog_porfavorespere));
+                progressDialog.setCanceledOnTouchOutside(false);
+                progressDialog.show();
+
                 if (uri != null) { //Y se debe haber seleccionado una foto de la galeria
                     String uuid = UUID.randomUUID().toString();
                     mStorageRef.child(uuid).putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -236,9 +246,16 @@ public class ChatFragment extends Fragment {
                                 public void onSuccess(Uri uri) {
                                     //Cogemos la fecha de hoy
                                     mandarMensaje(uri);
-
+                                    progressDialog.dismiss(); //Cancelamos la barra de proceso
                                 }
                             });
+
+                        }
+                    });
+                    mStorageRef.child(uuid).putFile(uri).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressDialog.dismiss(); //Cancelamos la barra de proceso
                         }
                     });
 
@@ -1296,8 +1313,6 @@ public class ChatFragment extends Fragment {
             @Override
             public ViewHolderMensaje onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.mensaje, parent, false);
-
-
                 return new ViewHolderMensaje(view);
             }
         };
@@ -1460,7 +1475,8 @@ public class ChatFragment extends Fragment {
         adapter.stopListening();
         recyclerView=null;
         adapter=null;
-        mDatabaseRef.removeEventListener(eventListenerEstado);
+        if(eventListenerEstado!=null)
+            mDatabaseRef.removeEventListener(eventListenerEstado);
         super.onDetach();
     }
 

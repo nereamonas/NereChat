@@ -70,22 +70,22 @@ public class CrearCuentaActivity extends BaseActivity {
         String repPass=inputrepPass.getEditText().getText().toString();
 
         if (email.equals("")||!email.contains("@")) {//Para que el email sea valido tiene q ser !="" y contener un @. Si no es asi saltamos un error
-            inputemail.setError("El email no es correcto");
+            inputemail.setError(getString(R.string.error_Elemailnoescorrecto));
             inputemail.requestFocus();
         }else if(pass.equals("")||pass.length()<6){ //La contraseña tiene que tener un minimo de 6 caracteres (Es una restriccion de las pass de firebase). Si no se cumple mostramos mensaje de error
-            inputpass.setError("La contraseña tiene que tener un minimo de 6 caracteres");
+            inputpass.setError(getString(R.string.error_Lacontraseñatienequetenerunminimode6caracteres));
             inputpass.requestFocus();
         }else if(repPass.equals("")||repPass.length()<6){ //La contraseña tiene que tener un minimo de 6 caracteres (Es una restriccion de las pass de firebase). Si no se cumple mostramos mensaje de error
-            inputrepPass.setError("La contraseña tiene que tener un minimo de 6 caracteres");
+            inputrepPass.setError(getString(R.string.error_Lacontraseñatienequetenerunminimode6caracteres));
             inputrepPass.requestFocus();
         }else if (!pass.equals(repPass)) { //Las contraseñas tienen que ser iguales
-            inputrepPass.setError("Las contraseñas no coinciden");
+            inputrepPass.setError(getString(R.string.error_Lascontraseñasnocoinciden));
             inputrepPass.requestFocus();
         }else{//To do bien, registramos el usuario
 
             //Mostramos un progrssDialog de registrando...
-            progressDialog.setTitle("Registrando...");
-            progressDialog.setMessage("Porfavor espera mientras se registra");
+            progressDialog.setTitle(getString(R.string.progressDialog_Registrando));
+            progressDialog.setMessage(getString(R.string.progressDialog_Porfavoresperamientrasseregistra));
             progressDialog.setCanceledOnTouchOutside(false);
             progressDialog.show();
 
