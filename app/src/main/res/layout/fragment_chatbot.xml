@@ -26,7 +26,7 @@
             android:id="@+id/chat_mensajechatbot"
             android:layout_width="299dp"
             android:layout_height="46dp"
-            android:hint="Ingresa un texto..."
+            android:hint="@string/chat_ingresauntexto"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/chat_sendchatbot"
             app:layout_constraintHorizontal_bias="0.192"

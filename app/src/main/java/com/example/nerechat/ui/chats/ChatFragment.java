@@ -116,6 +116,7 @@ public class ChatFragment extends Fragment {
     RequestQueue requestQueue;
 
     String tema;
+    boolean toastActivadas=false;
 
     int codigoRequestGaleria = 4;
 
@@ -148,6 +149,14 @@ public class ChatFragment extends Fragment {
         mDatabaseRefMensajes = FirebaseDatabase.getInstance().getReference().child("MensajesChat"); //Y la base de datos mensajeChat donde se almacenarán todos los mensajes
         mStorageRef = FirebaseStorage.getInstance().getReference().child("FotosMensajes"); //En Storage almacenaremos todas las imagenes de perfil que suban los usuarios, y en la base de datos guardamos la uri que hace referencia a la foto en storage
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext()); //Cogemos las preferencias
+        if (prefs.contains("notiftoast")) { //Comprobamos si existe notif
+            toastActivadas = prefs.getBoolean("notiftoast", true);  //Comprobamos si las notificaciones estan activadas
+        }
+        if (prefs.contains("tema")) {
+            tema = prefs.getString("tema", null);
+        }
+
         cambiarEstado("Conectado");
 
         requestQueue = Volley.newRequestQueue(getContext());
@@ -160,11 +169,6 @@ public class ChatFragment extends Fragment {
         BottomNavigationView nv = ((AppCompatActivity) getActivity()).findViewById(R.id.nav_view);
         nv.setVisibility(View.GONE);
 
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-        if (prefs.contains("tema")) {
-            tema = prefs.getString("tema", null);
-        }
         comprobarColores();
         cargarInfoBarra();
         cargarMiFotoPerfil(); //Buscamos mi foto de perfil porque se usara en los mensajes;
@@ -394,14 +398,15 @@ public class ChatFragment extends Fragment {
                                         //Preguntamos si quiere eliminar el mensaje
 
                                         AlertDialog.Builder dialogo = new AlertDialog.Builder(v.getContext());
-                                        dialogo.setTitle("Eliminar mensaje");
-                                        dialogo.setMessage("Quieres eliminar el mensaje " + model.getMensaje() + "?");
+                                        dialogo.setTitle(getString(R.string.alerta_Eliminarmensaje));
+                                        dialogo.setMessage(getString(R.string.alerta_Quiereseliminarelmensaje)+" '" + model.getMensaje() + "'?");
 
-                                        dialogo.setPositiveButton("Solo para mi", new DialogInterface.OnClickListener() {  //Botón si. es decir, queremos eliminar la rutina
+                                        dialogo.setPositiveButton(getString(R.string.alerta_Soloparami), new DialogInterface.OnClickListener() {  //Botón si. es decir, queremos eliminar la rutina
                                             public void onClick(DialogInterface dialogo1, int id) {
                                                 //Si dice que si quiere eliminar. Actualizamos la lista y lo borramos de la base de datos
                                                 //Cogemos el id del elemento seleccionado por el usuario
-                                                Toast.makeText(getContext(), "Has eliminado el mensaje " + model.getMensaje() + "solo para ti", Toast.LENGTH_SHORT).show();
+                                                if (toastActivadas)
+                                                Toast.makeText(getContext(), getString(R.string.toast_Haseliminadoelmensajesoloparati), Toast.LENGTH_SHORT).show();
 
                                                 mDatabaseRefMensajes.child(mUser.getUid()).child(pId).addListenerForSingleValueEvent(new ValueEventListener() {
                                                     @Override
@@ -422,9 +427,10 @@ public class ChatFragment extends Fragment {
                                             }
                                         });
 
-                                        dialogo.setNegativeButton("Para todos", new DialogInterface.OnClickListener() {
+                                        dialogo.setNegativeButton(getString(R.string.alerta_Paratodos), new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialogo1, int id) {
-                                                Toast.makeText(getContext(), "Has eliminado el mensaje " + model.getMensaje() + " para todos", Toast.LENGTH_SHORT).show();
+                                                if (toastActivadas)
+                                                Toast.makeText(getContext(), getString(R.string.toast_haseliminadoelmensajeparatodos), Toast.LENGTH_SHORT).show();
 
                                                 mDatabaseRefMensajes.child(mUser.getUid()).child(pId).addListenerForSingleValueEvent(new ValueEventListener() {
                                                     @Override
@@ -481,8 +487,8 @@ public class ChatFragment extends Fragment {
                                                 int id = item.getItemId();
                                                 if (id == R.id.popupReaccionar_like) {
                                                     if (model.getReaccion().equals("like")) {
-
-                                                        Toast.makeText(getContext(), "Has quitado el like", Toast.LENGTH_SHORT).show();
+                                                        if (toastActivadas)
+                                                        Toast.makeText(getContext(), getString(R.string.toast_yanotegusta), Toast.LENGTH_SHORT).show();
                                                         mDatabaseRefMensajes.child(mUser.getUid()).child(pId).addListenerForSingleValueEvent(new ValueEventListener() {
                                                             @Override
                                                             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -514,8 +520,8 @@ public class ChatFragment extends Fragment {
                                                             }
                                                         });
                                                     } else {
-
-                                                        Toast.makeText(getContext(), "Te ha gustado el mensaje", Toast.LENGTH_SHORT).show();
+                                                        if (toastActivadas)
+                                                        Toast.makeText(getContext(), getString(R.string.toast_Tehagustadoelmensaje), Toast.LENGTH_SHORT).show();
                                                         mDatabaseRefMensajes.child(mUser.getUid()).child(pId).addListenerForSingleValueEvent(new ValueEventListener() {
                                                             @Override
                                                             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -550,8 +556,8 @@ public class ChatFragment extends Fragment {
                                                     }
                                                 } else if (id == R.id.popupReaccionar_feliz) {
                                                     if (model.getReaccion().equals("feliz")) {
-
-                                                        Toast.makeText(getContext(), "Has quitado el estado feliz", Toast.LENGTH_SHORT).show();
+                                                        if (toastActivadas)
+                                                        Toast.makeText(getContext(), getString(R.string.toast_Hasquitadolareaccionfeliz), Toast.LENGTH_SHORT).show();
                                                         mDatabaseRefMensajes.child(mUser.getUid()).child(pId).addListenerForSingleValueEvent(new ValueEventListener() {
                                                             @Override
                                                             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -583,8 +589,8 @@ public class ChatFragment extends Fragment {
                                                             }
                                                         });
                                                     } else {
-
-                                                        Toast.makeText(getContext(), "REaccion feliz", Toast.LENGTH_SHORT).show();
+                                                        if (toastActivadas)
+                                                        Toast.makeText(getContext(), getString(R.string.toast_Reacciónfelizalmensaje), Toast.LENGTH_SHORT).show();
                                                         mDatabaseRefMensajes.child(mUser.getUid()).child(pId).addListenerForSingleValueEvent(new ValueEventListener() {
                                                             @Override
                                                             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -619,8 +625,8 @@ public class ChatFragment extends Fragment {
                                                     }
                                                 } else if (id == R.id.popupReaccionar_enfadado) {
                                                     if (model.getReaccion().equals("enfadado")) {
-
-                                                        Toast.makeText(getContext(), "Has quitado el estado enfadado", Toast.LENGTH_SHORT).show();
+                                                        if (toastActivadas)
+                                                        Toast.makeText(getContext(), getString(R.string.toast_Hasquitadolareacciónenfadado), Toast.LENGTH_SHORT).show();
                                                         mDatabaseRefMensajes.child(mUser.getUid()).child(pId).addListenerForSingleValueEvent(new ValueEventListener() {
                                                             @Override
                                                             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -652,8 +658,8 @@ public class ChatFragment extends Fragment {
                                                             }
                                                         });
                                                     } else {
-
-                                                        Toast.makeText(getContext(), "estado enfadado", Toast.LENGTH_SHORT).show();
+                                                        if (toastActivadas)
+                                                        Toast.makeText(getContext(), getString(R.string.toast_Reacciónenfadadoalmensaje), Toast.LENGTH_SHORT).show();
                                                         mDatabaseRefMensajes.child(mUser.getUid()).child(pId).addListenerForSingleValueEvent(new ValueEventListener() {
                                                             @Override
                                                             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -700,12 +706,12 @@ public class ChatFragment extends Fragment {
                                         //abrir_fotos();
 
                                         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                        builder.setTitle("Escribe el mensaje editado");
+                                        builder.setTitle(getString(R.string.alerta_Escribeelmensajeeditado));
                                         //Añadimos en la alerta un edit text
                                         final EditText input = new EditText(getContext());  //Creamos un edit text. para q el usuairo pueda insertar el titulo
                                         builder.setView(input);
                                         //Si el usuario da al ok
-                                        builder.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {  //Si el usuario acepta, mostramos otra alerta con los ejercicios que puede agregar
+                                        builder.setPositiveButton(getString(R.string.alerta_Guardar), new DialogInterface.OnClickListener() {  //Si el usuario acepta, mostramos otra alerta con los ejercicios que puede agregar
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
                                                 String mensajeNuevo = input.getText().toString();
@@ -750,7 +756,7 @@ public class ChatFragment extends Fragment {
                                         });
 
                                         //Si se cancela, no se creará la rutina y se cancelará el dialogo
-                                        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                                        builder.setNegativeButton(getString(R.string.alerta_Cancelar), new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
                                                 dialog.cancel();
@@ -780,8 +786,8 @@ public class ChatFragment extends Fragment {
                         public boolean onLongClick(View v) {
                             Log.d("Logs", "popupMenu_like");
                             if (model.getReaccion().equals("like")) {
-
-                                Toast.makeText(getContext(), "Has quitado el like", Toast.LENGTH_SHORT).show();
+                                if(toastActivadas)
+                                Toast.makeText(getContext(), getString(R.string.toast_yanotegusta), Toast.LENGTH_SHORT).show();
                                 mDatabaseRefMensajes.child(mUser.getUid()).child(pId).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -813,8 +819,8 @@ public class ChatFragment extends Fragment {
                                     }
                                 });
                             } else {
-
-                                Toast.makeText(getContext(), "Te ha gustado el mensaje", Toast.LENGTH_SHORT).show();
+                                if(toastActivadas)
+                                Toast.makeText(getContext(), getString(R.string.toast_Tehagustadoelmensaje), Toast.LENGTH_SHORT).show();
                                 mDatabaseRefMensajes.child(mUser.getUid()).child(pId).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -923,14 +929,15 @@ public class ChatFragment extends Fragment {
                                         //Preguntamos si quiere eliminar el mensaje
 
                                         AlertDialog.Builder dialogo = new AlertDialog.Builder(v.getContext());
-                                        dialogo.setTitle("Eliminar mensaje");
-                                        dialogo.setMessage("Quieres eliminar el mensaje " + model.getMensaje() + "?");
+                                        dialogo.setTitle(getString(R.string.alerta_Eliminarmensaje));
+                                        dialogo.setMessage(getString(R.string.alerta_Quiereseliminarelmensaje)+" '" + model.getMensaje() + "'?");
 
-                                        dialogo.setPositiveButton("Solo para mi", new DialogInterface.OnClickListener() {  //Botón si. es decir, queremos eliminar la rutina
+                                        dialogo.setPositiveButton(getString(R.string.alerta_Soloparami), new DialogInterface.OnClickListener() {  //Botón si. es decir, queremos eliminar la rutina
                                             public void onClick(DialogInterface dialogo1, int id) {
                                                 //Si dice que si quiere eliminar. Actualizamos la lista y lo borramos de la base de datos
                                                 //Cogemos el id del elemento seleccionado por el usuario
-                                                Toast.makeText(getContext(), "Has eliminado el mensaje " + model.getMensaje() + "solo para ti", Toast.LENGTH_SHORT).show();
+                                                if(toastActivadas)
+                                                Toast.makeText(getContext(), getString(R.string.toast_Haseliminadoelmensajesoloparati), Toast.LENGTH_SHORT).show();
 
                                                 mDatabaseRefMensajes.child(mUser.getUid()).child(pId).addListenerForSingleValueEvent(new ValueEventListener() {
                                                     @Override
@@ -973,8 +980,8 @@ public class ChatFragment extends Fragment {
                                                 int id = item.getItemId();
                                                 if (id == R.id.popupReaccionar_like) {
                                                     if (model.getReaccion().equals("like")) {
-
-                                                        Toast.makeText(getContext(), "Has quitado el like", Toast.LENGTH_SHORT).show();
+                                                        if(toastActivadas)
+                                                        Toast.makeText(getContext(), getString(R.string.toast_yanotegusta), Toast.LENGTH_SHORT).show();
                                                         mDatabaseRefMensajes.child(mUser.getUid()).child(pId).addListenerForSingleValueEvent(new ValueEventListener() {
                                                             @Override
                                                             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -1006,8 +1013,8 @@ public class ChatFragment extends Fragment {
                                                             }
                                                         });
                                                     } else {
-
-                                                        Toast.makeText(getContext(), "Te ha gustado el mensaje", Toast.LENGTH_SHORT).show();
+                                                        if(toastActivadas)
+                                                        Toast.makeText(getContext(), getString(R.string.toast_Tehagustadoelmensaje), Toast.LENGTH_SHORT).show();
                                                         mDatabaseRefMensajes.child(mUser.getUid()).child(pId).addListenerForSingleValueEvent(new ValueEventListener() {
                                                             @Override
                                                             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -1042,8 +1049,8 @@ public class ChatFragment extends Fragment {
                                                     }
                                                 } else if (id == R.id.popupReaccionar_feliz) {
                                                     if (model.getReaccion().equals("feliz")) {
-
-                                                        Toast.makeText(getContext(), "Has quitado el estado feliz", Toast.LENGTH_SHORT).show();
+                                                        if(toastActivadas)
+                                                        Toast.makeText(getContext(), getString(R.string.toast_Hasquitadolareaccionfeliz), Toast.LENGTH_SHORT).show();
                                                         mDatabaseRefMensajes.child(mUser.getUid()).child(pId).addListenerForSingleValueEvent(new ValueEventListener() {
                                                             @Override
                                                             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -1075,8 +1082,8 @@ public class ChatFragment extends Fragment {
                                                             }
                                                         });
                                                     } else {
-
-                                                        Toast.makeText(getContext(), "REaccion feliz", Toast.LENGTH_SHORT).show();
+                                                        if(toastActivadas)
+                                                        Toast.makeText(getContext(), getString(R.string.toast_Reacciónfelizalmensaje), Toast.LENGTH_SHORT).show();
                                                         mDatabaseRefMensajes.child(mUser.getUid()).child(pId).addListenerForSingleValueEvent(new ValueEventListener() {
                                                             @Override
                                                             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -1111,8 +1118,8 @@ public class ChatFragment extends Fragment {
                                                     }
                                                 } else if (id == R.id.popupReaccionar_enfadado) {
                                                     if (model.getReaccion().equals("enfadado")) {
-
-                                                        Toast.makeText(getContext(), "Has quitado el estado enfadado", Toast.LENGTH_SHORT).show();
+                                                        if(toastActivadas)
+                                                        Toast.makeText(getContext(), getString(R.string.toast_Hasquitadolareacciónenfadado), Toast.LENGTH_SHORT).show();
                                                         mDatabaseRefMensajes.child(mUser.getUid()).child(pId).addListenerForSingleValueEvent(new ValueEventListener() {
                                                             @Override
                                                             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -1144,8 +1151,8 @@ public class ChatFragment extends Fragment {
                                                             }
                                                         });
                                                     } else {
-
-                                                        Toast.makeText(getContext(), "estado enfadado", Toast.LENGTH_SHORT).show();
+                                                        if(toastActivadas)
+                                                        Toast.makeText(getContext(), getString(R.string.toast_Reacciónenfadadoalmensaje), Toast.LENGTH_SHORT).show();
                                                         mDatabaseRefMensajes.child(mUser.getUid()).child(pId).addListenerForSingleValueEvent(new ValueEventListener() {
                                                             @Override
                                                             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -1209,8 +1216,8 @@ public class ChatFragment extends Fragment {
                         public boolean onLongClick(View v) {
                             Log.d("Logs", "popupMenu_like");
                             if (model.getReaccion().equals("like")) {
-
-                                Toast.makeText(getContext(), "Has quitado el like", Toast.LENGTH_SHORT).show();
+                                if(toastActivadas)
+                                Toast.makeText(getContext(), getString(R.string.toast_yanotegusta), Toast.LENGTH_SHORT).show();
                                 mDatabaseRefMensajes.child(mUser.getUid()).child(pId).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -1242,8 +1249,8 @@ public class ChatFragment extends Fragment {
                                     }
                                 });
                             } else {
-
-                                Toast.makeText(getContext(), "Te ha gustado el mensaje", Toast.LENGTH_SHORT).show();
+                                if(toastActivadas)
+                                Toast.makeText(getContext(), getString(R.string.toast_Tehagustadoelmensaje), Toast.LENGTH_SHORT).show();
                                 mDatabaseRefMensajes.child(mUser.getUid()).child(pId).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {

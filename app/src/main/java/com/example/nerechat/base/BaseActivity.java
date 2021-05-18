@@ -67,20 +67,5 @@ public class BaseActivity extends AppCompatActivity {
             getResources().updateConfiguration(config, null);
 
         }
-        /*
-        public String returnTema(){
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-            String tema = "";
-            if (prefs.contains("tema")) {
-                tema = prefs.getString("tema", null);
-            }
-            return tema;
-        }
-
-        public void setSupportActionBar(Toolbar toolbar){
-            super.setSupportActionBar(toolbar);
-
-        }
-        */
 
     }

@@ -271,10 +271,10 @@ public class ChatbotFragment extends Fragment implements BotReply {
                 });
 
             }else {
-                Toast.makeText(getContext(), "something went wrong", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Algo salio mal", Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(getContext(), "failed to connect!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "No se ha podido conectar", Toast.LENGTH_SHORT).show();
         }
     }
 

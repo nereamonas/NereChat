@@ -3,13 +3,13 @@
     <item
         android:id="@+id/popupReaccionar_like"
         android:icon="@mipmap/ic_like"
-        android:title="Me gusta" />
+        android:title="@string/popup_reaccionar_megusta" />
     <item
         android:id="@+id/popupReaccionar_feliz"
         android:icon="@mipmap/ic_feliz"
-        android:title="Feliz"/>
+        android:title="@string/popup_reaccionar_Feliz"/>
     <item
         android:id="@+id/popupReaccionar_enfadado"
         android:icon="@mipmap/ic_enfadado"
-        android:title="Enfadado"/>
+        android:title="@string/popup_reaccionar_Enfadado"/>
 </menu>

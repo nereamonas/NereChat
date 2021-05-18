@@ -26,31 +26,26 @@ public class BaseFragment extends Fragment {
             case "morado":
                 getContext().setTheme(R.style.morado);
                 getActivity().setTheme(R.style.morado);
-                //((AppCompatActivity)getActivity()).getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#DA6CED")));
                 super.onCreate(savedInstanceState);
                 break;
             case "naranja":
                 getContext().setTheme(R.style.naranja);
                 getActivity().setTheme(R.style.naranja);
-                //((AppCompatActivity)getActivity()).getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FF9800")));
                 super.onCreate(savedInstanceState);
                 break;
             case "verde":
                 getContext().setTheme(R.style.verde);
                 getActivity().setTheme(R.style.verde);
-                //((AppCompatActivity)getActivity()).getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#8BC34A")));
                 super.onCreate(savedInstanceState);
                 break;
             case "azul":
                 getContext().setTheme(R.style.azul);
                 getActivity().setTheme(R.style.azul);
-                //((AppCompatActivity)getActivity()).getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#86E9F6")));
                 super.onCreate(savedInstanceState);
                 break;
             case "verdeazul":
                 getContext().setTheme(R.style.verdeazul);
                 getActivity().setTheme(R.style.verdeazul);
-                //((AppCompatActivity)getActivity()).getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#86E9F6")));
                 super.onCreate(savedInstanceState);
                 break;
             default:
@@ -60,7 +55,5 @@ public class BaseFragment extends Fragment {
                 break;
         }
 
-
-        //super.onCreate(savedInstanceState);
     }
 }

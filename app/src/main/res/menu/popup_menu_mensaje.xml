@@ -3,13 +3,13 @@
     <item
         android:id="@+id/popupMenu_EliminarMensaje"
         android:icon="@drawable/ic_eliminar"
-        android:title="Eliminar" />
+        android:title="@string/popup_mensaje_Eliminar" />
     <item
         android:id="@+id/popupMenu_emoji"
         android:icon="@drawable/ic_emoji"
-        android:title="Reaccionar"/>
+        android:title="@string/popup_mensaje_Reaccionar"/>
     <item
         android:id="@+id/popupMenu_editarMensaje"
         android:icon="@drawable/ic_editar"
-        android:title="Editar"/>
+        android:title="@string/popup_mensaje_Editar"/>
 </menu>

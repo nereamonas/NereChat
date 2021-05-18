@@ -3,17 +3,17 @@
     <item
         android:id="@+id/popupMaps_relieve"
         android:icon="@mipmap/ic_maps_relieve"
-        android:title="Relieve" />
+        android:title="@string/popup_map_Relieve" />
     <item
         android:id="@+id/popupMaps_hibrido"
         android:icon="@mipmap/ic_maps_hibrido"
-        android:title="Hibrido"/>
+        android:title="@string/popup_map_Hibrido"/>
     <item
         android:id="@+id/popupMaps_satelite"
         android:icon="@mipmap/ic_maps_satelite"
-        android:title="Satelite"/>
+        android:title="@string/popup_map_Satelite"/>
     <item
         android:id="@+id/popupMaps_normal"
         android:icon="@mipmap/ic_maps_normal"
-        android:title="Normal"/>
+        android:title="@string/popup_map_Normal"/>
 </menu>
