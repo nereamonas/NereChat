@@ -46,6 +46,7 @@
         <activity android:name=".CrearPerfilActivity" />
         <activity android:name=".CrearCuentaActivity" />
         <activity android:name=".IniciarSesionActivity" />
+        <activity android:name=".SubirFotoActivity" />
 
         <service
             android:name=".servicios.NotificacionMensajeService"

@@ -96,6 +96,8 @@ public class MainActivity extends BaseActivity {
                 abrir_chat(usuario);
             }else if(abrir.equals("ajustes")){ //Opcion 2 quiere q se abra ajustes
                 abrir_ajustes();
+            }else if(abrir.equals("fotos")){
+                abrir_fotos();
             }
         }
 
