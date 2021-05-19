@@ -2,7 +2,6 @@ package com.example.nerechat;
 
 import androidx.annotation.NonNull;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,8 +17,13 @@ import com.google.firebase.database.ValueEventListener;
 
 public class InicioAbrirActivity extends BaseActivity {
 
+    //Simplemente es como una actividad de transicion. cuando se abra la app se mostrara unos segundos esta ventana.
+    //Aqui se verá si el usuario ya cuenta con una sesion iniciada o por el contrario no tiene ninguna iniciada.
+    //En el caso de ya tener iniciada, se reenvia directamente al mainActivity para que no tenga que volver a pasar por el inicio de sesion
+    //Cada vez q cierre y abra la app. Por el contrario, si la sesion está cerrada se le enviará a la ventana de inicio de sesion
+
+    //Cargamos la informacion de firebase. que necesitamos para ssaber si esta abierta la sesion
     FirebaseAuth mAuth;
-    ProgressDialog progressDialog;
     FirebaseUser mUser;
     DatabaseReference mDatabaseRef;
     @Override
@@ -27,12 +31,12 @@ public class InicioAbrirActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inicio_abrir);
 
-
+        //Inicializamos variables
         mAuth=FirebaseAuth.getInstance();
         mUser=mAuth.getCurrentUser(); //El usuario actual que tiene iniciada la sesion
         mDatabaseRef= FirebaseDatabase.getInstance().getReference().child("Perfil"); //para comprobar el perfil del usuario correspondiente
 
-        comprobarSiYaHaySesion();
+        comprobarSiYaHaySesion(); //Comprobar
 
     }
 
@@ -50,7 +54,6 @@ public class InicioAbrirActivity extends BaseActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if(snapshot.exists()){//Comporbamos que ese mUser, tenga creado un perfil. si ya tiene el perfil creado vamos directamente a mainActivicity
-
                         Log.d("Logs", "ya tiene perfil asique vamos al main");
                         abrirPrincipal();
                     }else{//Si no tiene el usuario creado, es porque ha abandonado en la pagina NuevoUsuarioActivity, asique le llevamos a esa pag para que termine de crear todo bien
@@ -58,7 +61,6 @@ public class InicioAbrirActivity extends BaseActivity {
                         abrirCrearPerfil();
                     }
                 }
-
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) { }
             });

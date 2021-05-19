@@ -12,7 +12,9 @@ import com.example.nerechat.R;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ViewHolderChatUsuarios extends RecyclerView.ViewHolder {
-    //Guardaremos los elementos que tiene cada elemento del recycler view. en este caso un nombre de usuario, info y la foto de perfil
+    //Guardaremos los elementos que tiene cada elemento del recycler view. Es la recycler view tanto del fragment chatAmigos como todos los chats.
+    // Se muestra la info de un usuario. un nombre de usuario y la foto de perfil, el ultimo mensaje enviado, la hora del ultimo mensaje,
+    // la cantidad de mensajes sin leer y un circulito que muestra si está o no conectado
     public TextView nombreUsuario;
     public TextView info;
     public CircleImageView fotoPerfil;

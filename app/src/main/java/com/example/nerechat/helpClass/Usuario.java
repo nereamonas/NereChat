@@ -1,6 +1,7 @@
 package com.example.nerechat.helpClass;
 
 public class Usuario {
+    //Clase de ayuda de un usuario, donde se guarda la informacion de un usuario
     private String nombreUsuario;
     private String fotoPerfil;
     private String conectado;

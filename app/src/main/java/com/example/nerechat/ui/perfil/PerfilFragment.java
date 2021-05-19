@@ -51,6 +51,8 @@ import static android.app.Activity.RESULT_OK;
 
 public class PerfilFragment extends Fragment {
 
+    //Fragmento donde se muestra la informacion de tu perfil y se da la opcion a modificar dicha informacion
+
     int CODIGO_GALERIA=1;
     FirebaseAuth mAuth;
     FirebaseUser mUser;
@@ -69,7 +71,6 @@ public class PerfilFragment extends Fragment {
     Toolbar toolbar;
     ConstraintLayout constraintLayout;
 
-    boolean imagenCompleta;
     ImageView toolbarImagenAjustes;
     TextView toolbarTitulo;
 
@@ -79,30 +80,27 @@ public class PerfilFragment extends Fragment {
                 new ViewModelProvider(this).get(BaseViewModel.class);
         View root = inflater.inflate(R.layout.fragment_perfil, container, false);
 
+        //Inicializamos las variables necesarias
         circleImageView=root.findViewById(R.id.circleImageViewPerfilE);
         editUsername=root.findViewById(R.id.imageViewUsuarioEdit);
         editEstado=root.findViewById(R.id.imageViewEstadoEdit);
         floatingButtonCambiarFoto=root.findViewById(R.id.floatingActionButtonEditFoto);
         nombreUsu=root.findViewById(R.id.textPerfil_NombreUs);
         estado=root.findViewById(R.id.textPerfil_Estado);
-        Button b=root.findViewById(R.id.buttonLogOut);
 
         mAuth= FirebaseAuth.getInstance();
         mUser=mAuth.getCurrentUser(); //El usuario actual que tiene la sesion iniciada
         mDatabaseRef= FirebaseDatabase.getInstance().getReference().child("Perfil"); //La base de datos perfil
         mStorageRef= FirebaseStorage.getInstance().getReference().child("ImagenesPerfil"); //En Storage almacenaremos todas las imagenes de perfil que suban los usuarios, y en la base de datos guardamos la uri que hace referencia a la foto en storage
 
-
-
         //Toolbar
-
         toolbar=root.findViewById(R.id.chat_toolbarPerfil);
         constraintLayout=root.findViewById(R.id.toolbatPrincipalLayout);
-        comprobarColores();
+        comprobarColores(); //El toolbar tiene un problema para sincronizarse con el tema, asique lo he hecho en este metodo aparte
         toolbarImagenAjustes=root.findViewById(R.id.imageViewToolbarPrincipalAjustes);
         toolbarTitulo=root.findViewById(R.id.toolbarPrincipalTitulo);
         toolbarTitulo.setText(getString(R.string.nav_perfil));
-        toolbarImagenAjustes.setOnClickListener(new View.OnClickListener() {
+        toolbarImagenAjustes.setOnClickListener(new View.OnClickListener() { //Cuando se clique en el boton  de ajustes del toolvar, navegaremos al fragment de ajustes
             @Override
             public void onClick(View v) {
                 NavOptions options = new NavOptions.Builder()
@@ -113,29 +111,19 @@ public class PerfilFragment extends Fragment {
             }
         });
 
-        cargarInformacion();
+        cargarInformacion(); //Cargamos la informacion del toolbar, es decir, el nombre de usuario, la foto y el estado del otro usuario
 
-        b.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mAuth.signOut();
-                Intent i = new Intent(getContext(), IniciarSesionActivity.class);
-                i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                startActivity(i);
-                ((AppCompatActivity)getActivity()).finish();
-            }
-        });
-
-
+        //Cuando demos al boton de editar el estado. mostraremos una alerta para que el usuario inserte su nnuevo estado
         editEstado.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Creamos una alerta
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("Inserta el nuevo estado");
+                builder.setTitle(getString(R.string.alert_Insertaelnuevoestado));
                 //Añadimos en la alerta un edit text
                 final EditText input = new EditText(getContext());  //Creamos un edit text. para q el usuairo pueda insertar el titulo
                 builder.setView(input);
+                input.setText(estado.getText());
                 //Si el usuario da al ok
                 builder.setPositiveButton(getString(R.string.Ok), new DialogInterface.OnClickListener() {  //Si el usuario acepta, mostramos otra alerta con los ejercicios que puede agregar
                     @Override
@@ -148,7 +136,7 @@ public class PerfilFragment extends Fragment {
                         }
                         // actualizar
                         if (nuevoEstado != "") {
-                            mDatabaseRef.child(mUser.getUid()).child("estado").setValue(nuevoEstado);
+                            mDatabaseRef.child(mUser.getUid()).child("estado").setValue(nuevoEstado); //Actualizamos el valor de la base de datos
                             estado.setText(nuevoEstado);
                             if(activadas)
                             Toast.makeText(getContext(), getString(R.string.toast_estadoactualizado), Toast.LENGTH_SHORT).show();
@@ -172,15 +160,17 @@ public class PerfilFragment extends Fragment {
             }
         });
 
+        //Cuando clicamos en editar el nombre de usuario, mostramos una alerta para insertar el nuevo nombre de usuario
         editUsername.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Creamos una alerta
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("Inserta el nuevo nombre de usuario");
+                builder.setTitle(getString(R.string.alert_Insertaelnuevonombredeusuario));
                 //Añadimos en la alerta un edit text
                 final EditText input = new EditText(getContext());  //Creamos un edit text. para q el usuairo pueda insertar el titulo
                 builder.setView(input);
+                input.setText(nombreUsu.getText());
                 //Si el usuario da al ok
                 builder.setPositiveButton(getString(R.string.Ok), new DialogInterface.OnClickListener() {  //Si el usuario acepta, mostramos otra alerta con los ejercicios que puede agregar
                     @Override
@@ -216,6 +206,7 @@ public class PerfilFragment extends Fragment {
             }
         });
 
+        //Para cambiar la foto de perfil hay que hacer click en el boton flotante. se abrira la galeria para poder seleccionar una foto
         floatingButtonCambiarFoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -227,6 +218,7 @@ public class PerfilFragment extends Fragment {
         });
 
 
+        //Cuando hacemos click envima de la propia foto de perfil. abriremos el fragment de ver foto en grande, donde se podrá hacer zoom sobre la foto y asi
         circleImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -244,8 +236,8 @@ public class PerfilFragment extends Fragment {
     }
 
 
+    //Cargamos la informacion del toolbar
     public void cargarInformacion(){
-
         //Tenemos que coger de la base de datos la informacion del otro usuario. como tenemos su UID es sencillo
         mDatabaseRef.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -258,7 +250,6 @@ public class PerfilFragment extends Fragment {
                     Picasso.get().load(snapshot.child("fotoPerfil").getValue().toString()).into(circleImageView); //Mostramos la foto de perfil en pantalla
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
@@ -266,6 +257,7 @@ public class PerfilFragment extends Fragment {
     }
 
 
+    //Cuando seleccionamos una nueva foto, hay que borrar en firebase la foto de perfil anterior, insertar la nueva foto y cambiar de la base de datos el enlace a la nueva foto
     public void actualizarFirebaseImage(){
         mStorageRef.child(mUser.getUid()).delete();
 
@@ -293,6 +285,7 @@ public class PerfilFragment extends Fragment {
     }
 
 
+    //On activity result cuando hayamos terminado de seleccionar una foto de la galeria
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         //Recogeremos la informacion de fin de actividad de elegir la foto de la galeria
@@ -304,7 +297,7 @@ public class PerfilFragment extends Fragment {
                 this.uriImg=data.getData(); //Cogemos la uri de la imagen cargada y la guardamos en un aldagai
                 Log.d("Logs","URL de la imagen de la galeria: "+uriImg);
                 circleImageView.setImageURI(uriImg);  //mostramos en pantalla la imagen subida
-                actualizarFirebaseImage();
+                actualizarFirebaseImage(); //Temos q subir a firebase la nueva foto
             }
         }
 

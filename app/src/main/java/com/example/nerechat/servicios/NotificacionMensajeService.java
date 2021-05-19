@@ -22,10 +22,13 @@ import com.google.firebase.messaging.RemoteMessage;
 
 public class NotificacionMensajeService extends FirebaseMessagingService{
 
+    //Mandar notificaciones de firebase. Cuando un usuario manda un mensaje, mediante cloud messaging de firebase se enviara una peticion
+    //para que reciba la notificacion el destinatario del mensaje. cuando llega una notificacion mediante este codigo se visualizara
+    // unicamente en el dispositibo donde el usuario destinatario tenga iniciada la sesion
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage){
         super.onMessageReceived(remoteMessage);
-        Log.d("Logs","Notificacion recibida");
+        Log.d("Logs","Notificacion recibida"); //Hemos recibido una notificacion
         if (remoteMessage.getData().size() > 0) {
             Log.d("Logs","Tamaño data recibido: "+remoteMessage.getData().size());
         }
@@ -43,6 +46,7 @@ public class NotificacionMensajeService extends FirebaseMessagingService{
         }
     }
     public void lanzarNotif(RemoteMessage remoteMessage){
+        //Lanzamos la notificacion
         NotificationManager elManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder elBuilder = new NotificationCompat.Builder(this, "IdCanal");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -52,12 +56,16 @@ public class NotificacionMensajeService extends FirebaseMessagingService{
         }
         Intent intent = null;
 
+        //si tenemos informado quien es exactamente el usuario que lo ha mandado, podemos crear un intent que nos abra directamente el chat con esa persona
+        //Abriremos el mainactivity y le pasare un parametro diciendo chat. asi en el main mirare si tiene ese atributo y de ser asi con el identificador
+        //del usuario navegare directamente el chat con dicha persona.
         if (remoteMessage.getData().get("type").equals("sms")) {
             intent = new Intent(this, MainActivity.class);
             intent.putExtra("abrir", "chat");
             intent.putExtra("usuario", remoteMessage.getData().get("userID"));
         }
 
+        //Creamos el pending intent a traves del intent recien creado
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         elBuilder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_chat))

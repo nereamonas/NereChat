@@ -29,6 +29,8 @@ import java.util.Date;
 
 public class MainActivity extends BaseActivity {
 
+    //La actividad principal, que se encarga ded navegar por los diferentes fragmentos del menu
+
     FirebaseAuth mAuth;
     FirebaseUser mUser;
     DatabaseReference mDatabaseRef;
@@ -37,9 +39,8 @@ public class MainActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //Tendremos un bottonnavigationview con 4 destinos. los chats, el mapa, las fotos y la info del perfil
         BottomNavigationView navView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_chatsamigos, R.id.navigation_mapa, R.id.navigation_fotos, R.id.navigation_perfil)
                 .build();
@@ -47,26 +48,16 @@ public class MainActivity extends BaseActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
+        //Hasieratuamos las instancias de firebase que necesitaremos
         mAuth= FirebaseAuth.getInstance();
         mUser=mAuth.getCurrentUser(); //El usuario actual que tiene la sesion iniciada
         mDatabaseRef= FirebaseDatabase.getInstance().getReference().child("Perfil"); //La base de datos perfil
 
-
+        //Cuando abrimos este fragment tenemos que cambiar en firebase en la informacion de perifl nuestro estado a conectados para que el resto de usuarios vea que tenemos
+        //la aplicacion abierta y estamos disponibles.
         mDatabaseRef.child(mUser.getUid()).child("conectado").setValue("Conectado");
 
-        FirebaseMessaging.getInstance().subscribeToTopic(mUser.getUid()).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                Log.d("Logs","SUSCRITO EL USUARIO A NOTIFICACIONES");
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-
-                Log.d("Logs","NO SE HA PODIDO SUSCRIBIR EL USUARIO A NOTIFIACIONES");
-            }
-        });
-        Log.d("Logs","NO SE HA PODIDO SUSCRIBIR EL USUARIO A NOTIFIACIONESxxxxxxxxxxxxxxxxxxxxxxxxx");
+        FirebaseMessaging.getInstance().subscribeToTopic(mUser.getUid()); //Suscribimos el usuario para que reciba notificaciones. su topic será su uid
 
         //Poner visible la navegacion de abajo
         BottomNavigationView nv= findViewById(R.id.nav_view);
@@ -74,14 +65,13 @@ public class MainActivity extends BaseActivity {
         //Ocultar el action bar x defecto
         getSupportActionBar().hide();
 
-        //cambiarEstado("Conectado");
         //Controlaremos todos los botones del menu
         navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
 
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
-                if (id == R.id.navigation_chatsamigos) {  //Si clicamos en rutinas, abriremos con navigation, la ventana donde se muestran las rutinas. he igual con todos
+                if (id == R.id.navigation_chatsamigos) {  //Si clicamos en chats, abriremos con navigation, la ventana donde se muestran los chats
                     Log.d("Logs", "navigation_chatsamigos");
                     abrir_chatAmigos();
                 } else if (id==R.id.navigation_mapa){
@@ -98,21 +88,20 @@ public class MainActivity extends BaseActivity {
             }
         });
 
+        //Cuando venga de una notificacion de mensaje o se ha recargado la pagina desde ajustes, tendrá informado en los argumentos que le llegan la variable abrir. en el caso de ser asi:
         if (getIntent().hasExtra("abrir")) {
             String abrir = getIntent().getExtras().getString("abrir");
-            if (abrir.equals("chat")){
-
+            if (abrir.equals("chat")){ //Opcion 1, que tengamos q abrir el chat, de ser asi viene de una notificacion y tambien trae informado el usuario
                 String usuario = getIntent().getExtras().getString("usuario");
                 abrir_chat(usuario);
-            }else if(abrir.equals("ajustes")){
+            }else if(abrir.equals("ajustes")){ //Opcion 2 quiere q se abra ajustes
                 abrir_ajustes();
             }
         }
 
-
     }
 
-    public void abrir_chat(String s){
+    public void abrir_chat(String s){ //Abrimos el chat, como tenemos el uid del usuario se abrira sin problema
         Bundle bundle = new Bundle();
         bundle.putString("usuario", s);
         NavOptions options = new NavOptions.Builder()
@@ -121,27 +110,27 @@ public class MainActivity extends BaseActivity {
         Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.action_global_chatFragment, bundle,options);
     }
 
-    public void abrir_ajustes(){
+    public void abrir_ajustes(){//Abrimos la ventana de ajustes
         NavOptions options = new NavOptions.Builder()
                 .setLaunchSingleTop(true)
                 .build();
         Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.action_global_ajustesFragment,null,options);
     }
 
-    public void abrir_mapa(){
+    public void abrir_mapa(){//Abrimos la ventana de mapa
         NavOptions options = new NavOptions.Builder()
                 .setLaunchSingleTop(true)
                 .build();
         Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.action_global_navigation_mapa,null,options);
     }
-    public void abrir_chatAmigos(){
+    public void abrir_chatAmigos(){//Abrimos la ventana de los chats con amigos
         NavOptions options = new NavOptions.Builder()
                 .setLaunchSingleTop(true)
                 .build();
         Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.action_global_navigation_chatsamigos,null,options);
     }
 
-    public void abrir_fotos(){
+    public void abrir_fotos(){//Abrimos la ventana de fotos
         NavOptions options = new NavOptions.Builder()
                 .setLaunchSingleTop(true)
                 .build();
@@ -149,39 +138,15 @@ public class MainActivity extends BaseActivity {
 
     }
 
-    public void abrir_perfil(){
+    public void abrir_perfil(){//Abrimos la ventana de perfil
         NavOptions options = new NavOptions.Builder()
                 .setLaunchSingleTop(true)
                 .build();
         Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.action_global_navigation_perfil,null,options);
 
     }
-/*
-    public void cambiarEstado(String estado){
-        mDatabaseRef.child(mUser.getUid()).child("conectado").setValue(estado);
-    }
-    @Override
-    public void onBack() {
-        mDatabaseRef.child(mUser.getUid()).child("conectado").setValue("No está conectado");
-        super.onStop();
 
-    }
-
-@Override
-public void onBackPressed() {
-        mDatabaseRef.child(mUser.getUid()).child("conectado").setValue("No está conectado");
-
-   super.onBackPressed();
-
-}
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mDatabaseRef.child(mUser.getUid()).child("conectado").setValue("Conectado");
-
-    }
-*/
+    //Cuando se cierre la ventana ya no estaremos conectamos entonces en firebase tenemos que guardar nuestra ultima hora
     @Override
     public void onStop() {
         super.onStop();

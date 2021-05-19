@@ -55,6 +55,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChatbotFragment extends Fragment implements BotReply {
 
+    //Será el fragment encargado de manejar la conversación entre el usuario y el chatbot. Contendrá un toolbar que se personalizará con la foto y el estado del chatbot
+    // una recyclerview donde se cargan todos los mensajes intercambiados y en la parte inferior un edittext para escribir el mensaje
+    //que se quiere enviar al boton y un boton para enviar el mensaje
 
     Toolbar toolbar;
     RecyclerView recyclerView;
@@ -84,31 +87,33 @@ public class ChatbotFragment extends Fragment implements BotReply {
         // Inflate the layout for this fragment
         View root=inflater.inflate(R.layout.fragment_chatbot, container, false);
 
-
+        //Hasieratuamos todos los elementos necesarios
         recyclerView=root.findViewById(R.id.chat_recyclerViewchatbot);
         mensaje=root.findViewById(R.id.chat_mensajechatbot);
         send=root.findViewById(R.id.chat_sendchatbot);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         mAuth= FirebaseAuth.getInstance();
-        mUser=mAuth.getCurrentUser();
+        mUser=mAuth.getCurrentUser(); //Cogemos el usuario actual que tiene iniciada la sesion
         mDatabaseRef= FirebaseDatabase.getInstance().getReference().child("Perfil"); //La base de datos perfil
         mDatabaseRefMensajes= FirebaseDatabase.getInstance().getReference().child("MensajesChat"); //Y la base de datos mensajeChat donde se almacenarán todos los mensajes
 
         BottomNavigationView nv=  ((AppCompatActivity)getActivity()).findViewById(R.id.nav_view);
-        nv.setVisibility(View.GONE);
+        nv.setVisibility(View.GONE); //Ocultaremos la barra de navegacion inferior, ya que estando en el chat no nos interesa mostrarla y ganamos espacio
 
         toolbar=root.findViewById(R.id.chat_toolbarchatbot);
         barraPerfilImg=root.findViewById(R.id.barraImagenPErfil);
         barraUsername=root.findViewById(R.id.barraNombreUsu);
         barraStado=root.findViewById(R.id.barraEstado);
+        //Añadimos la informacion de la barra. la foto del chatbot, el nombre y el estado(siempre estará conectado)
         barraPerfilImg.setImageResource(R.mipmap.ic_fotochatbot_round);
         barraUsername.setText("Chatbot");
         barraStado.setText("Conectado");
-        cargarMiFotoPerfil();
-        cargarMensajes();
 
-        send.setOnClickListener(new View.OnClickListener() {
+        cargarMiFotoPerfil();//Cargamos desde firebase nuestra foto de perfil, ya que cada vez que mandamos un mensaje mostraremos nuestra foto, asi solo realizaremos la llamada una vez y optimizaremos tiempo
+        cargarMensajes();//Cargamos todos los mensajes almacenados en firebase que comparten el usuario y el chatbot
+
+        send.setOnClickListener(new View.OnClickListener() { //Cuando clickemos el boton send mandaremos el mensaje
             @Override public void onClick(View view) {
                 mandarMensaje();
             }
@@ -120,24 +125,23 @@ public class ChatbotFragment extends Fragment implements BotReply {
     }
 
     public void mandarMensaje(){
-        String mensaj=mensaje.getText().toString();
+        String mensaj=mensaje.getText().toString(); //Cogemos el texto escrito en el edittext
         if(!mensaj.equals("")){ //El mensaje debe ser distinto de "", sino no se mandara
-            Date date = new Date();
+            Date date = new Date(); //Cogeremos la hora exacta del momento en el que se mande, para saber a que hora se ha mandado el mensaje exactamente
             SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
 
-            sendMessageToBot(mensaj);
-            //Creamos un hashMap que subiremos a la base de datos en la tabla MensajesChat, y guardaremos el mensaje enviado y el Uid del usuario que lo ha mandado, en este caso yo
+            sendMessageToBot(mensaj); //Le mandamos el mensaje al bot. el nos dará la respuesta
+            //Creamos un hashMap que subiremos a la base de datos en la tabla MensajesChat, y guardaremos el mensaje enviado, la hora y el Uid del usuario que lo ha mandado, en este caso yo
             HashMap hashMap=new HashMap();
             hashMap.put("mensaje",mensaj);
             hashMap.put("usuario",mUser.getUid());
             hashMap.put("hora",formatter.format(date));
-            //Tenemos que hacer dos cosas, por un lado, subirlo con el titulo de mi usuario y subtitulo del otro usuario y por otro lado con el titulo del otro usuario y subtitulo de mi usuario, para tener las referencias con las dos personas
+            //subimos con el titulo de mi usuario y subtitulo de chatbot.
             mDatabaseRefMensajes.child(mUser.getUid()).child("chatbot").push().updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener() {
                 @Override
-                public void onSuccess(Object o) {
+                public void onSuccess(Object o) { //Una vez subido
                     //subido corectamente
                     mensaje.setText(""); //Actualizamos el valor de mensaje a "" para q el usuario escriba otro mensaje
-
                 }
             });
 
@@ -146,7 +150,7 @@ public class ChatbotFragment extends Fragment implements BotReply {
     }
 
 
-    private void setUpBot() {
+    private void setUpBot() { //Creamos la conexion con el chatbot. está creado con dialogflow que ofrece google
         try {
             InputStream stream = this.getResources().openRawResource(R.raw.credential);
             GoogleCredentials credentials = GoogleCredentials.fromStream(stream)
@@ -166,19 +170,19 @@ public class ChatbotFragment extends Fragment implements BotReply {
     }
 
 
-    public void cargarMensajes(){
-        //Se ha creado con un recycler view + card view como la lista de usuarios. que firebase facilita el trabajo.
-        //Tenemos que crear una clase Chat para guardar los valores de la bbdd
+    public void cargarMensajes(){ //Cargamos todos los mensajes almacenados en firebase
+        //Se ha creado con un recycler view + card view . que firebase facilita el trabajo.
+        //Tenemos que crear una clase Mensaje para guardar los valores de la bbdd
         options= new FirebaseRecyclerOptions.Builder<Mensaje>().setQuery(mDatabaseRefMensajes.child(mUser.getUid()).child("chatbot"), Mensaje.class).build();
         adapter= new FirebaseRecyclerAdapter<Mensaje, ViewHolderMensaje>(options) {
             @Override
             protected void onBindViewHolder(@NonNull ViewHolderMensaje holder, int position, @NonNull Mensaje model) {
                 //Tenemos dos opciones. Que el mensaje lo hayamos mandado nosotros, o que nosotros seamos los receptores del mensaje
                 if (model.getUsuario().equals(mUser.getUid())){ //En el caso de que el mensaje lo haya mandado yo
-                    holder.mensajeTextoUno.setVisibility(View.GONE); //Oculto la info del otro
+                    holder.mensajeTextoUno.setVisibility(View.GONE); //Oculto la info de cuando el mensaje lo envia el otro usuario
                     holder.mensajeFotoPerfilUno.setVisibility(View.GONE);
                     holder.mensajeHoraUno.setVisibility(View.GONE);
-                    holder.mensajeTextoDos.setVisibility(View.VISIBLE); //Pongo visible la info del mio
+                    holder.mensajeTextoDos.setVisibility(View.VISIBLE); //Pongo visible los elementos del mensaje cuando lo envio yo
                     holder.mensajeFotoPerfilDos.setVisibility(View.VISIBLE);
                     holder.mensajeHoraDos.setVisibility(View.VISIBLE);
 
@@ -186,10 +190,10 @@ public class ChatbotFragment extends Fragment implements BotReply {
                     holder.imageLikeUno.setVisibility(View.GONE);
                     holder.imageDobleCheckDos.setVisibility(View.GONE);
 
-                    holder.mensajeTextoDos.setText(model.getMensaje()); //Pongo mi mezu
-                    holder.mensajeHoraDos.setText(model.getHora());
-                    Picasso.get().load(miFotoPerfil).into(holder.mensajeFotoPerfilDos);
-                }else{
+                    holder.mensajeTextoDos.setText(model.getMensaje()); //Escribo mi mensaje en mensajeTextoDos ya que todos los elementos Dos perteneceran a mi mensaje
+                    holder.mensajeHoraDos.setText(model.getHora()); //Pongo la hora
+                    Picasso.get().load(miFotoPerfil).into(holder.mensajeFotoPerfilDos); //Añado la imagen
+                }else{ //El mensaje no lo he mandado yo por lo que se hará lo contrario, los elementos que terminen en Uno visibles y los elementos que terminan en Dos se omiten
                     holder.mensajeTextoUno.setVisibility(View.VISIBLE);//Pongo visible la info del otro usuario
                     holder.mensajeFotoPerfilUno.setVisibility(View.VISIBLE);
                     holder.mensajeHoraUno.setVisibility(View.VISIBLE);
@@ -215,31 +219,29 @@ public class ChatbotFragment extends Fragment implements BotReply {
             }
         };
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-            public void onItemRangeInserted(int positionStart, int itemCount) {
+            public void onItemRangeInserted(int positionStart, int itemCount) { //Este metodo es para que cada vez que se mande un mensaje se haga scroll hasta el final del chat, por defecto se quedaria en la pos 1.
                 ((LinearLayoutManager)recyclerView.getLayoutManager()).scrollToPositionWithOffset(adapter.getItemCount() - 1,200);
             }
         });
-        adapter.startListening();
-        recyclerView.setAdapter(adapter);
+        adapter.startListening(); //Empieza a escuchar
+        recyclerView.setAdapter(adapter); //Añadimos el adaptador a la recyclerview
     }
 
     public void cargarMiFotoPerfil(){
-        //Tenemos que coger de la base de datos la informacion del otro usuario. como tenemos su UID es sencillo
-        mDatabaseRef.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        //Tenemos que coger de la base de datos mi foto de perfil. como tenemos su UID es sencillo
+        mDatabaseRef.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() { //Añadimos un listener de solo una vez.
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
+                if(snapshot.exists()){ //Si existe un elemento con las caracteristicas que hemos dicho
                     //Si existe el usuario
-                    miFotoPerfil=snapshot.child("fotoPerfil").getValue().toString(); //Cogemos mi foto de perfil
-
+                    miFotoPerfil=snapshot.child("fotoPerfil").getValue().toString(); //Cogemos mi foto de perfil y la guardamos en un atr
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {}
         });
     }
-    private void sendMessageToBot(String message) {
+    private void sendMessageToBot(String message) { //Le mandamos el mensaje al bot
         QueryInput input = QueryInput.newBuilder()
                 .setText(TextInput.newBuilder().setText(message).setLanguageCode("en-US")).build();
         new SendMessageInBackground(this, sessionName, sessionsClient, input).execute();
@@ -247,32 +249,32 @@ public class ChatbotFragment extends Fragment implements BotReply {
 
     @Override
     public void callback(DetectIntentResponse returnResponse) {
+        //Recogemos la respuesta del bot
         if(returnResponse!=null) {
             String botReply = returnResponse.getQueryResult().getFulfillmentText();
             if(!botReply.isEmpty()){
 
-                Date date = new Date();
+                Date date = new Date(); //Cogemos la hora exacta en la que estamos
                 SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
                 //Creamos un hashMap que subiremos a la base de datos en la tabla MensajesChat, y guardaremos el mensaje enviado y el Uid del usuario que lo ha mandado, en este caso yo
                 HashMap hashMap=new HashMap();
                 hashMap.put("mensaje",botReply);
-                hashMap.put("usuario","chatbot");
+                hashMap.put("usuario","chatbot"); //En este caso como lo envia el chatbot, ponemos chatbot asecas
                 hashMap.put("hora",formatter.format(date));
-                //Tenemos que hacer dos cosas, por un lado, subirlo con el titulo de mi usuario y subtitulo del otro usuario y por otro lado con el titulo del otro usuario y subtitulo de mi usuario, para tener las referencias con las dos personas
+                //añadimos el mensaje a la base de datos
                 mDatabaseRefMensajes.child(mUser.getUid()).child("chatbot").push().updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener() {
                     @Override
-                    public void onSuccess(Object o) {
+                    public void onSuccess(Object o) {//Cuando se haya añadido
                         //subido corectamente
                         mensaje.setText(""); //Actualizamos el valor de mensaje a "" para q el usuario escriba otro mensaje
-
                     }
                 });
 
             }else {
-                Toast.makeText(getContext(), "Algo salio mal", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.toast_algosaliomal), Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(getContext(), "No se ha podido conectar", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.toast_Nosehapodidoconectarconelchatbot), Toast.LENGTH_SHORT).show();
         }
     }
 

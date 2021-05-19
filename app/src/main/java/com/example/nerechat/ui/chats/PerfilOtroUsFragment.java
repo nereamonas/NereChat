@@ -30,6 +30,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PerfilOtroUsFragment extends Fragment {
 
+    //Mostraremos la informacion del perfil del otro usuario
+
     private BaseViewModel perfilOtroUsViewModel;
 
     FirebaseAuth mAuth;
@@ -41,7 +43,6 @@ public class PerfilOtroUsFragment extends Fragment {
     CircleImageView imageView;
     TextView nombreUsu,estado,fechaUnion;
 
-    boolean imagenCompleta;
     String fotoPerfilurl="";
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -51,7 +52,7 @@ public class PerfilOtroUsFragment extends Fragment {
                 new ViewModelProvider(this).get(BaseViewModel.class);
         View root=inflater.inflate(R.layout.fragment_perfil_otro_us, container, false);
 
-        //circleImageView=root.findViewById(R.id.circleImageViewPerfilOtroUsE);
+        //hasieratuamos los elementos
         imageView=root.findViewById(R.id.circleImageViewPerfilOtroUsE);
         nombreUsu=root.findViewById(R.id.textPerfilOtroUs_NombreUs);
 
@@ -62,22 +63,21 @@ public class PerfilOtroUsFragment extends Fragment {
         mUser=mAuth.getCurrentUser(); //El usuario actual que tiene la sesion iniciada
         mDatabaseRef= FirebaseDatabase.getInstance().getReference().child("Perfil"); //La base de datos perfil
 
-        pId = getArguments().getString("usuario");
+        pId = getArguments().getString("usuario"); //Cogemos el pid del usuario del que tenemos que mostrar la informacion, que nos viene como argumento del fragment anterior
 
         FirebaseMessaging.getInstance().subscribeToTopic(mUser.getUid()); //Para recibir las notif d ese id
 
-        cargarInformacion();
+        cargarInformacion(); //Cargamos la info del usuario
 
-        imageView.setOnClickListener(new View.OnClickListener() {
+        imageView.setOnClickListener(new View.OnClickListener() { //Al hacer click en la foto cargaremos un nuevo fragment que simplemente muestra la imagen ampliada y nos permitirá hacer zoom sobre ella
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle(); //Con el bundle podemos pasar datos
-                bundle.putString("imagen", fotoPerfilurl);
+                bundle.putString("imagen", fotoPerfilurl); //Le tenemos q pasar la url de la imagen
                 NavOptions options = new NavOptions.Builder()
                         .setLaunchSingleTop(true)
                         .build();
                 Navigation.findNavController(v).navigate(R.id.action_perfilOtroUsFragment_to_verImagenFragment, bundle,options);
-
 
             }
         });
@@ -93,7 +93,7 @@ public class PerfilOtroUsFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    //Si existe el usuario
+                    //Si existe el usuario cogemos sus datos y los insertamos en los textview/imaegview
                     Log.d("Logs","Snapchot "+snapshot.toString());
                     nombreUsu.setText(snapshot.child("nombreUsuario").getValue().toString()); //Cogemos su nombre de usuario
                     estado.setText(snapshot.child("estado").getValue().toString()); //Cogemos su foto de perfil

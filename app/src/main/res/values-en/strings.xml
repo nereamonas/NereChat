@@ -19,7 +19,7 @@
     <string name="EN">English</string>
     <string name="EU">Basque</string>
     <string name="ajustes_morado">Purple</string>
-    <string name="ajustes_verde">Berdea</string>
+    <string name="ajustes_verde">Green</string>
     <string name="ajustes_naranja">Orange</string>
     <string name="ajustes_azul">Blue</string>
     <string name="iniciarsesion_IniciarSesion">Log in</string>
@@ -100,4 +100,8 @@
     <string name="progressDialog_Porfavoresperamientrasseregistra">Please wait while you register</string>
     <string name="progressDialog_Creandoperfil">Creating profile</string>
     <string name="progressDialog_Porfavoresperehastaqueseacabedecrearelperfil">Please wait until the profile is finished creating</string>
+    <string name="toast_algosaliomal">Something went wrong</string>
+    <string name="toast_Nosehapodidoconectarconelchatbot">Unable to connect to the chatbot</string>
+    <string name="alert_Insertaelnuevoestado">Insert the new state</string>
+    <string name="alert_Insertaelnuevonombredeusuario">Insert the new username</string>
 </resources>

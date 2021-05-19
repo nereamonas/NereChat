@@ -79,34 +79,33 @@ public class ChatsTodosFragment extends Fragment {
         recyclerView.addItemDecoration(dividerItemDecoration);
         cargarUsuarios("");
 
-
+        //En este caso desactivaremos la nevagacion inferior, no nos interesa que se muestre
         BottomNavigationView nv=  ((AppCompatActivity)getActivity()).findViewById(R.id.nav_view);
         nv.setVisibility(View.GONE);
 
-        //Toolbar
-
+        //Toolbar. tenemos q configurar el toolbar que se debe mostrar en este fragmento
         toolbar=root.findViewById(R.id.chat_toolbarChatTodos);
         constraintLayout=root.findViewById(R.id.toolbarBuscarLayout);
-        comprobarColores();
+        comprobarColores(); //Aplicamos los colores correspondientes dependiendo del tema
         toolbarSearchEditText=root.findViewById(R.id.editTextToolbarSearch);
         toolbarImageSearch=root.findViewById(R.id.imageViewToolbarBuscar);
         toolbarTitulo=root.findViewById(R.id.toolbarBuscarTitulo);
         toolbarImagenAjustes=root.findViewById(R.id.imageViewToolbarAjustes);
         toolbarTitulo.setText(getString(R.string.nav_todoslosusuarios));
         toolbarSearchEditText.setVisibility(View.INVISIBLE);
-        toolbarImageSearch.setOnClickListener(new View.OnClickListener() {
+        toolbarImageSearch.setOnClickListener(new View.OnClickListener() { //Cuando se clicke en la lopa de buscar:
             @Override
             public void onClick(View v) {
-                if (toolbarSearchEditText.getVisibility()==View.VISIBLE){
-                    toolbarSearchEditText.setVisibility(View.INVISIBLE);
-                    toolbarImageSearch.setImageDrawable(getResources().getDrawable(R.drawable.ic_buscar));
-                    //Cerramos el teclado
+                if (toolbarSearchEditText.getVisibility()==View.VISIBLE){ //Si el edit text para agregar el texto a buscar estaba visible:
+                    toolbarSearchEditText.setVisibility(View.INVISIBLE); //Lo volveremos invisible
+                    toolbarImageSearch.setImageDrawable(getResources().getDrawable(R.drawable.ic_buscar)); //Y cambiaremos el icono de la X al icono de buscar para hacer una nueva busqueda
+                    //Cerramos el teclado, ya que se ha terminado con la accion de buscar
                     InputMethodManager imm = (InputMethodManager) ((AppCompatActivity)getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(toolbarSearchEditText.getWindowToken(), 0);
-                    cargarUsuarios("");
-                }else {
-                    toolbarSearchEditText.setVisibility(View.VISIBLE);
-                    toolbarImageSearch.setImageDrawable(getResources().getDrawable(R.drawable.ic_cerrar));
+                    cargarUsuarios(""); //Y cargaremos los usuarios de nuevo pero sin ninguna busqueda. si no los bvolvemos a cargar se quedaria con la ultima busqueda
+                }else { //Si por el contrario el edittext esta invisible, es que acabamos de dar a la lupa para buscar
+                    toolbarSearchEditText.setVisibility(View.VISIBLE); //Volveremos el edittext visible para q se pueda realizar una busqueda
+                    toolbarImageSearch.setImageDrawable(getResources().getDrawable(R.drawable.ic_cerrar)); //Cambiamos el icono de la lupa por una X para cerrar la busqueda
                     //Le ponemos el focus y abrimos el teclado para q escriba
                     toolbarSearchEditText.requestFocus();
                     InputMethodManager imm = (InputMethodManager) ((AppCompatActivity)getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -115,7 +114,7 @@ public class ChatsTodosFragment extends Fragment {
             }
         });
 
-        toolbarImagenAjustes.setOnClickListener(new View.OnClickListener() {
+        toolbarImagenAjustes.setOnClickListener(new View.OnClickListener() { //Cuando se clicke al icono de ajustes abriremos la ventana de ajustes
             @Override
             public void onClick(View v) {
                 NavOptions options = new NavOptions.Builder()
@@ -125,12 +124,12 @@ public class ChatsTodosFragment extends Fragment {
 
             }
         });
-        toolbarSearchEditText.addTextChangedListener(new TextWatcher() {
+        toolbarSearchEditText.addTextChangedListener(new TextWatcher() { //Cuando le demos a la lupa tendremos que cargar los usuarios con el texto que se ha escrito en el edittext
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                cargarUsuarios(s.toString());
+                cargarUsuarios(s.toString()); //Cargamos los usuarios que e nombre de usuario coincida con el text
             }
             @Override
             public void afterTextChanged(Editable s) { }

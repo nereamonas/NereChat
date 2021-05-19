@@ -9,6 +9,7 @@ import com.google.cloud.dialogflow.v2.SessionsClient;
 
 public class SendMessageInBackground extends AsyncTask<Void, Void, DetectIntentResponse> {
 
+    //Aqui se mandara en background el mensaje del chatbot
 
     private SessionName session;
     private SessionsClient sessionsClient;

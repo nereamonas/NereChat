@@ -19,7 +19,7 @@
     <string name="EN">Ingelera</string>
     <string name="EU">Euskera</string>
     <string name="ajustes_morado">Morea</string>
-    <string name="ajustes_verde">Green</string>
+    <string name="ajustes_verde">Berdea</string>
     <string name="ajustes_naranja">Laranja</string>
     <string name="ajustes_azul">Urdina</string>
     <string name="iniciarsesion_IniciarSesion">Saioa hasi</string>
@@ -100,4 +100,8 @@
     <string name="progressDialog_Porfavoresperamientrasseregistra">Mesedez, itxaron erregistratu bitartean</string>
     <string name="progressDialog_Creandoperfil">Profila sortzen</string>
     <string name="progressDialog_Porfavoresperehastaqueseacabedecrearelperfil">Itxaron profila sortzen amaitu arte</string>
+    <string name="toast_algosaliomal">Arazoren bat izan da</string>
+    <string name="toast_Nosehapodidoconectarconelchatbot">Ezin da chatbot-era konektatu</string>
+    <string name="alert_Insertaelnuevoestado">Txertatu egoera berria</string>
+    <string name="alert_Insertaelnuevonombredeusuario">Sartu erabiltzaile izen berria</string>
 </resources>

@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 @SuppressLint("AppCompatCustomView")
 //Copiado de https://github.com/Destroyer716/ZoomImageTest
 
+//ImageView donde se puede hacer zoom
 
 public class ZoomImageView extends ImageView implements View.OnTouchListener {
 

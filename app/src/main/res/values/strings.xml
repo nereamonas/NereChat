@@ -117,4 +117,8 @@
     <string name="progressDialog_Porfavoresperamientrasseregistra">Por favor espera mientras se registra</string>
     <string name="progressDialog_Creandoperfil">Creando perfil</string>
     <string name="progressDialog_Porfavoresperehastaqueseacabedecrearelperfil">Por favor espere hasta que se acabe de crear el perfil</string>
+    <string name="toast_algosaliomal">Algo salió mal</string>
+    <string name="toast_Nosehapodidoconectarconelchatbot">No se ha podido conectar con el chatbot</string>
+    <string name="alert_Insertaelnuevoestado">Inserta el nuevo estado</string>
+    <string name="alert_Insertaelnuevonombredeusuario">Inserta el nuevo nombre de usuario</string>
 </resources>

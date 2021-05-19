@@ -91,35 +91,35 @@ public class ChatsAmigosFragment extends Fragment {
         dividerItemDecoration= new DividerItemDecoration(getContext(),llm.getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
         nohaychats=root.findViewById(R.id.textViewNoTienesChats);
-        nohaychats.setVisibility(View.VISIBLE);
-        cargarUsuarios("");
+        nohaychats.setVisibility(View.VISIBLE); //Cuando no hay todavia ningun chat, mostraremos este textview para q el usuario vea que esta en blanco porque aun no tiene ningun chat activo
+        cargarUsuarios(""); //Cargamos todos los usuarios
 
         floatButton=root.findViewById(R.id.floatingActionButtonNuevoContacto);
         imgChatbot=root.findViewById(R.id.imgChatbot);
 
+        //Toolbar.  tenemos q configurar el toolbar que se debe mostrar en este fragmento
         toolbar=root.findViewById(R.id.chat_toolbarChatAmigos);
         constraintLayout=root.findViewById(R.id.toolbarBuscarLayout);
-        comprobarColores();
-        //Toolbar
+        comprobarColores();//Aplicamos los colores correspondientes dependiendo del tema
         toolbarSearchEditText=root.findViewById(R.id.editTextToolbarSearch);
         toolbarImageSearch=root.findViewById(R.id.imageViewToolbarBuscar);
         toolbarTitulo=root.findViewById(R.id.toolbarBuscarTitulo);
         toolbarImagenAjustes=root.findViewById(R.id.imageViewToolbarAjustes);
         toolbarTitulo.setText(getString(R.string.nav_chats));
         toolbarSearchEditText.setVisibility(View.INVISIBLE);
-        toolbarImageSearch.setOnClickListener(new View.OnClickListener() {
+        toolbarImageSearch.setOnClickListener(new View.OnClickListener() { //Cuando se clicke en la lopa de buscar:
             @Override
             public void onClick(View v) {
-                if (toolbarSearchEditText.getVisibility()==View.VISIBLE){
-                    toolbarSearchEditText.setVisibility(View.INVISIBLE);
-                    toolbarImageSearch.setImageDrawable(getResources().getDrawable(R.drawable.ic_buscar));
+                if (toolbarSearchEditText.getVisibility()==View.VISIBLE){ //Si el edit text para agregar el texto a buscar estaba visible:
+                    toolbarSearchEditText.setVisibility(View.INVISIBLE);//Lo volveremos invisible
+                    toolbarImageSearch.setImageDrawable(getResources().getDrawable(R.drawable.ic_buscar)); //Y cambiaremos el icono de la X al icono de buscar para hacer una nueva busqueda
                     //Cerramos el teclado
                     InputMethodManager imm = (InputMethodManager) ((AppCompatActivity)getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(toolbarSearchEditText.getWindowToken(), 0);
-                    cargarUsuarios("");
-                }else {
-                    toolbarSearchEditText.setVisibility(View.VISIBLE);
-                    toolbarImageSearch.setImageDrawable(getResources().getDrawable(R.drawable.ic_cerrar));
+                    cargarUsuarios("");//Y cargaremos los usuarios de nuevo pero sin ninguna busqueda. si no los bvolvemos a cargar se quedaria con la ultima busqueda
+                }else { //Si por el contrario el edittext esta invisible, es que acabamos de dar a la lupa para buscar
+                    toolbarSearchEditText.setVisibility(View.VISIBLE);//Volveremos el edittext visible para q se pueda realizar una busqueda
+                    toolbarImageSearch.setImageDrawable(getResources().getDrawable(R.drawable.ic_cerrar)); //Cambiamos el icono de la lupa por una X para cerrar la busqueda
                     //Le ponemos el focus y abrimos el teclado para q escriba
                     toolbarSearchEditText.requestFocus();
                     InputMethodManager imm = (InputMethodManager) ((AppCompatActivity)getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -127,7 +127,7 @@ public class ChatsAmigosFragment extends Fragment {
                 }
             }
         });
-        toolbarImagenAjustes.setOnClickListener(new View.OnClickListener() {
+        toolbarImagenAjustes.setOnClickListener(new View.OnClickListener() {//Cuando se clicke al icono de ajustes abriremos la ventana de ajustes
             @Override
             public void onClick(View v) {
                 NavOptions options = new NavOptions.Builder()
@@ -137,22 +137,22 @@ public class ChatsAmigosFragment extends Fragment {
 
             }
         });
-        toolbarSearchEditText.addTextChangedListener(new TextWatcher() {
+        toolbarSearchEditText.addTextChangedListener(new TextWatcher() {//Cuando le demos a la lupa tendremos que cargar los usuarios con el texto que se ha escrito en el edittext
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                cargarUsuarios(s.toString());
+                cargarUsuarios(s.toString()); //Cargamos los usuarios que e nombre de usuario coincida con el text
             }
             @Override
             public void afterTextChanged(Editable s) { }
         });
 
-
+        //En este caso ponemos visible la nevagacion inferior, nos interesa que se muestre para poder viajar entre los diferentes fragmentos
         BottomNavigationView nv=  ((AppCompatActivity)getActivity()).findViewById(R.id.nav_view);
         nv.setVisibility(View.VISIBLE);
 
-        floatButton.setOnClickListener(new View.OnClickListener() {
+        floatButton.setOnClickListener(new View.OnClickListener() { //Cuando le demos al boton flotante +, se abrira el fragmento con todos los chats. se listarán todos los usuarios que estan registrados en la app para que puedas hablar con ellos
             @Override
             public void onClick(View v) {
                 NavOptions options = new NavOptions.Builder()
@@ -163,7 +163,7 @@ public class ChatsAmigosFragment extends Fragment {
         });
 
 
-        imgChatbot.setOnClickListener(new View.OnClickListener() {
+        imgChatbot.setOnClickListener(new View.OnClickListener() { //Cuando le das al boton flotante con el icono del chatbot se abrira el fragmento chatbot, donde se podrá mantener una conversacion con un chat virtual
             @Override
             public void onClick(View v) {
                 NavOptions options = new NavOptions.Builder()
@@ -176,10 +176,10 @@ public class ChatsAmigosFragment extends Fragment {
 
         return root;
     }
-    public void cambiarVisibilidad(){
+    public void cambiarVisibilidad(){ //Cuando hay minimo un chat, ocultaremos este textview, que simplemente informe que no tiene ningun chat activo
         nohaychats.setVisibility(View.INVISIBLE);
     }
-    public void cargarUsuarios(String search){
+    public void cargarUsuarios(String search){ //Cargamos todos los usuarios que tienen iniciada una conversacion con el usuario actual
         //Firebase nos ayuda tambien a la hora de crear los recycleViews, nos ofrece un FirebaseRecyclerOptions y FirebaseRecyclerAdapter por lo que no tenemos que crear una clase para el adaptador
         //Cogeremos todos los elementos que hay almacenados en la base de datos en la tabla Perfil. y los ordenamos por el nombredeUsuario por ahora.
         Query query= mDatabaseRef.orderByChild("nombreUsuario").startAt(search).endAt(search+"\uf8ff");
@@ -193,47 +193,47 @@ public class ChatsAmigosFragment extends Fragment {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if(snapshot.exists()){
-                            cambiarVisibilidad();
+                            cambiarVisibilidad();//Si existe, ya hay chats asique ocultamos el textview ese
                             //Si existe el usuario
                             Picasso.get().load(model.getFotoPerfil()).into(holder.fotoPerfil); //Mostramos la foto de perfil
                             holder.nombreUsuario.setText(model.getNombreUsuario()); //Mostramos el nombre de uusario
-                            ArrayList<Mensaje> lista= new ArrayList<Mensaje>();
+                            ArrayList<Mensaje> lista= new ArrayList<Mensaje>(); //Necesitamos conseguir cual es el ultimo mensaje, añadiremos en la lista todos los emnsajes
                             for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                                 Mensaje mensaje = postSnapshot.getValue(Mensaje.class);
                                 lista.add(mensaje);
                             }
                             Log.d("Logs","Ultimo mensaje: "+lista.get(lista.size()-1).getMensaje());
-                            Mensaje ultimo=lista.get(lista.size()-1);
-                            String msg=ultimo.getMensaje();
-                             if(ultimo.getMensaje().contains("https://firebasestorage.googleapis.com/")) {
+                            Mensaje ultimo=lista.get(lista.size()-1); //Cogemos el ultimo mensaje
+                            String msg=ultimo.getMensaje(); //Cogemos su texto
+                             if(ultimo.getMensaje().contains("https://firebasestorage.googleapis.com/")) { //Si el ultimo mensaje es una imagen, en vez de mostrar la url de la imagen, pondremos el texto IMAGEN para informar que el ultimo mensaje ha sido una foto
                                 msg="IMAGEN";
                             }
-                            if (ultimo.getUsuario().equals(mUser.getUid())){
+                            if (ultimo.getUsuario().equals(mUser.getUid())){ //Si he sido yo el que ha mandado el ultimo mensaje, pondremos por delante un Tú, para saber que ha sido nuestro
                                 msg="Tú: "+msg;
-                                holder.info.setTextColor(Color.parseColor("#61699C"));
-                            }else{
+                                holder.info.setTextColor(Color.parseColor("#61699C")); //Y le pondremos un color azulito al mensaje
+                            }else{ //Si el mensaje no lo he mandado yo, sino el otro usuario, le cambiamos el color a uno gris
                                 holder.info.setTextColor(Color.parseColor("#AAAAAA"));
                             }
-                            holder.info.setText(msg); //Mostramos la info
-                            holder.textHoraUltimoMensaje.setText(ultimo.getHora());
+                            holder.info.setText(msg); //Mostramos el mensaje
+                            holder.textHoraUltimoMensaje.setText(ultimo.getHora()); //Mostramos la ultima hora del mensaje
 
 
-                            //Conseguir cuantos mensajes estan sin leer
-                            mDatabaseRefMensajes.child(model.getUid()).child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                            //Tambien queremos mostrar cuantos mensajes hay sin leer, asique haremos los siguiente
+                            mDatabaseRefMensajes.child(model.getUid()).child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() { //Buscamos todos los mensajes enviados
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         int mensajesLeidos=0;
                                         for (DataSnapshot d: snapshot.getChildren()) { //Por cada datasnapshot (es decir cada foto subida a firebase)
                                             Mensaje mensaje= d.getValue(Mensaje.class);
-                                           if(mensaje.getLeido().equals("no") && mensaje.getUsuario().equals(model.getUid())){
-                                                mensajesLeidos++;
+                                           if(mensaje.getLeido().equals("no") && mensaje.getUsuario().equals(model.getUid())){ //Cogemos los mensajes enviados por el otro usuario y que esten en leido='np'
+                                                mensajesLeidos++; //Y de ser asi incrementamos el valor
                                             }
                                         }
-                                        if(mensajesLeidos!=0){
-                                            holder.textViewMensajesSinLeer.setText(""+mensajesLeidos);
-                                            holder.textHoraUltimoMensaje.setTextColor(Color.parseColor("#50DA2A"));
-                                            holder.textViewMensajesSinLeer.setTextColor(Color.parseColor("#50DA2A"));
-                                            holder.info.setTextColor(Color.parseColor("#50DA2A"));
+                                        if(mensajesLeidos!=0){ //Si mensajesleidos es más que  significa que tenemos algun mensaje sin leer. por lo cual
+                                            holder.textViewMensajesSinLeer.setText(""+mensajesLeidos); //En el textView de mensajes sin leer, añadiremos el numero de mensajes que tenemos sin leer
+                                            holder.textHoraUltimoMensaje.setTextColor(Color.parseColor("#50DA2A"));//Ponemos el textview de la hora en color verde, para llamar mas la atencion
+                                            holder.textViewMensajesSinLeer.setTextColor(Color.parseColor("#50DA2A")); //Ponemos el textview de la cantidad de mensajes sin leer a verde
+                                            holder.info.setTextColor(Color.parseColor("#50DA2A")); //Y ponemos el ultimo mensaje en verde tambn
 
                                         }
                                     }
@@ -242,14 +242,13 @@ public class ChatsAmigosFragment extends Fragment {
                                     }
                                 });
 
-
-
-                            mDatabaseRef.child(model.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                            //Tendremos que mirar si los otros usuarios se encuentran actualmente conectados a la app o desconectados
+                            mDatabaseRef.child(model.getUid()).addListenerForSingleValueEvent(new ValueEventListener() { //Para ello buscamos el perfil del otro usuario
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     if (snapshot.exists()) {
                                         //Si existe el usuario
-                                        String conectado=snapshot.child("conectado").getValue().toString();
+                                        String conectado=snapshot.child("conectado").getValue().toString(); //Cogemos su valor del parametro conectado
                                         if ("Conectado".equals(conectado)){
                                             holder.icRojo.setVisibility(View.INVISIBLE);
                                         }else{
@@ -264,7 +263,7 @@ public class ChatsAmigosFragment extends Fragment {
                             });
 
                         }else{
-                            holder.itemView.setVisibility(View.GONE);
+                            holder.itemView.setVisibility(View.GONE); //si somos nosotros el elemento que toca, debemos omitir la lista y pasar al siguiente elemento
                             ViewGroup.LayoutParams params=holder.itemView.getLayoutParams();
                             params.height= 0;
                             holder.itemView.setLayoutParams(params);

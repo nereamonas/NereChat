@@ -166,17 +166,15 @@ public class MapsFragment extends BaseFragment implements GoogleMap.OnPolylineCl
        // IW_vista.setTextColor(getResources().getColor(R.color.white));
        // IW_vista.setBackgroundColor(getResources().getColor(R.color.azul_oscuro));
 
+        //mostramos un popupmenu donde nos saldra la opcion de cambiar la vista del mapa
         IW_vista.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 //POPUP MENU
-                //Creating the instance of PopupMenu
                 PopupMenu popup = new PopupMenu(getContext(), IW_vista);
-                //Inflating the Popup using xml file
                 popup.getMenuInflater().inflate(R.menu.popup_maps, popup.getMenu());
 
-                //registering popup with OnMenuItemClickListener
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     public boolean onMenuItemClick(MenuItem item) {
                         int id = item.getItemId();
