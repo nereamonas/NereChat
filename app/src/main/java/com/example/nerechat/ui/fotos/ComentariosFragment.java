@@ -2,14 +2,14 @@ package com.example.nerechat.ui.fotos;
 
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
+import androidx.navigation.NavOptions;
+import androidx.navigation.Navigation;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -26,11 +26,8 @@ import android.widget.Toast;
 
 import com.example.nerechat.R;
 import com.example.nerechat.adaptadores.RecyclerViewAdapterChatUsuarios.ViewHolderComment;
-import com.example.nerechat.adaptadores.RecyclerViewAdapterChatUsuarios.ViewHolderImagen;
 import com.example.nerechat.base.BaseFragment;
 import com.example.nerechat.helpClass.Comment;
-import com.example.nerechat.helpClass.Imagen;
-import com.example.nerechat.helpClass.Mensaje;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -61,6 +58,7 @@ public class ComentariosFragment extends BaseFragment {
     RecyclerView recyclerView;
     DividerItemDecoration dividerItemDecoration;
 
+    ImageView toolbarImagenAjustes;
     TextView toolbarTitulo;
     Toolbar toolbar;
     ConstraintLayout constraintLayout;
@@ -81,7 +79,17 @@ public class ComentariosFragment extends BaseFragment {
         comprobarColores(); //Aplicamos los colores correspondientes dependiendo del tema
         toolbarTitulo = root.findViewById(R.id.toolbarPrincipalTitulo);
         toolbarTitulo.setText(getString(R.string.nav_comentarios));
+        toolbarImagenAjustes=root.findViewById(R.id.imageViewToolbarPrincipalAjustes);
+        toolbarImagenAjustes.setOnClickListener(new View.OnClickListener() { //Cuando se clique en el boton  de ajustes del toolvar, navegaremos al fragment de ajustes
+            @Override
+            public void onClick(View v) {
+                NavOptions options = new NavOptions.Builder()
+                        .setLaunchSingleTop(true)
+                        .build();
+                Navigation.findNavController(v).navigate(R.id.action_comentariosFragment_to_ajustesFragment,null,options);
 
+            }
+        });
 
         mAuth= FirebaseAuth.getInstance();
         mUser=mAuth.getCurrentUser();

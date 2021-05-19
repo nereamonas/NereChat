@@ -58,13 +58,12 @@ public class FotosFragment extends BaseFragment {
 
     FirebaseAuth mAuth;
     FirebaseUser mUser;
-    DatabaseReference mDatabaseRefPerfil,mDatabaseRefImagenes, mDatabaseRefLikes;
+    DatabaseReference mDatabaseRefPerfil,mDatabaseRefImagenes, mDatabaseRefLikes,mDatabaseRefComentarios;
     FirebaseRecyclerOptions<Imagen> options;
     FirebaseRecyclerAdapter<Imagen, ViewHolderImagen> adapter;
 
     Toolbar toolbar;
     ConstraintLayout constraintLayout;
-
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -84,6 +83,7 @@ public class FotosFragment extends BaseFragment {
         mDatabaseRefPerfil= FirebaseDatabase.getInstance().getReference().child("Perfil"); //Referencia a la base de datos donde se encuentras los perfiles de usuario
         mDatabaseRefImagenes= FirebaseDatabase.getInstance().getReference().child("Imagen"); //Y la base de datos mensajeChat donde se almacenarán todos los mensajes
         mDatabaseRefLikes= FirebaseDatabase.getInstance().getReference().child("Likes");
+        mDatabaseRefComentarios= FirebaseDatabase.getInstance().getReference().child("Comentarios");
 
         recyclerView=root.findViewById(R.id.recyclerFotos);
         LinearLayoutManager llm=new LinearLayoutManager(getContext());
@@ -168,6 +168,24 @@ public class FotosFragment extends BaseFragment {
 
                                 }
                             });
+
+                            mDatabaseRefComentarios.child(model.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    int cantidadComent=0;
+                                    for(DataSnapshot d:snapshot.getChildren()){
+                                        cantidadComent++;
+                                    }
+
+                                    holder.coments.setText(cantidadComent+" comentarios");
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+
                             mDatabaseRefPerfil.child(model.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {

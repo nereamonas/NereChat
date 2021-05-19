@@ -13,7 +13,7 @@ public class ViewHolderImagen  extends RecyclerView.ViewHolder{
 
     public ZoomImageView fotoPost;
     public ImageView fotoPerfil, mg, mg2, comentar, borrar;
-    public TextView usuario, usuario2, descripcion, likes;
+    public TextView usuario, usuario2, descripcion, likes,coments;
 
     public ViewHolderImagen(@NonNull View itemView) {
         super(itemView);
@@ -28,5 +28,6 @@ public class ViewHolderImagen  extends RecyclerView.ViewHolder{
         usuario2 = itemView.findViewById(R.id.textViewUsername2);
         descripcion = itemView.findViewById(R.id.textViewDescripcion);
         likes = itemView.findViewById(R.id.textViewLikes);
+        coments = itemView.findViewById(R.id.textViewCantidadComents);
     }
 }

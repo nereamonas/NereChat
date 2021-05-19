@@ -131,7 +131,11 @@
         android:id="@+id/comentariosFragment"
         android:name="com.example.nerechat.ui.fotos.ComentariosFragment"
         android:label="fragment_comentarios"
-        tools:layout="@layout/fragment_comentarios" />
+        tools:layout="@layout/fragment_comentarios" >
+        <action
+            android:id="@+id/action_comentariosFragment_to_ajustesFragment"
+            app:destination="@id/ajustesFragment" />
+    </fragment>
     <fragment
         android:id="@+id/subirFotoFragment"
         android:name="com.example.nerechat.ui.fotos.SubirFotoFragment"
