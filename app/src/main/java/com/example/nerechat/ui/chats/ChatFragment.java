@@ -112,7 +112,7 @@ public class ChatFragment extends Fragment {
     RequestQueue requestQueue;
     ProgressDialog progressDialog;
 
-    String tema;
+    String tema="";
     boolean toastActivadas=false;
 
     int codigoRequestGaleria = 4;

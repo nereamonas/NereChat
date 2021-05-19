@@ -68,6 +68,7 @@ public class PerfilFragment extends Fragment {
     Uri uriImg;
     String foto;
 
+    Button buttonLogout;
     Toolbar toolbar;
     ConstraintLayout constraintLayout;
 
@@ -87,7 +88,7 @@ public class PerfilFragment extends Fragment {
         floatingButtonCambiarFoto=root.findViewById(R.id.floatingActionButtonEditFoto);
         nombreUsu=root.findViewById(R.id.textPerfil_NombreUs);
         estado=root.findViewById(R.id.textPerfil_Estado);
-
+        buttonLogout=root.findViewById(R.id.buttonLogOut);
         mAuth= FirebaseAuth.getInstance();
         mUser=mAuth.getCurrentUser(); //El usuario actual que tiene la sesion iniciada
         mDatabaseRef= FirebaseDatabase.getInstance().getReference().child("Perfil"); //La base de datos perfil
@@ -231,7 +232,16 @@ public class PerfilFragment extends Fragment {
 
             }
         });
-
+        buttonLogout.setOnClickListener(new View.OnClickListener() {
+              @Override
+              public void onClick(View v) {
+                  mAuth.signOut();
+                  Intent i = new Intent(getContext(), IniciarSesionActivity.class);
+                  i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                  startActivity(i);
+                  ((AppCompatActivity)getActivity()).finish();
+              }
+        });
         return root;
     }
 

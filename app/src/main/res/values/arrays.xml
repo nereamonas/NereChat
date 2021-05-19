@@ -28,18 +28,18 @@
 
     <!-- Tema Preference -->
     <string-array name="tema_entries">
+        <item>@string/ajustes_azul</item>
         <item>@string/ajustes_morado</item>
         <item>@string/ajustes_naranja</item>
         <item>@string/ajustes_verde</item>
-        <item>@string/ajustes_azul</item>
         <item>@string/ajustes_verdeAzulado</item>
     </string-array>
 
     <string-array name="tema_values">
+        <item>azul</item>
         <item>morado</item>
         <item>naranja</item>
         <item>verde</item>
-        <item>azul</item>
         <item>verdeazul</item>
     </string-array>
     <string name="ajustes_verdeAzulado" >Verde azulado</string>
