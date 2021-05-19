@@ -1,6 +1,9 @@
 package com.example.nerechat.ui.fotos;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,12 +14,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,6 +32,7 @@ import com.bumptech.glide.Glide;
 import com.example.nerechat.R;
 import com.example.nerechat.SubirFotoActivity;
 import com.example.nerechat.adaptadores.RecyclerViewAdapterChatUsuarios.ViewHolderImagen;
+import com.example.nerechat.base.BaseFragment;
 import com.example.nerechat.base.BaseViewModel;
 import com.example.nerechat.helpClass.Imagen;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -43,7 +51,7 @@ import com.squareup.picasso.Picasso;
 import java.util.HashMap;
 
 
-public class FotosFragment extends Fragment {
+public class FotosFragment extends BaseFragment {
 
     private BaseViewModel fotosViewModel;
 
@@ -60,6 +68,9 @@ public class FotosFragment extends Fragment {
     FirebaseRecyclerOptions<Imagen> options;
     FirebaseRecyclerAdapter<Imagen, ViewHolderImagen> adapter;
 
+    Toolbar toolbar;
+    ConstraintLayout constraintLayout;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -67,6 +78,9 @@ public class FotosFragment extends Fragment {
                 new ViewModelProvider(this).get(BaseViewModel.class);
         View root = inflater.inflate(R.layout.fragment_fotos, container, false);
 
+        toolbar=root.findViewById(R.id.chat_toolbarFotos);
+        constraintLayout=root.findViewById(R.id.cltoolbarFotos);
+        comprobarColores(); //Aplicamos los colores correspondientes dependiendo del tema
         toolbarImagenAjustes = root.findViewById(R.id.imageViewToolbarAjustes);
         toolbarTitulo = root.findViewById(R.id.toolbarBuscarTitulo);
         toolbarTitulo.setText(getString(R.string.nav_fotos));
@@ -130,9 +144,19 @@ public class FotosFragment extends Fragment {
 
                             //Picasso.get().load(model.getUri()).into(holder.fotoPost);
                             Glide.with(getContext()).load(model.getUri()).into(holder.fotoPost);
+
+                            holder.mg.setImageDrawable(getContext().getResources().getDrawable(R.mipmap.ic_feliz));
+                            holder.mg2.setImageDrawable(getContext().getResources().getDrawable(R.mipmap.ic_like));
+
                             holder.descripcion.setText(model.getDescripcion());
                             holder.likes.setText(model.getLikes()+ " likes");
                             holder.mg2.setVisibility(View.INVISIBLE);
+                            if(model.getUid().equals(mUser.getUid())){
+                                holder.borrar.setVisibility(View.VISIBLE);
+                            }else{
+                                holder.borrar.setVisibility(View.GONE);
+                            }
+
                             mDatabaseRefLikes.child(model.getId()).child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -147,7 +171,7 @@ public class FotosFragment extends Fragment {
 
                                 }
                             });
-                                        mDatabaseRefPerfil.child(model.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                            mDatabaseRefPerfil.child(model.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     if (snapshot.exists()) {
@@ -290,6 +314,7 @@ public class FotosFragment extends Fragment {
 
                                                     }
                                                 });
+
                                             }
                                         }
 
@@ -299,6 +324,56 @@ public class FotosFragment extends Fragment {
 
                                         }
                                     });
+
+
+                                }
+                            });
+                            holder.comentar.setOnClickListener(new View.OnClickListener() {
+
+                                @Override
+                                public void onClick(View v) {
+                                    Bundle bundle = new Bundle(); //Con el bundle podemos pasar datos
+                                    bundle.putString("idPost", model.getId());
+                                    NavOptions options = new NavOptions.Builder()
+                                            .setLaunchSingleTop(true)
+                                            .build();
+                                    Navigation.findNavController(v).navigate(R.id.action_navigation_fotos_to_comentariosFragment, bundle,options);
+                                }
+                            });
+
+                            holder.borrar.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    AlertDialog.Builder dialogo = new AlertDialog.Builder(v.getContext());
+                                    dialogo.setTitle(getString(R.string.alerta_Eliminarpost));
+                                    dialogo.setMessage(getString(R.string.alerta_Quiereseliminarelpost) +"?");
+
+                                    dialogo.setPositiveButton(getString(R.string.si), new DialogInterface.OnClickListener() {  //Botón si. es decir, queremos eliminar la rutina
+                                        public void onClick(DialogInterface dialogo1, int id) {
+                                            //Si dice que si quiere eliminar. Actualizamos la lista y lo borramos de la base de datos
+                                            //Cogemos el id del elemento seleccionado por el usuario
+                                            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext()); //Cogemos las preferencias
+                                            boolean activadas = false;
+                                            if (prefs.contains("notiftoast")) { //Comprobamos si existe notif
+                                                activadas = prefs.getBoolean("notiftoast", true);  //Comprobamos si las notificaciones estan activadas
+                                            }
+                                            if (activadas) {
+                                                Toast.makeText(getContext(), getString(R.string.toast_haseliminadolaimagen), Toast.LENGTH_SHORT).show();
+                                            }
+                                            mDatabaseRefImagenes.child(model.getId()).removeValue(); //eliminamos el mensaje
+                                            Log.d("Logs", "mensaje eliminado");
+                                        }
+                                    });
+
+                                    //En el caso de que el usuario diga que no quiere borrarlo, pues no hará nada. se cerrará el dialogo
+                                    dialogo.setNeutralButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialogo1, int id) {
+                                            Log.d("Logs", "no se eliminara el mensaje");
+                                        }
+                                    });
+                                    dialogo.show();
+
+
                                 }
                             });
                         }
@@ -313,6 +388,41 @@ public class FotosFragment extends Fragment {
         };
         adapter.startListening();
         recyclerView.setAdapter(adapter);
+    }
+
+    public void comprobarColores(){
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        String tema = "";
+        if (prefs.contains("tema")) {
+            tema = prefs.getString("tema", null);
+        }
+        switch (tema) {
+            case "morado":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.toolbar_morado,getContext().getTheme()));
+                constraintLayout.setBackgroundColor(getResources().getColor(R.color.toolbar_morado,getContext().getTheme()));
+                break;
+            case "naranja":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.toolbar_naranja,getContext().getTheme()));
+                constraintLayout.setBackgroundColor(getResources().getColor(R.color.toolbar_naranja,getContext().getTheme()));
+                break;
+            case "verde":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.toolbar_verde,getContext().getTheme()));
+                constraintLayout.setBackgroundColor(getResources().getColor(R.color.toolbar_verde,getContext().getTheme()));
+                break;
+            case "azul":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.azul_medioOscuro,getContext().getTheme()));
+                constraintLayout.setBackgroundColor(getResources().getColor(R.color.azul_medioOscuro,getContext().getTheme()));
+                break;
+            case "verdeazul":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.toolbar_verdeazul,getContext().getTheme()));
+                constraintLayout.setBackgroundColor(getResources().getColor(R.color.toolbar_verdeazul,getContext().getTheme()));
+                break;
+            default:
+                toolbar.setBackgroundColor(getResources().getColor(R.color.azul_medioOscuro,getContext().getTheme()));
+                constraintLayout.setBackgroundColor(getResources().getColor(R.color.azul_medioOscuro,getContext().getTheme()));
+                break;
+        }
     }
 
 

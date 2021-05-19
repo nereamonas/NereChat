@@ -1,5 +1,6 @@
 package com.example.nerechat;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -29,8 +30,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashMap;
 
 public class SubirFotoActivity extends BaseActivity {
@@ -45,6 +48,7 @@ public class SubirFotoActivity extends BaseActivity {
     DatabaseReference mDatabaseRef;
     StorageReference mStorageRef;
 
+    ProgressDialog progressDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,6 +63,7 @@ public class SubirFotoActivity extends BaseActivity {
         mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("Imagen"); //La base de datos perfil
         mStorageRef = FirebaseStorage.getInstance().getReference().child("Fotos"); //En Storage almacenaremos todas las imagenes de perfil que suban los usuarios, y en la base de datos guardamos la uri que hace referencia a la foto en storage
 
+        progressDialog=new ProgressDialog(this);
 
         fotoImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,15 +92,24 @@ public class SubirFotoActivity extends BaseActivity {
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+
     public void subirFotoFirebase(View view){
         //mStorageRef.child(mUser.getUid()).delete();
 
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
-        LocalDateTime now = LocalDateTime.now();
+        Date date = new Date(); //Cargamos la hora exacta en la que estamos para enviar el mensaje
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
 
-        String titulo=mUser.getUid()+"_"+dtf.format(now);
+        String titulo=mUser.getUid()+"_"+formatter.format(date);
+
+
         if (uriImg!=null) {
+
+            progressDialog.setTitle(getString(R.string.progressDialog_SubiendoImagen));
+            progressDialog.setMessage(getString(R.string.progressDialog_porfavorespere));
+            progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.show();
+
+
             // Una vez borrado subimos la foto nueva
             mStorageRef.child(titulo).putFile(uriImg).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
@@ -118,6 +132,7 @@ public class SubirFotoActivity extends BaseActivity {
                                 public void onSuccess(Object o) {
                                     //Si to do ha ido bien, se ha añadido correctamente a la base de datos por lo que se ha creado el perfil
                                     Toast.makeText(SubirFotoActivity.this, "Imagen subida", Toast.LENGTH_SHORT).show();
+                                    progressDialog.dismiss();
                                     abrirPrincipal(); //Abrimos la pantalla principal
 
                                 }
@@ -125,6 +140,7 @@ public class SubirFotoActivity extends BaseActivity {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
                                     //No se ha podido crear el usuario
+                                    progressDialog.dismiss();
                                     Toast.makeText(SubirFotoActivity.this, "Ha ocurrido algun error al subir la imagen", Toast.LENGTH_SHORT).show();
                                 }
                             });
@@ -138,7 +154,7 @@ public class SubirFotoActivity extends BaseActivity {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         //Recogeremos la informacion de fin de actividad de elegir la foto de la galeria

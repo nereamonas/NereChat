@@ -104,4 +104,13 @@
     <string name="toast_Nosehapodidoconectarconelchatbot">Unable to connect to the chatbot</string>
     <string name="alert_Insertaelnuevoestado">Insert the new state</string>
     <string name="alert_Insertaelnuevonombredeusuario">Insert the new username</string>
+    <string name="progressDialog_SubiendoImagen">Posting image</string>
+    <string name="nav_comentarios">Comments</string>
+    <string name="toast_comentado">You\'ve commented</string>
+    <string name="alerta_Eliminarcomentario">Delete comment</string>
+    <string name="alerta_Quiereseliminarelcomentario">Are you sure you want to delete the comment?</string>
+    <string name="toast_haseliminadoelcomentario">You\'ve deleted the comment</string>
+    <string name="alerta_Eliminarpost">Delete post</string>
+    <string name="alerta_Quiereseliminarelpost">Are you sure you want to delete the post?</string>
+    <string name="toast_haseliminadolaimagen">You\'ve deleted the post</string>
 </resources>

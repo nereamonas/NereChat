@@ -104,4 +104,13 @@
     <string name="toast_Nosehapodidoconectarconelchatbot">Ezin da chatbot-era konektatu</string>
     <string name="alert_Insertaelnuevoestado">Txertatu egoera berria</string>
     <string name="alert_Insertaelnuevonombredeusuario">Sartu erabiltzaile izen berria</string>
+    <string name="progressDialog_SubiendoImagen">Argazkia igotzen</string>
+    <string name="nav_comentarios">Iruzkinak</string>
+    <string name="toast_comentado">Komentatu duzu</string>
+    <string name="alerta_Eliminarcomentario">Iruzkina ezabatu</string>
+    <string name="alerta_Quiereseliminarelcomentario">Ziur zaude iruzkina ezabatu nahi duzula?</string>
+    <string name="toast_haseliminadoelcomentario">Iruzkina ezabatu duzu</string>
+    <string name="alerta_Eliminarpost">Argazkia ezabatu</string>
+    <string name="alerta_Quiereseliminarelpost">Ziur zaurde argazkia ezabatu nahi duzula?</string>
+    <string name="toast_haseliminadolaimagen">Argazkia ezabatu duzu</string>
 </resources>

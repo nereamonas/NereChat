@@ -104,4 +104,13 @@
     <string name="toast_Nosehapodidoconectarconelchatbot">No se ha podido conectar con el chatbot</string>
     <string name="alert_Insertaelnuevoestado">Inserta el nuevo estado</string>
     <string name="alert_Insertaelnuevonombredeusuario">Inserta el nuevo nombre de usuario</string>
+    <string name="progressDialog_SubiendoImagen">Subiendo imagen</string>
+    <string name="nav_comentarios">Comentarios</string>
+    <string name="toast_comentado">Has comentado</string>
+    <string name="alerta_Quiereseliminarelcomentario">¿Quieres eliminar el comentario?</string>
+    <string name="alerta_Eliminarcomentario">Eliminar comentario</string>
+    <string name="toast_haseliminadoelcomentario">Has eliminado el comentario</string>
+    <string name="alerta_Eliminarpost">Eliminar imagen</string>
+    <string name="alerta_Quiereseliminarelpost">¿Quieres eliminar la imagen?</string>
+    <string name="toast_haseliminadolaimagen">Has eliminado la imagen</string>
 </resources>

@@ -6,64 +6,65 @@ android:layout_width="match_parent"
 android:layout_height="?attr/actionBarSize"
 android:background="@color/azul_medioOscuro">
 
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/azul_medioOscuro">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cltoolbarFotos"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/azul_medioOscuro">
 
 
-    <ImageView
-        android:id="@+id/imageViewToolbarBuscar"
-        android:layout_width="40dp"
-        android:layout_height="47dp"
-        android:layout_marginEnd="3dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/imageViewToolbarAjustes"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/toolbarBuscarTitulo"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_buscar"
-        tools:srcCompat="@drawable/ic_buscar" />
+        <ImageView
+            android:id="@+id/imageViewToolbarBuscar"
+            android:layout_width="40dp"
+            android:layout_height="47dp"
+            android:layout_marginEnd="3dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/imageViewToolbarAjustes"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/toolbarBuscarTitulo"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_buscar"
+            tools:srcCompat="@drawable/ic_buscar" />
 
-    <TextView
-        android:id="@+id/toolbarBuscarTitulo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Fotos"
-        android:textColor="#FFFFFF"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.069"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/toolbarBuscarTitulo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fotos"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.069"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/editTextToolbarSearch"
-        android:layout_width="125dp"
-        android:layout_height="46dp"
-        android:ems="10"
-        android:hint="Buscar"
-        android:inputType="textPersonName"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#ABFFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/imageViewToolbarBuscar"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/toolbarBuscarTitulo"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.6" />
+        <EditText
+            android:id="@+id/editTextToolbarSearch"
+            android:layout_width="125dp"
+            android:layout_height="46dp"
+            android:ems="10"
+            android:hint="Buscar"
+            android:inputType="textPersonName"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#ABFFFFFF"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/imageViewToolbarBuscar"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/toolbarBuscarTitulo"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.6" />
 
-    <ImageView
-        android:id="@+id/imageViewToolbarAjustes"
-        android:layout_width="37dp"
-        android:layout_height="37dp"
-        android:layout_marginEnd="3dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_ajustes" />
+        <ImageView
+            android:id="@+id/imageViewToolbarAjustes"
+            android:layout_width="37dp"
+            android:layout_height="37dp"
+            android:layout_marginEnd="3dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_ajustes" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.appcompat.widget.Toolbar>
