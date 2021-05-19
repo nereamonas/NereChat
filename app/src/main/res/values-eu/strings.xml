@@ -113,4 +113,7 @@
     <string name="alerta_Eliminarpost">Argazkia ezabatu</string>
     <string name="alerta_Quiereseliminarelpost">Ziur zaurde argazkia ezabatu nahi duzula?</string>
     <string name="toast_haseliminadolaimagen">Argazkia ezabatu duzu</string>
+    <string name="nav_subirfoto">Argazki bat igo</string>
+    <string name="subirfoto_Descripción">Deskribapena</string>
+    <string name="subirfoto_seleccionaunafoto">Argazki bat hautatu</string>
 </resources>

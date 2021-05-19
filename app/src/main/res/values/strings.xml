@@ -130,4 +130,7 @@
     <string name="alerta_Eliminarpost">Eliminar imagen</string>
     <string name="alerta_Quiereseliminarelpost">¿Quieres eliminar la imagen?</string>
     <string name="toast_haseliminadolaimagen">Has eliminado la imagen</string>
+    <string name="nav_subirfoto">Subir foto</string>
+    <string name="subirfoto_Descripción">Descripción</string>
+    <string name="subirfoto_seleccionaunafoto">Selecciona una foto</string>
 </resources>

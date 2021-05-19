@@ -113,4 +113,7 @@
     <string name="alerta_Eliminarpost">Delete post</string>
     <string name="alerta_Quiereseliminarelpost">Are you sure you want to delete the post?</string>
     <string name="toast_haseliminadolaimagen">You\'ve deleted the post</string>
+    <string name="nav_subirfoto">Post a image</string>
+    <string name="subirfoto_Descripción">Description</string>
+    <string name="subirfoto_seleccionaunafoto">Choose an image</string>
 </resources>

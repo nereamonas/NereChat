@@ -31,7 +31,7 @@
                 android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="@+id/imageViewPost"
                 app:layout_constraintTop_toBottomOf="@+id/imageViewPost"
-                app:srcCompat="@mipmap/nolike" />
+                app:srcCompat="@mipmap/ic_corazon_gris" />
 
             <TextView
                 android:id="@+id/textView"
@@ -109,7 +109,7 @@
                 app:layout_constraintStart_toStartOf="@+id/imageViewLike"
                 app:layout_constraintTop_toTopOf="@+id/imageViewLike"
                 app:layout_constraintVertical_bias="1.0"
-                app:srcCompat="@mipmap/like" />
+                app:srcCompat="@mipmap/ic_corazon_rojo" />
 
             <ImageView
                 android:id="@+id/imageViewBasura"

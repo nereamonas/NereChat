@@ -2,12 +2,8 @@ package com.example.nerechat.ui.fotos;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +15,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
@@ -30,7 +25,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.nerechat.R;
-import com.example.nerechat.SubirFotoActivity;
 import com.example.nerechat.adaptadores.RecyclerViewAdapterChatUsuarios.ViewHolderImagen;
 import com.example.nerechat.base.BaseFragment;
 import com.example.nerechat.base.BaseViewModel;
@@ -114,8 +108,11 @@ public class FotosFragment extends BaseFragment {
         floatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getContext(), SubirFotoActivity.class);
-                startActivity(i);
+
+                NavOptions options = new NavOptions.Builder()
+                        .setLaunchSingleTop(true)
+                        .build();
+                Navigation.findNavController(v).navigate(R.id.action_navigation_fotos_to_subirFotoFragment, null, options);
             }
         });
 
@@ -145,8 +142,8 @@ public class FotosFragment extends BaseFragment {
                             //Picasso.get().load(model.getUri()).into(holder.fotoPost);
                             Glide.with(getContext()).load(model.getUri()).into(holder.fotoPost);
 
-                            holder.mg.setImageDrawable(getContext().getResources().getDrawable(R.mipmap.ic_feliz));
-                            holder.mg2.setImageDrawable(getContext().getResources().getDrawable(R.mipmap.ic_like));
+                            //holder.mg.setImageDrawable(getContext().getResources().getDrawable(R.mipmap.ic_feliz));
+                            //holder.mg2.setImageDrawable(getContext().getResources().getDrawable(R.mipmap.ic_like));
 
                             holder.descripcion.setText(model.getDescripcion());
                             holder.likes.setText(model.getLikes()+ " likes");

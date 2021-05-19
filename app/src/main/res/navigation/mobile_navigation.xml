@@ -35,6 +35,9 @@
         <action
             android:id="@+id/action_navigation_fotos_to_comentariosFragment"
             app:destination="@id/comentariosFragment" />
+        <action
+            android:id="@+id/action_navigation_fotos_to_subirFotoFragment"
+            app:destination="@id/subirFotoFragment" />
     </fragment>
 
     <fragment
@@ -129,6 +132,18 @@
         android:name="com.example.nerechat.ui.fotos.ComentariosFragment"
         android:label="fragment_comentarios"
         tools:layout="@layout/fragment_comentarios" />
+    <fragment
+        android:id="@+id/subirFotoFragment"
+        android:name="com.example.nerechat.ui.fotos.SubirFotoFragment"
+        android:label="fragment_subir_foto"
+        tools:layout="@layout/fragment_subir_foto" >
+        <action
+            android:id="@+id/action_subirFotoFragment_to_navigation_fotos"
+            app:destination="@id/navigation_fotos" />
+        <action
+            android:id="@+id/action_subirFotoFragment_to_ajustesFragment"
+            app:destination="@id/ajustesFragment" />
+    </fragment>
 
 
 </navigation>
