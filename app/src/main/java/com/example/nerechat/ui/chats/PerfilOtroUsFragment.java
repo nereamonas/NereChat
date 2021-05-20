@@ -66,7 +66,7 @@ public class PerfilOtroUsFragment extends Fragment {
                 new ViewModelProvider(this).get(BaseViewModel.class);
         View root=inflater.inflate(R.layout.fragment_perfil_otro_us, container, false);
 
-        //hasieratuamos los elementos
+        //Inicializamos los elementos
         imageView=root.findViewById(R.id.circleImageViewPerfilOtroUsE);
         nombreUsu=root.findViewById(R.id.textPerfilOtroUs_NombreUs);
 
@@ -78,7 +78,7 @@ public class PerfilOtroUsFragment extends Fragment {
         mAuth= FirebaseAuth.getInstance();
         mUser=mAuth.getCurrentUser(); //El usuario actual que tiene la sesion iniciada
         mDatabaseRef= FirebaseDatabase.getInstance().getReference().child("Perfil"); //La base de datos perfil
-        mDatabaseRefImagenes= FirebaseDatabase.getInstance().getReference().child("Imagen");
+        mDatabaseRefImagenes= FirebaseDatabase.getInstance().getReference().child("Imagen"); //La base de datos de las imagenes
 
         pId = getArguments().getString("usuario"); //Cogemos el pid del usuario del que tenemos que mostrar la informacion, que nos viene como argumento del fragment anterior
 

@@ -94,9 +94,9 @@ public class FotosFragment extends BaseFragment {
         mAuth= FirebaseAuth.getInstance();
         mUser=mAuth.getCurrentUser();
         mDatabaseRefPerfil= FirebaseDatabase.getInstance().getReference().child("Perfil"); //Referencia a la base de datos donde se encuentras los perfiles de usuario
-        mDatabaseRefImagenes= FirebaseDatabase.getInstance().getReference().child("Imagen"); //Y la base de datos mensajeChat donde se almacenarán todos los mensajes
-        mDatabaseRefLikes= FirebaseDatabase.getInstance().getReference().child("Likes");
-        mDatabaseRefComentarios= FirebaseDatabase.getInstance().getReference().child("Comentarios");
+        mDatabaseRefImagenes= FirebaseDatabase.getInstance().getReference().child("Imagen"); //Referencia a la base de datos donde se encuentras las imágenes
+        mDatabaseRefLikes= FirebaseDatabase.getInstance().getReference().child("Likes");//Referencia a la base de datos donde se encuentras los likes
+        mDatabaseRefComentarios= FirebaseDatabase.getInstance().getReference().child("Comentarios");//Referencia a la base de datos donde se encuentras los comentarios
 
         recyclerView=root.findViewById(R.id.recyclerFotos);
         LinearLayoutManager llm=new LinearLayoutManager(getContext());
@@ -106,7 +106,7 @@ public class FotosFragment extends BaseFragment {
 
 
 
-        toolbarImagenAjustes.setOnClickListener(new View.OnClickListener() {
+        toolbarImagenAjustes.setOnClickListener(new View.OnClickListener() {//Al hacer click en la tuerca, nos llevará a los ajustes
             @Override
             public void onClick(View v) {
                 NavOptions options = new NavOptions.Builder()
@@ -117,11 +117,11 @@ public class FotosFragment extends BaseFragment {
             }
         });
 
+        //El botón de + nos llevará al fragment donde podremos subir una foto
         floatButton = root.findViewById(R.id.floatingActionButtonSubirFoto);
         floatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 NavOptions options = new NavOptions.Builder()
                         .setLaunchSingleTop(true)
                         .build();
@@ -129,7 +129,7 @@ public class FotosFragment extends BaseFragment {
             }
         });
 
-        toolbarImageSearch.setOnClickListener(new View.OnClickListener() { //Cuando se clicke en la lopa de buscar:
+        toolbarImageSearch.setOnClickListener(new View.OnClickListener() { //Cuando se clicke en la lupa de buscar:
             @Override
             public void onClick(View v) {
                 if (toolbarSearchEditText.getVisibility()==View.VISIBLE){ //Si el edit text para agregar el texto a buscar estaba visible:
@@ -138,7 +138,7 @@ public class FotosFragment extends BaseFragment {
                     //Cerramos el teclado, ya que se ha terminado con la accion de buscar
                     InputMethodManager imm = (InputMethodManager) ((AppCompatActivity)getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(toolbarSearchEditText.getWindowToken(), 0);
-                    cargarFotos(); //Y cargaremos los usuarios de nuevo pero sin ninguna busqueda. si no los bvolvemos a cargar se quedaria con la ultima busqueda
+                    cargarFotos(); //Cargaremos las fotos
                 }else { //Si por el contrario el edittext esta invisible, es que acabamos de dar a la lupa para buscar
                     toolbarSearchEditText.setVisibility(View.VISIBLE); //Volveremos el edittext visible para q se pueda realizar una busqueda
                     toolbarImageSearch.setImageDrawable(getResources().getDrawable(R.drawable.ic_cerrar)); //Cambiamos el icono de la lupa por una X para cerrar la busqueda
@@ -160,7 +160,7 @@ public class FotosFragment extends BaseFragment {
             @Override
             public void afterTextChanged(Editable s) { }
         });
-
+        //Cargamos las imagenes
         cargarFotos();
 
         return root;
@@ -185,17 +185,14 @@ public class FotosFragment extends BaseFragment {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if(snapshot.exists()){
-
+                            //Cargamos los datos recogidos de Firebase en sus
                             //Picasso.get().load(model.getUri()).into(holder.fotoPost);
                             Glide.with(getContext()).load(model.getUri()).into(holder.fotoPost);
-
-                            //holder.mg.setImageDrawable(getContext().getResources().getDrawable(R.mipmap.ic_feliz));
-                            //holder.mg2.setImageDrawable(getContext().getResources().getDrawable(R.mipmap.ic_like));
-
                             holder.descripcion.setText(model.getDescripcion());
                             holder.likes.setText(model.getLikes()+ " likes");
                             holder.mg2.setVisibility(View.INVISIBLE);
-                            if(model.getUid().equals(mUser.getUid())){
+                            if(model.getUid().equals(mUser.getUid())){ //Si la foto pertenece al usuario logeado
+                                //Hacer visible la papelera
                                 holder.borrar.setVisibility(View.VISIBLE);
                             }else{
                                 holder.borrar.setVisibility(View.GONE);
@@ -204,7 +201,7 @@ public class FotosFragment extends BaseFragment {
                             mDatabaseRefLikes.child(model.getId()).child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        //Por cada datasnapshot (es decir cada foto subida a firebase)
+                                        //Si al usuario le gusta la foto, hacer visible el corazón rojo
                                         if (snapshot.getKey().equals(mUser.getUid()) && snapshot.exists()) {
                                             holder.mg2.setVisibility(View.VISIBLE);
                                         }
@@ -216,14 +213,14 @@ public class FotosFragment extends BaseFragment {
                                 }
                             });
 
-                            mDatabaseRefComentarios.child(model.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                            mDatabaseRefComentarios.child(model.getId()).addListenerForSingleValueEvent(new ValueEventListener() { //Recoger la cantidad de comentarios de la base de datos
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     int cantidadComent=0;
-                                    for(DataSnapshot d:snapshot.getChildren()){
+                                    for(DataSnapshot d:snapshot.getChildren()){//Cada snapshot quiere decir que hay un comentario
                                         cantidadComent++;
                                     }
-
+                                    //
                                     holder.coments.setText(cantidadComent+" comentarios");
                                 }
 
@@ -233,10 +230,11 @@ public class FotosFragment extends BaseFragment {
                                 }
                             });
 
-                            mDatabaseRefPerfil.child(model.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                            mDatabaseRefPerfil.child(model.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {//Recogemos los datos del usuario
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     if (snapshot.exists()) {
+                                        //Poner el nombre de usuario y la foto de perfil en sus campos
                                         Picasso.get().load(snapshot.child("fotoPerfil").getValue().toString()).into(holder.fotoPerfil);
                                         String miNombreUsuario = snapshot.child("nombreUsuario").getValue().toString();
                                         holder.usuario.setText(miNombreUsuario);
@@ -250,67 +248,61 @@ public class FotosFragment extends BaseFragment {
                                 }
                             });
 
-                            holder.mg.setOnClickListener(new View.OnClickListener() {
+                            holder.mg.setOnClickListener(new View.OnClickListener() { //Gestionar los clicks al darle like
                                 @Override
                                 public void onClick(View v) {
-                                    //CAMBIAR LA FOTO
-                                    mDatabaseRefLikes.child(model.getId()).child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    mDatabaseRefLikes.child(model.getId()).child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() { //Recoger datos de likes de la imagen
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                            //Por cada datasnapshot (es decir cada foto subida a firebase)
-                                            //if(snapshot.exists()){
-                                            Log.d("LOGS",snapshot.getKey());
-                                            Log.d("LOGS",snapshot.toString());
-                                                if (snapshot.getKey().equals(mUser.getUid())&&snapshot.exists()) {
-                                                    //Quitar like
-                                                    Log.d("LOGS",snapshot.getValue().toString());
-                                                    holder.mg2.setVisibility(View.INVISIBLE);
-                                                    mDatabaseRefLikes.child(model.getId()).child(mUser.getUid()).removeValue();
-                                                    mDatabaseRefImagenes.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                        @Override
-                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                            for (DataSnapshot d : snapshot.getChildren()) { //Por cada datasnapshot (es decir cada foto subida a firebase)
-                                                                Imagen imagen = d.getValue(Imagen.class);
-                                                                if (imagen.getId().equals(model.getId())) {
-                                                                    int like = Integer.parseInt(imagen.getLikes());
-                                                                    like--;
-                                                                    mDatabaseRefImagenes.child(model.getId()).child("likes").setValue("" + like);
-                                                                }
+                                            if (snapshot.getKey().equals(mUser.getUid())&&snapshot.exists()) { //Si existe el like (se lo ha quitado)
+                                                //Esconder el corazón rojo
+                                                holder.mg2.setVisibility(View.INVISIBLE);
+                                                mDatabaseRefLikes.child(model.getId()).child(mUser.getUid()).removeValue();//Quitar like
+                                                mDatabaseRefImagenes.addListenerForSingleValueEvent(new ValueEventListener() {//Recoger los datos de las imagenes
+                                                    @Override
+                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                        for (DataSnapshot d : snapshot.getChildren()) { //Por cada datasnapshot (es decir cada foto subida a firebase)
+                                                            Imagen imagen = d.getValue(Imagen.class);
+                                                            if (imagen.getId().equals(model.getId())) {//Si es la imagen a la que se le ha borrado el like, actualizar la base de datos
+                                                                int like = Integer.parseInt(imagen.getLikes());
+                                                                like--;
+                                                                mDatabaseRefImagenes.child(model.getId()).child("likes").setValue("" + like);
                                                             }
                                                         }
+                                                    }
 
-                                                        @Override
-                                                        public void onCancelled(@NonNull DatabaseError error) {
+                                                    @Override
+                                                    public void onCancelled(@NonNull DatabaseError error) {
 
-                                                        }
-                                                    });
-                                                } else {
-                                                    holder.mg2.setVisibility(View.VISIBLE);
-                                                    HashMap hm = new HashMap();
-                                                    hm.put("uid",mUser.getUid());
-                                                    mDatabaseRefLikes.child(model.getId()).child(mUser.getUid()).updateChildren(hm);
-                                                    mDatabaseRefImagenes.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                        @Override
-                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                            for (DataSnapshot d : snapshot.getChildren()) { //Por cada datasnapshot (es decir cada foto subida a firebase)
-                                                                Imagen imagen = d.getValue(Imagen.class);
-                                                                if (imagen.getId().equals(model.getId())) {
-                                                                    int like = Integer.parseInt(imagen.getLikes());
-                                                                    like++;
-                                                                    mDatabaseRefImagenes.child(model.getId()).child("likes").setValue("" + like);
-                                                                }
+                                                    }
+                                                });
+                                            } else {//Si no existe el like (le ha dado)
+                                                //Hacer visible el corazón rojo
+                                                holder.mg2.setVisibility(View.VISIBLE);
+                                                //Añadir el id de usuario a la tabla de likes de esa imagen
+                                                HashMap hm = new HashMap();
+                                                hm.put("uid",mUser.getUid());
+                                                mDatabaseRefLikes.child(model.getId()).child(mUser.getUid()).updateChildren(hm);
+                                                mDatabaseRefImagenes.addListenerForSingleValueEvent(new ValueEventListener() {//Recoger los datos de las imagenes
+                                                    @Override
+                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                        for (DataSnapshot d : snapshot.getChildren()) { //Por cada datasnapshot (es decir cada foto subida a firebase)
+                                                            Imagen imagen = d.getValue(Imagen.class);
+                                                            if (imagen.getId().equals(model.getId())) {//Si es la imagen a la que se le ha borrado el like, actualizar la base de datos
+                                                                int like = Integer.parseInt(imagen.getLikes());
+                                                                like++;
+                                                                mDatabaseRefImagenes.child(model.getId()).child("likes").setValue("" + like);
                                                             }
                                                         }
+                                                    }
 
-                                                        @Override
-                                                        public void onCancelled(@NonNull DatabaseError error) {
+                                                    @Override
+                                                    public void onCancelled(@NonNull DatabaseError error) {
 
-                                                        }
-                                                    });
-                                                }
+                                                    }
+                                                });
                                             }
-
-
+                                        }
                                         @Override
                                         public void onCancelled(@NonNull DatabaseError error) {
 
@@ -318,21 +310,16 @@ public class FotosFragment extends BaseFragment {
                                     });
                                 }
                             });
-
+                            //Hacemos lo mismo con el segundo botón de me gusta
                             holder.mg2.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    //CAMBIAR LA FOTO
+
                                     mDatabaseRefLikes.child(model.getId()).child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                            //Por cada datasnapshot (es decir cada foto subida a firebase)
-                                            //if(snapshot.exists()){
-                                            Log.d("LOGS",snapshot.getKey());
-                                            Log.d("LOGS",snapshot.toString());
                                             if (snapshot.getKey().equals(mUser.getUid())&&snapshot.exists()) {
                                                 //Quitar like
-                                                Log.d("LOGS",snapshot.getValue().toString());
                                                 holder.mg2.setVisibility(View.INVISIBLE);
                                                 mDatabaseRefLikes.child(model.getId()).child(mUser.getUid()).removeValue();
                                                 mDatabaseRefImagenes.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -390,10 +377,11 @@ public class FotosFragment extends BaseFragment {
 
                                 }
                             });
-                            holder.comentar.setOnClickListener(new View.OnClickListener() {
+                            holder.comentar.setOnClickListener(new View.OnClickListener() { //Gestionar los clicks en el botón de comentarios
 
                                 @Override
-                                public void onClick(View v) {
+                                public void onClick(View v) { //Al hacer click
+                                    //Abrir el fragment de comentarios pasándole el id de la imagen
                                     Bundle bundle = new Bundle(); //Con el bundle podemos pasar datos
                                     bundle.putString("idPost", model.getId());
                                     NavOptions options = new NavOptions.Builder()
@@ -403,14 +391,15 @@ public class FotosFragment extends BaseFragment {
                                 }
                             });
 
-                            holder.borrar.setOnClickListener(new View.OnClickListener() {
+                            holder.borrar.setOnClickListener(new View.OnClickListener() {//Gestionar los clicks en el botón de eliminar
                                 @Override
-                                public void onClick(View v) {
+                                public void onClick(View v) {//Al hacer click
+                                    //Enseñar un diálogo para que el usuario confirme que quiere eliminar la imagen
                                     AlertDialog.Builder dialogo = new AlertDialog.Builder(v.getContext());
                                     dialogo.setTitle(getString(R.string.alerta_Eliminarpost));
                                     dialogo.setMessage(getString(R.string.alerta_Quiereseliminarelpost) +"?");
 
-                                    dialogo.setPositiveButton(getString(R.string.si), new DialogInterface.OnClickListener() {  //Botón si. es decir, queremos eliminar la rutina
+                                    dialogo.setPositiveButton(getString(R.string.si), new DialogInterface.OnClickListener() {  //Botón si. es decir, queremos eliminar la imagen
                                         public void onClick(DialogInterface dialogo1, int id) {
                                             //Si dice que si quiere eliminar. Actualizamos la lista y lo borramos de la base de datos
                                             //Cogemos el id del elemento seleccionado por el usuario
@@ -427,7 +416,7 @@ public class FotosFragment extends BaseFragment {
                                         }
                                     });
 
-                                    //En el caso de que el usuario diga que no quiere borrarlo, pues no hará nada. se cerrará el dialogo
+                                    //En el caso de que el usuario diga que no quiere borrarlo, no hará nada. se cerrará el dialogo
                                     dialogo.setNeutralButton(getString(R.string.no), new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialogo1, int id) {
                                             Log.d("Logs", "no se eliminara el mensaje");
@@ -438,7 +427,7 @@ public class FotosFragment extends BaseFragment {
 
                                 }
                             });
-
+                            //Al hacer click en la foto de perfil, nos dirige al perfil del usuario en el que hemos clickado
                             holder.fotoPerfil.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -451,7 +440,7 @@ public class FotosFragment extends BaseFragment {
 
                                 }
                             });
-
+                            //Al hacer click en el nombre de usuario, nos dirige al perfil del usuario en el que hemos clickado
                             holder.usuario.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -464,7 +453,7 @@ public class FotosFragment extends BaseFragment {
 
                                 }
                             });
-
+                            //Al hacer click en el nombre de usuario (esta vez el que está debajo de la foto), nos dirige al perfil del usuario en el que hemos clickado
                             holder.usuario2.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -501,7 +490,7 @@ public class FotosFragment extends BaseFragment {
         adapter_user = new FirebaseRecyclerAdapter<Usuario, ViewHolderChatUsuarios>(options_user) {
             @Override
             protected void onBindViewHolder(@NonNull ViewHolderChatUsuarios holder, int position, @NonNull Usuario model) {
-                //Por cada elemento tendremos q añadirlo al holder, pero tenemos que mirar si es nuestro perfil actual, ya que en ese caso no deberiamos mostrarlo, porque una persona no va a hablar con si mismo
+                //Por cada elemento tendremos q añadirlo al holder, pero tenemos que mirar si es nuestro perfil actual, ya que en ese caso no deberiamos mostrarlo, porque una persona no va a hablar con sigo mismo
                 if(!mUser.getUid().equals(getRef(position).getKey().toString())){
                     Picasso.get().load(model.getFotoPerfil()).into(holder.fotoPerfil); //Mostramos la foto de perfil
                     holder.nombreUsuario.setText(model.getNombreUsuario()); //Mostramos el nombre de uusario
@@ -577,7 +566,7 @@ public class FotosFragment extends BaseFragment {
     }
 
     @Override
-    public void onStart() {
+    public void onStart() { //Cargamos las imagenes al hacer start
         super.onStart();
         cargarFotos();
     }

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -27,10 +28,17 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.nerechat.IniciarSesionActivity;
 import com.example.nerechat.R;
+import com.example.nerechat.adaptadores.RecyclerViewAdapterChatUsuarios.ViewHolderFoto;
 import com.example.nerechat.base.BaseViewModel;
+import com.example.nerechat.helpClass.Imagen;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,6 +47,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -56,7 +65,9 @@ public class PerfilFragment extends Fragment {
     int CODIGO_GALERIA=1;
     FirebaseAuth mAuth;
     FirebaseUser mUser;
-    DatabaseReference mDatabaseRef;
+    DatabaseReference mDatabaseRef, mDatabaseRefImagenes;
+    FirebaseRecyclerOptions<Imagen> options;
+    FirebaseRecyclerAdapter<Imagen, ViewHolderFoto> adapter;
     StorageReference mStorageRef;
 
     private BaseViewModel perfilViewModel;
@@ -75,6 +86,8 @@ public class PerfilFragment extends Fragment {
     ImageView toolbarImagenAjustes;
     TextView toolbarTitulo;
 
+    RecyclerView recycler;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         perfilViewModel =
@@ -92,7 +105,10 @@ public class PerfilFragment extends Fragment {
         mAuth= FirebaseAuth.getInstance();
         mUser=mAuth.getCurrentUser(); //El usuario actual que tiene la sesion iniciada
         mDatabaseRef= FirebaseDatabase.getInstance().getReference().child("Perfil"); //La base de datos perfil
+        mDatabaseRefImagenes= FirebaseDatabase.getInstance().getReference().child("Imagen");
         mStorageRef= FirebaseStorage.getInstance().getReference().child("ImagenesPerfil"); //En Storage almacenaremos todas las imagenes de perfil que suban los usuarios, y en la base de datos guardamos la uri que hace referencia a la foto en storage
+
+        recycler = root.findViewById(R.id.recyclerMisFotos);
 
         //Toolbar
         toolbar=root.findViewById(R.id.chat_toolbarPerfil);
@@ -111,6 +127,20 @@ public class PerfilFragment extends Fragment {
 
             }
         });
+
+        GridLayoutManager elLayoutRejillaIgual;
+        //Cogemos la orientacion de la pantalla. ya q si está en vertical, saldran solamente dos columnas, y si está en horizontal saldran 3 columnas
+        int rotacion=getActivity().getWindowManager().getDefaultDisplay().getRotation();
+        if (rotacion== Surface.ROTATION_0 || rotacion==Surface.ROTATION_180){
+            //La pantalla está en vertical
+            elLayoutRejillaIgual= new GridLayoutManager(getContext(),2, GridLayoutManager.VERTICAL,false);
+        }else{
+            //La pantalla esta en horizontal
+            elLayoutRejillaIgual= new GridLayoutManager(getContext(),1, GridLayoutManager.VERTICAL,false);
+        }
+
+        recycler.setLayoutManager(elLayoutRejillaIgual);
+
 
         cargarInformacion(); //Cargamos la informacion del toolbar, es decir, el nombre de usuario, la foto y el estado del otro usuario
 
@@ -264,6 +294,26 @@ public class PerfilFragment extends Fragment {
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
+
+
+        Query query= mDatabaseRefImagenes.orderByChild("uid").startAt(mUser.getUid()).endAt(mUser.getUid()+"\uf8ff"); //Cargar todos los elementos de Imagen
+        options= new FirebaseRecyclerOptions.Builder<Imagen>().setQuery(query,Imagen.class).build();
+        adapter= new FirebaseRecyclerAdapter<Imagen, ViewHolderFoto>(options) {
+
+            @NonNull
+            @Override
+            public ViewHolderFoto onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.foto_grid_item,parent,false);
+                return new ViewHolderFoto(view);
+            }
+
+            @Override
+            protected void onBindViewHolder(@NonNull ViewHolderFoto holder, int position, @NonNull Imagen model) {
+                Glide.with(getContext()).load(model.getUri()).into(holder.img);
+            }
+        };
+        adapter.startListening();
+        recycler.setAdapter(adapter);
     }
 
 
@@ -310,6 +360,8 @@ public class PerfilFragment extends Fragment {
                 actualizarFirebaseImage(); //Temos q subir a firebase la nueva foto
             }
         }
+
+
 
     }
 
