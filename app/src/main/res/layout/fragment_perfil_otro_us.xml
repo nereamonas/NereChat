@@ -6,32 +6,19 @@
     android:layout_height="match_parent"
     tools:context=".ui.chats.PerfilOtroUsFragment">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/circleImageViewPerfilOtroUsE"
-            android:layout_width="188dp"
-            android:layout_height="150dp"
-            android:src="@drawable/icono"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.046"></de.hdodenhof.circleimageview.CircleImageView>
 
-
-    <TextView
-        android:id="@+id/textPerfilOtroUs_tituloNombreUs"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/perfil_nombreUsuario"
-        android:textColor="#000000"
-        android:textSize="18sp"
-        android:textStyle="bold"
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/circleImageViewPerfilOtroUsE"
+        android:layout_width="188dp"
+        android:layout_height="150dp"
+        android:src="@drawable/icono"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.435"
+        app:layout_constraintHorizontal_bias="0.071"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/circleImageViewPerfilOtroUsE"
-        app:layout_constraintVertical_bias="0.122" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.027"></de.hdodenhof.circleimageview.CircleImageView>
+
 
     <TextView
         android:id="@+id/textPerfilOtroUs_Estado"
@@ -40,66 +27,27 @@
         android:text="holiholi"
         android:textAlignment="textStart"
         android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/textPerfilOtroUs_tituloEstado"
-        app:layout_constraintTop_toBottomOf="@+id/textPerfilOtroUs_tituloEstado"
-        app:layout_constraintVertical_bias="0.032" />
-
-    <TextView
-        android:id="@+id/textPerfilOtroUs_tituloEstado"
-        android:layout_width="66dp"
-        android:layout_height="25dp"
-        android:text="@string/perfil_Estado"
-        android:textColor="#000000"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/circleImageViewPerfilOtroUsE"
+        app:layout_constraintEnd_toEndOf="@+id/textPerfilOtroUs_NombreUs"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/textPerfilOtroUs_NombreUs"
-        app:layout_constraintTop_toBottomOf="@+id/textPerfilOtroUs_NombreUs"
-        app:layout_constraintVertical_bias="0.136" />
-
-    <ImageView
-        android:id="@+id/imageViewUsuarioOtroUs"
-        android:layout_width="26dp"
-        android:layout_height="27dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/textPerfilOtroUs_tituloNombreUs"
-        app:layout_constraintHorizontal_bias="0.548"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/circleImageViewPerfilOtroUsE"
-        app:layout_constraintVertical_bias="0.123"
-        app:srcCompat="@drawable/ic_perfil"></ImageView>
+        app:layout_constraintTop_toTopOf="@+id/circleImageViewPerfilOtroUsE"
+        app:layout_constraintVertical_bias="0.493" />
 
     <TextView
         android:id="@+id/textPerfilOtroUs_NombreUs"
-        android:layout_width="163dp"
-        android:layout_height="23dp"
+        android:layout_width="201dp"
+        android:layout_height="25dp"
         android:text="Nereamonas"
         android:textAlignment="viewStart"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/circleImageViewPerfilOtroUsE"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/textPerfilOtroUs_tituloNombreUs"
-        app:layout_constraintTop_toBottomOf="@+id/textPerfilOtroUs_tituloNombreUs"
-        app:layout_constraintVertical_bias="0.02" />
-
-    <ImageView
-        android:id="@+id/imageViewEstadoOtroUs"
-        android:layout_width="26dp"
-        android:layout_height="27dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/textPerfilOtroUs_tituloEstado"
-        app:layout_constraintHorizontal_bias="0.548"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textPerfilOtroUs_NombreUs"
-        app:layout_constraintVertical_bias="0.13"
-        app:srcCompat="@drawable/ic_perfil"></ImageView>
-
+        app:layout_constraintStart_toEndOf="@+id/circleImageViewPerfilOtroUsE"
+        app:layout_constraintTop_toTopOf="@+id/circleImageViewPerfilOtroUsE"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/textPerfilOtroUs_titulofechaunion"
@@ -107,14 +55,14 @@
         android:layout_height="wrap_content"
         android:text="@string/perfil_fechaunion"
         android:textColor="#000000"
-        android:textSize="18sp"
+        android:textSize="14sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/textPerfilOtroUs_Estado"
         app:layout_constraintTop_toBottomOf="@+id/textPerfilOtroUs_Estado"
-        app:layout_constraintVertical_bias="0.127" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/textPerfilOtroUs_fechaunion"
@@ -124,23 +72,20 @@
         android:textAlignment="viewStart"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/textPerfilOtroUs_tituloNombreUs"
+        app:layout_constraintEnd_toEndOf="@+id/textPerfilOtroUs_NombreUs"
         app:layout_constraintTop_toBottomOf="@+id/textPerfilOtroUs_titulofechaunion"
-        app:layout_constraintVertical_bias="0.04000002" />
+        app:layout_constraintVertical_bias="0.0" />
 
-    <ImageView
-        android:id="@+id/imageViewOtroUsFechaUnion"
-        android:layout_width="26dp"
-        android:layout_height="27dp"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerFotos"
+        android:layout_width="match_parent"
+        android:layout_height="549dp"
+        android:layout_marginTop="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/textPerfilOtroUs_tituloNombreUs"
-        app:layout_constraintHorizontal_bias="0.548"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textPerfilOtroUs_Estado"
-        app:layout_constraintVertical_bias="0.13"
-        app:srcCompat="@drawable/ic_perfil"></ImageView>
+        app:layout_constraintEnd_toEndOf="@+id/textPerfilOtroUs_Estado"
+        app:layout_constraintHorizontal_bias="0.888"
+        app:layout_constraintStart_toStartOf="@+id/circleImageViewPerfilOtroUsE"
+        app:layout_constraintTop_toBottomOf="@+id/circleImageViewPerfilOtroUsE" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

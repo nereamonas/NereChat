@@ -1,18 +1,24 @@
 package com.example.nerechat.ui.fotos;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.ViewModelProvider;
@@ -25,10 +31,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.nerechat.R;
+import com.example.nerechat.adaptadores.RecyclerViewAdapterChatUsuarios.ViewHolderChatUsuarios;
 import com.example.nerechat.adaptadores.RecyclerViewAdapterChatUsuarios.ViewHolderImagen;
 import com.example.nerechat.base.BaseFragment;
 import com.example.nerechat.base.BaseViewModel;
 import com.example.nerechat.helpClass.Imagen;
+import com.example.nerechat.helpClass.Usuario;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -49,8 +57,8 @@ public class FotosFragment extends BaseFragment {
 
     private BaseViewModel fotosViewModel;
 
-
-    ImageView toolbarImagenAjustes;
+    EditText toolbarSearchEditText;
+    ImageView toolbarImagenAjustes,toolbarImageSearch;
     TextView toolbarTitulo;
     FloatingActionButton floatButton;
     RecyclerView recyclerView;
@@ -59,8 +67,10 @@ public class FotosFragment extends BaseFragment {
     FirebaseAuth mAuth;
     FirebaseUser mUser;
     DatabaseReference mDatabaseRefPerfil,mDatabaseRefImagenes, mDatabaseRefLikes,mDatabaseRefComentarios;
-    FirebaseRecyclerOptions<Imagen> options;
-    FirebaseRecyclerAdapter<Imagen, ViewHolderImagen> adapter;
+    FirebaseRecyclerOptions<Imagen> options_imagen;
+    FirebaseRecyclerAdapter<Imagen, ViewHolderImagen> adapter_imagen;
+    FirebaseRecyclerOptions<Usuario> options_user;
+    FirebaseRecyclerAdapter<Usuario, ViewHolderChatUsuarios> adapter_user;
 
     Toolbar toolbar;
     ConstraintLayout constraintLayout;
@@ -77,6 +87,9 @@ public class FotosFragment extends BaseFragment {
         toolbarImagenAjustes = root.findViewById(R.id.imageViewToolbarAjustes);
         toolbarTitulo = root.findViewById(R.id.toolbarBuscarTitulo);
         toolbarTitulo.setText(getString(R.string.nav_fotos));
+        toolbarSearchEditText=root.findViewById(R.id.editTextToolbarSearch);
+        toolbarImageSearch=root.findViewById(R.id.imageViewToolbarBuscar);
+        toolbarSearchEditText.setVisibility(View.INVISIBLE);
 
         mAuth= FirebaseAuth.getInstance();
         mUser=mAuth.getCurrentUser();
@@ -116,13 +129,45 @@ public class FotosFragment extends BaseFragment {
             }
         });
 
+        toolbarImageSearch.setOnClickListener(new View.OnClickListener() { //Cuando se clicke en la lopa de buscar:
+            @Override
+            public void onClick(View v) {
+                if (toolbarSearchEditText.getVisibility()==View.VISIBLE){ //Si el edit text para agregar el texto a buscar estaba visible:
+                    toolbarSearchEditText.setVisibility(View.INVISIBLE); //Lo volveremos invisible
+                    toolbarImageSearch.setImageDrawable(getResources().getDrawable(R.drawable.ic_buscar)); //Y cambiaremos el icono de la X al icono de buscar para hacer una nueva busqueda
+                    //Cerramos el teclado, ya que se ha terminado con la accion de buscar
+                    InputMethodManager imm = (InputMethodManager) ((AppCompatActivity)getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(toolbarSearchEditText.getWindowToken(), 0);
+                    cargarUsuarios(""); //Y cargaremos los usuarios de nuevo pero sin ninguna busqueda. si no los bvolvemos a cargar se quedaria con la ultima busqueda
+                }else { //Si por el contrario el edittext esta invisible, es que acabamos de dar a la lupa para buscar
+                    toolbarSearchEditText.setVisibility(View.VISIBLE); //Volveremos el edittext visible para q se pueda realizar una busqueda
+                    toolbarImageSearch.setImageDrawable(getResources().getDrawable(R.drawable.ic_cerrar)); //Cambiamos el icono de la lupa por una X para cerrar la busqueda
+                    //Le ponemos el focus y abrimos el teclado para q escriba
+                    toolbarSearchEditText.requestFocus();
+                    InputMethodManager imm = (InputMethodManager) ((AppCompatActivity)getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.showSoftInput(toolbarSearchEditText, InputMethodManager.SHOW_IMPLICIT);
+                }
+            }
+        });
+
+        toolbarSearchEditText.addTextChangedListener(new TextWatcher() { //Cuando le demos a la lupa tendremos que cargar los usuarios con el texto que se ha escrito en el edittext
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                cargarUsuarios(s.toString()); //Cargamos los usuarios que e nombre de usuario coincida con el text
+            }
+            @Override
+            public void afterTextChanged(Editable s) { }
+        });
+
         return root;
     }
 
     private void cargarFotos() {
         Query query= mDatabaseRefImagenes.orderByChild("descripcion").startAt("").endAt("\uf8ff"); //Cargar todos los elementos de Imagen
-        options= new FirebaseRecyclerOptions.Builder<Imagen>().setQuery(query,Imagen.class).build();
-        adapter= new FirebaseRecyclerAdapter<Imagen, ViewHolderImagen>(options) {
+        options_imagen = new FirebaseRecyclerOptions.Builder<Imagen>().setQuery(query,Imagen.class).build();
+        adapter_imagen = new FirebaseRecyclerAdapter<Imagen, ViewHolderImagen>(options_imagen) {
 
             @NonNull
             @Override
@@ -401,9 +446,59 @@ public class FotosFragment extends BaseFragment {
                 });
             }
         };
-        adapter.startListening();
-        recyclerView.setAdapter(adapter);
+        adapter_imagen.startListening();
+        recyclerView.setAdapter(adapter_imagen);
     }
+
+
+    public void cargarUsuarios(String search){
+        //Firebase nos ayuda tambien a la hora de crear los recycleViews, nos ofrece un FirebaseRecyclerOptions y FirebaseRecyclerAdapter por lo que no tenemos que crear una clase para el adaptador
+        //Cogeremos todos los elementos que hay almacenados en la base de datos en la tabla Perfil. y los ordenamos por el nombredeUsuario por ahora.
+        Query query= mDatabaseRefPerfil.orderByChild("nombreUsuario").startAt(search).endAt(search+"\uf8ff");
+        //Creamos una clase adaptadora que será Usuario, que debera tener los mismos atributos que la tabla Perfil de la base de datos para poder unirlos correctamente
+        options_user = new FirebaseRecyclerOptions.Builder<Usuario>().setQuery(query,Usuario.class).build();
+        adapter_user = new FirebaseRecyclerAdapter<Usuario, ViewHolderChatUsuarios>(options_user) {
+            @Override
+            protected void onBindViewHolder(@NonNull ViewHolderChatUsuarios holder, int position, @NonNull Usuario model) {
+                //Por cada elemento tendremos q añadirlo al holder, pero tenemos que mirar si es nuestro perfil actual, ya que en ese caso no deberiamos mostrarlo, porque una persona no va a hablar con si mismo
+                if(!mUser.getUid().equals(getRef(position).getKey().toString())){
+                    Picasso.get().load(model.getFotoPerfil()).into(holder.fotoPerfil); //Mostramos la foto de perfil
+                    holder.nombreUsuario.setText(model.getNombreUsuario()); //Mostramos el nombre de uusario
+                    holder.info.setText(""); //Mostramos la info
+                }else{ //Es nuestro perfil actual, por lo que tenemos q omitir este elemento
+                    holder.itemView.setVisibility(View.GONE);
+                    holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(0,0));
+                }
+
+                holder.itemView.setOnClickListener(new View.OnClickListener(){
+                    //Cuando clickemos encima de un usuario nos deberá abrir el chat con dicha persona
+                    @Override
+                    public void onClick(View view){
+                        //Abrimos el chat, y le pasamos el codigo de la persona con la que vamos a hablar
+                        Bundle bundle = new Bundle(); //Con el bundle podemos pasar datos
+                        bundle.putString("usuario", getRef(position).getKey().toString());
+                        NavOptions options = new NavOptions.Builder()
+                                .setLaunchSingleTop(true)
+                                .build();
+                        Navigation.findNavController(view).navigate(R.id.action_navigation_fotos_to_perfilOtroUsFragment, bundle,options);
+
+                    }
+                });
+            }
+
+            @NonNull
+            @Override
+            public ViewHolderChatUsuarios onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_usuario,parent,false);
+                return new ViewHolderChatUsuarios(view);
+            }
+        };
+
+        adapter_user.startListening();
+        recyclerView.setAdapter(adapter_user);
+
+    }
+
 
     public void comprobarColores(){
 

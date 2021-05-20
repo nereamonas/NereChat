@@ -38,6 +38,9 @@
         <action
             android:id="@+id/action_navigation_fotos_to_subirFotoFragment"
             app:destination="@id/subirFotoFragment" />
+        <action
+            android:id="@+id/action_navigation_fotos_to_perfilOtroUsFragment"
+            app:destination="@id/perfilOtroUsFragment" />
     </fragment>
 
     <fragment
