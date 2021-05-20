@@ -143,7 +143,7 @@ public class PerfilOtroUsFragment extends Fragment {
             }
         });
 
-        Query query= mDatabaseRefImagenes.orderByChild("descripcion").startAt("").endAt("\uf8ff"); //Cargar todos los elementos de Imagen
+        Query query= mDatabaseRefImagenes.orderByChild("uid").startAt(pId).endAt(pId+"\uf8ff"); //Cargar todos los elementos de Imagen
         options= new FirebaseRecyclerOptions.Builder<Imagen>().setQuery(query,Imagen.class).build();
         adapter= new FirebaseRecyclerAdapter<Imagen, ViewHolderFoto>(options) {
 
@@ -156,20 +156,7 @@ public class PerfilOtroUsFragment extends Fragment {
 
             @Override
             protected void onBindViewHolder(@NonNull ViewHolderFoto holder, int position, @NonNull Imagen model) {
-                mDatabaseRefImagenes.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if(snapshot.exists()) {
-                            if (model.getUid().equals(pId)) {
-                                Glide.with(getContext()).load(model.getUri()).into(holder.img);
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                    }
-                });
+                Glide.with(getContext()).load(model.getUri()).into(holder.img);
             }
         };
         adapter.startListening();
