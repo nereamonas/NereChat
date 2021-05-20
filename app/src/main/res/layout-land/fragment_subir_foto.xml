@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.fotos.SubirFotoFragment">
+
+    <include
+        android:id="@+id/chat_toolbarsubirfoto"
+        layout="@layout/toolbar_principal"
+        android:background="#F7C6FF"></include>
+
+    <Button
+        android:id="@+id/buttonSubirFoto"
+        android:layout_width="104dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="12dp"
+        android:text="Subir"
+        app:layout_constraintEnd_toEndOf="@+id/editTextTextMultiLine"
+        app:layout_constraintHorizontal_bias="0.71"
+        app:layout_constraintStart_toStartOf="@+id/editTextTextMultiLine"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextMultiLine"
+        app:strokeColor="#FFFFFF" />
+
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="62dp"
+        android:layout_height="49dp"
+        app:layout_constraintEnd_toStartOf="@+id/buttonSubirFoto"
+        app:layout_constraintStart_toStartOf="@+id/editTextTextMultiLine"
+        app:layout_constraintTop_toTopOf="@+id/buttonSubirFoto"
+        app:srcCompat="@drawable/ic_cerrar" />
+
+    <ImageView
+        android:id="@+id/fotoImageView"
+        android:layout_width="289dp"
+        android:layout_height="271dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.108"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView4"
+        app:srcCompat="@mipmap/elegir_foto" />
+
+    <EditText
+        android:id="@+id/editTextTextMultiLine"
+        android:layout_width="300dp"
+        android:layout_height="79dp"
+        android:background="@drawable/fondo_text_input"
+        android:ems="10"
+        android:hint="@string/subirfoto_Descripción"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/fotoImageView"
+        app:layout_constraintTop_toTopOf="@+id/fotoImageView"
+        app:layout_constraintVertical_bias="0.052" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="146dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="4dp"
+        android:text="@string/subirfoto_seleccionaunafoto"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@+id/fotoImageView"
+        app:layout_constraintStart_toStartOf="@+id/fotoImageView"
+        app:layout_constraintTop_toBottomOf="@+id/chat_toolbarsubirfoto" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
