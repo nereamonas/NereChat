@@ -104,7 +104,7 @@ public class FotosFragment extends BaseFragment {
         dividerItemDecoration= new DividerItemDecoration(getContext(),llm.getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
 
-        cargarFotos();
+
 
         toolbarImagenAjustes.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,7 +138,7 @@ public class FotosFragment extends BaseFragment {
                     //Cerramos el teclado, ya que se ha terminado con la accion de buscar
                     InputMethodManager imm = (InputMethodManager) ((AppCompatActivity)getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(toolbarSearchEditText.getWindowToken(), 0);
-                    cargarUsuarios(""); //Y cargaremos los usuarios de nuevo pero sin ninguna busqueda. si no los bvolvemos a cargar se quedaria con la ultima busqueda
+                    cargarFotos(); //Y cargaremos los usuarios de nuevo pero sin ninguna busqueda. si no los bvolvemos a cargar se quedaria con la ultima busqueda
                 }else { //Si por el contrario el edittext esta invisible, es que acabamos de dar a la lupa para buscar
                     toolbarSearchEditText.setVisibility(View.VISIBLE); //Volveremos el edittext visible para q se pueda realizar una busqueda
                     toolbarImageSearch.setImageDrawable(getResources().getDrawable(R.drawable.ic_cerrar)); //Cambiamos el icono de la lupa por una X para cerrar la busqueda
@@ -160,6 +160,8 @@ public class FotosFragment extends BaseFragment {
             @Override
             public void afterTextChanged(Editable s) { }
         });
+
+        cargarFotos();
 
         return root;
     }
@@ -436,6 +438,45 @@ public class FotosFragment extends BaseFragment {
 
                                 }
                             });
+
+                            holder.fotoPerfil.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Bundle bundle = new Bundle(); //Con el bundle podemos pasar datos
+                                    bundle.putString("usuario", model.getUid());
+                                    NavOptions options = new NavOptions.Builder()
+                                            .setLaunchSingleTop(true)
+                                            .build();
+                                    Navigation.findNavController(v).navigate(R.id.action_navigation_fotos_to_perfilOtroUsFragment, bundle,options);
+
+                                }
+                            });
+
+                            holder.usuario.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Bundle bundle = new Bundle(); //Con el bundle podemos pasar datos
+                                    bundle.putString("usuario", model.getUid());
+                                    NavOptions options = new NavOptions.Builder()
+                                            .setLaunchSingleTop(true)
+                                            .build();
+                                    Navigation.findNavController(v).navigate(R.id.action_navigation_fotos_to_perfilOtroUsFragment, bundle,options);
+
+                                }
+                            });
+
+                            holder.usuario2.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Bundle bundle = new Bundle(); //Con el bundle podemos pasar datos
+                                    bundle.putString("usuario", model.getUid());
+                                    NavOptions options = new NavOptions.Builder()
+                                            .setLaunchSingleTop(true)
+                                            .build();
+                                    Navigation.findNavController(v).navigate(R.id.action_navigation_fotos_to_perfilOtroUsFragment, bundle,options);
+
+                                }
+                            });
                         }
                     }
 
@@ -535,5 +576,9 @@ public class FotosFragment extends BaseFragment {
         }
     }
 
-
+    @Override
+    public void onStart() {
+        super.onStart();
+        cargarFotos();
+    }
 }
