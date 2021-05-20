@@ -18,10 +18,10 @@
         android:src="@drawable/icono"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.152"
+        app:layout_constraintHorizontal_bias="0.029"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/chat_toolbarPerfil"
-        app:layout_constraintVertical_bias="0.097">
+        app:layout_constraintVertical_bias="0.053">
 
 
     </de.hdodenhof.circleimageview.CircleImageView>
@@ -33,10 +33,10 @@
         android:text="@string/perfil_cerrarsesion"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.203"
+        app:layout_constraintHorizontal_bias="0.053"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/circleImageViewPerfilE"
-        app:layout_constraintVertical_bias="0.257" />
+        app:layout_constraintVertical_bias="0.116" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButtonEditFoto"
@@ -61,15 +61,15 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.42"
+        app:layout_constraintHorizontal_bias="0.138"
         app:layout_constraintStart_toEndOf="@+id/circleImageViewPerfilE"
         app:layout_constraintTop_toBottomOf="@+id/chat_toolbarPerfil"
         app:layout_constraintVertical_bias="0.09" />
 
     <TextView
         android:id="@+id/textPerfil_Estado"
-        android:layout_width="202dp"
-        android:layout_height="69dp"
+        android:layout_width="155dp"
+        android:layout_height="87dp"
         android:text="holiholi"
         android:textAlignment="textStart"
         android:textSize="14sp"
@@ -101,7 +101,7 @@
         android:layout_height="27dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.349"
+        app:layout_constraintHorizontal_bias="0.017"
         app:layout_constraintStart_toEndOf="@+id/textPerfil_tituloNombreUs"
         app:layout_constraintTop_toTopOf="@+id/textPerfil_tituloEstado"
         app:layout_constraintVertical_bias="0.0"
@@ -125,7 +125,7 @@
         android:layout_height="27dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.349"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/textPerfil_NombreUs"
         app:layout_constraintTop_toTopOf="@+id/textPerfil_tituloNombreUs"
         app:layout_constraintVertical_bias="0.0"
@@ -156,5 +156,18 @@
         app:layout_constraintTop_toBottomOf="@+id/textPerfil_NombreUs"
         app:layout_constraintVertical_bias="0.138"
         app:srcCompat="@drawable/ic_perfil"></ImageView>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerMisFotos"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.888"
+        app:layout_constraintStart_toEndOf="@+id/imageViewUsuarioEdit"
+        app:layout_constraintTop_toBottomOf="@+id/chat_toolbarPerfil"
+        app:layout_constraintVertical_bias="0.868" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
